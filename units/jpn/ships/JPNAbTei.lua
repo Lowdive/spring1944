@@ -10,21 +10,21 @@ local JPN_AbTei = BoatMother:New{
 	corpse					= "JPNAbTei_dead",
 	mass					= 3000,
 	maxDamage				= 3000,
-	maxReverseVelocity		= 0.6,
-	maxVelocity				= 1.3,
+	maxReverseVelocity		= 0.8,
+	maxVelocity				= 1.8,
 	movementClass			= "BOAT_RiverSmall",
 	objectName				= "JPNAbTei.s3o",
-	soundCategory			= "JPNBoat",
 	transportCapacity		= 3, -- 3 x 1fpu turrets
 	turnRate				= 250,	
 	
 	weapons = {	
 		[1] = { -- give primary weapon for ranging
-			name				= "jpn57mmtype97_he",
+			name				= "Type9757mmHE",
 			onlyTargetCategory	= "BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED",
 		},
 	},
 	customparams = {
+		soundcategory = "JPN/Boat",
 	    armor_front	= 6,
 		armor_rear	= 6,
 		armor_side	= 6,
@@ -46,7 +46,7 @@ local JPN_AbTei_Turret_57mm_Front = BoatChild:New{
 	objectName				= "JPNAbTei_turret_57mm.s3o",
   	weapons = {	
 		[1] = {
-			name				= "jpn57mmtype97_he",
+			name				= "Type9757mmHE",
 			maxAngleDif			= 300,
 			onlyTargetCategory	= "BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED",
 			mainDir		= [[0 0 1]],
@@ -81,11 +81,11 @@ local JPN_AbTei_Turret_MG = BoatChild:New{
 	objectName				= "JPNAbTei_turret_MG.s3o",
 	weapons = {	
 		[1] = {
-			name				= "jpntype97_mg",
+			name				= "Type97MG",
 			onlyTargetCategory	= "INFANTRY SOFTVEH OPENVEH TURRET",
 		},
 		[2] = {
-			name				= "jpntype97_mg",
+			name				= "Type97MG",
 			onlyTargetCategory	= "INFANTRY SOFTVEH OPENVEH TURRET",
 		},
 	},

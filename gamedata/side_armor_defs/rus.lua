@@ -53,6 +53,8 @@ local RUSDefs = {
     "RUSTankYard1",
     "RUSTankYard2",
 	"RUSGuardsBarracks",
+	"RUSboatyard",
+	"RUSboatyardlarge",
   },
 
   sandbags  =  {
@@ -64,8 +66,9 @@ local RUSDefs = {
   lighttanks  =  {
 	--USSR--
 	"RUST60",
-    "RUST70",
-    "rust28",
+    	"RUST70",
+    	"rust28",
+	"RUSValentine",
 	},
 	
   mediumtanks  =  {
@@ -113,8 +116,11 @@ local RUSDefs = {
     "RUSPo2",
     --USSR--
     "RUSYak3",
-    "RUSIL2",
     "RUSLa5FN",
+  },
+  hardplanes  =  {
+    "RUSIL2",
+    "RUSIL2PTAB",
   },
   
     squadSpawners  =  {
@@ -135,21 +141,6 @@ local RUSDefs = {
   "rus_sortie_interceptor",
   "rus_sortie_fighter",
   "rus_sortie_attack",
-  },
-  ships  =  {
-    --USSR--
-  "RUSMonitor",
-  "RUSBMO",
-  "RUSBKA-1125",
-  "RUSPr161",
-  "RUSPSK",
-  "RUSPr7",
-  "RUSTypeM",
-  "RUSTypeM_surfaced",
-  "RUSLCT",
-  "RUSTender15t",
-  "RUSKomsMTB",
-  "RUSG5",
   },
 }
 

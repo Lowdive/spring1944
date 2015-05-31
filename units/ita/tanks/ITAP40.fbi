@@ -16,7 +16,7 @@
   //collisionVolumeTest=1;
   corpse=ITAP40_Abandoned;
   [customParams] {
-    armor_front=70;
+    armor_front=66;
     armor_rear=42;
     armor_side=46;
     armor_top=20;
@@ -24,8 +24,9 @@
     lowammolevel=6;
     maxammo=19;
     weaponcost=10;
-    weaponswithammo=2;
+    weaponswithammo=3;
 	hasturnbutton=1;
+    soundcategory=ITA/Tank;
   }
   explodeAs=Vehicle_Explosion_Med;
   footprintX=3;
@@ -59,7 +60,6 @@
   side=RUS;
   sightDistance=750;
   smoothAnim=0;
-  soundcategory=ITATank;
   stealth=1;
   trackOffset=5;
   trackStrength=7;
@@ -72,21 +72,26 @@
 
   maxAngleDif1=210;
   maxAngleDif2=210;
+  maxAngleDif3=210;
   weaponMainDir1=0 16 1;
   weaponMainDir2=0 16 1;
+  weaponMainDir3=0 16 1;
 
-  weapon1=ita75mml34he;
-  badTargetCategory1=OPENVEH HARDVEH;
-  onlyTargetCategory1=BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED;
+  weapon1=Ansaldo75mmL34HE;
+  onlyTargetCategory1=BUILDING INFANTRY SOFTVEH SHIP OPENVEH HARDVEH LARGESHIP DEPLOYED;
 
-  weapon2=ita75mml34ap;
+  weapon2=Ansaldo75mmL34AP;
   onlyTargetCategory2=OPENVEH HARDVEH;
 
-  weapon3=BredaM38;
-  onlyTargetCategory3=INFANTRY SOFTVEH DEPLOYED;
+  weapon3=Ansaldo75mmL34HEAT;
+  onlyTargetCategory3=OPENVEH HARDVEH;
 
-  weapon4=.50calproof;
+  weapon4=BredaM38;
+  onlyTargetCategory4=INFANTRY SOFTVEH DEPLOYED;
+  maxAngleDif4=10;
 
-  weapon5=Small_Tracer_Green;
+  weapon5=.50calproof;
+
+  weapon6=Small_Tracer_Green;
 }
 

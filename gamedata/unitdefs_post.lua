@@ -4,40 +4,12 @@ VFS.Include("LuaRules/Includes/utilities.lua", nil, VFS.ZIP)
 -- Setup modoptions
 local modOptions
 if (Spring.GetModOptions) then
-  modOptions = Spring.GetModOptions()
+	modOptions = Spring.GetModOptions()
 end
+modOptions = modOptions or {}
 
-local function disableunits(unitlist)
-	for name, ud in pairs(UnitDefs) do
-	    if (ud.buildoptions) then
-	      for _, toremovename in ipairs(unitlist) do
-	        for index, unitname in pairs(ud.buildoptions) do
-	          if (unitname == toremovename) then
-	            table.remove(ud.buildoptions, index)
-	          end
-	        end
-	      end
-	    end
-	end
-end
-
--- Auto-generate per-nation {AP, AT}minesign units
+-- Auto-generate sortie, squad & queuable-morph units
 VFS.Include("gamedata/unitdefs_autogen.lua")
-local sides = VFS.DirList("luarules/configs/side_squad_defs", "*.lua")
-
-local ATMineSign = UnitDefs["atminesign"]
-local APMineSign = UnitDefs["apminesign"]
-local TankObstacle = UnitDefs["tankobstacle"]
-
-for _, sideFile in pairs(sides) do
-	local side = sideFile:sub(string.len("luarules/configs/side_squad_defs/")+1, -5)
-	UnitDefs[side .. "atminesign"] = {}
-	table.copy(ATMineSign, UnitDefs[side .. "atminesign"])
-	UnitDefs[side .. "apminesign"] = {}
-	table.copy(APMineSign, UnitDefs[side .. "apminesign"])
-	UnitDefs[side .. "tankobstacle"] = {}
-	table.copy(TankObstacle, UnitDefs[side .. "tankobstacle"])
-end
 
 -- have to implement squad file preloading here, because it's needed for transport stuff
 local squadDefs = VFS.Include("luarules/configs/squad_defs_loader.lua")
@@ -55,51 +27,50 @@ for name, ud in pairs(UnitDefs) do
 				ud.customparams[k] = table.serialize(v)
 			end
 		end
+	else
+		ud.customparams = {}
 	end
 	--MODOPTION CONTROLS
-	if (modOptions) then	
-		if (modOptions.scoremode) then
-			if (modOptions.scoremode ~= 'disabled') then
-				if (ud.customparams) then
-					if (not ud.customparams.flagcaprate) then
-						if (not ud.customparams.flag and ud.weapons ~= nil) then
-							ud.customparams.flagcaprate = 1
-						end
-					end
-				end
-			end
-		end		
-		
-		if (modOptions.command_mult) then
-			if (ud.extractsmetal) then
-				if (modOptions.command_mult == '0') then --Very Low Command
-					ud.extractsmetal = (0.25 * ud.extractsmetal)
-				end
-				if (modOptions.command_mult == '1') then --Low Command
-					ud.extractsmetal = (0.5 * ud.extractsmetal)
-				end
-				if (modOptions.command_mult == '2') then --Normal Command
-					ud.extractsmetal = (1 * ud.extractsmetal)
-				end
-				if (modOptions.command_mult == '3') then --High Command
-					ud.extractsmetal = (1.5 * ud.extractsmetal)
-				end
-				if (modOptions.command_mult == '4') then --Very High Command
-					ud.extractsmetal = (2.5 * ud.extractsmetal)
-				end
-			end
-		end
+    if (modOptions.scoremode) then
+        if (modOptions.scoremode ~= 'disabled') then
+            if (ud.customparams) then
+                if (not ud.customparams.flagcaprate) then
+                    if (not ud.customparams.flag and ud.weapons ~= nil) then
+                        ud.customparams.flagcaprate = 1
+                    end
+                end
+            end
+        end
+    end
 
-		if (modOptions.command_storage and (tonumber(modOptions.command_storage) > 0)) then
-			if (ud.metalstorage) then
-				ud.metalstorage = 0
-			end
-		end
-	end
+    if (modOptions.command_mult) then
+        if (ud.extractsmetal) then
+            if (modOptions.command_mult == '0') then --Very Low Command
+                ud.extractsmetal = (0.25 * ud.extractsmetal)
+            end
+            if (modOptions.command_mult == '1') then --Low Command
+                ud.extractsmetal = (0.5 * ud.extractsmetal)
+            end
+            if (modOptions.command_mult == '2') then --Normal Command
+                ud.extractsmetal = (1 * ud.extractsmetal)
+            end
+            if (modOptions.command_mult == '3') then --High Command
+                ud.extractsmetal = (1.5 * ud.extractsmetal)
+            end
+            if (modOptions.command_mult == '4') then --Very High Command
+                ud.extractsmetal = (2.5 * ud.extractsmetal)
+            end
+        end
+    end
 
+    if (modOptions.command_storage and (tonumber(modOptions.command_storage) > 0)) then
+        if (ud.metalstorage) then
+            ud.metalstorage = 0
+        end
+    end
  --END MODOPTION CONTROLS
- 
- --BEGIN UNIT PROCESSING	
+
+ --BEGIN UNIT PROCESSING
 	local LoSMult = 0.6
     local decloakDistMult = 0.6
     local infSpeedMult = 0.5
@@ -135,7 +106,7 @@ for name, ud in pairs(UnitDefs) do
             end
         end
     end
-    
+
 
 	if ud.customparams then
 		if ud.customparams.feartarget then
@@ -171,7 +142,7 @@ for name, ud in pairs(UnitDefs) do
 
     ]]--
 	--end first chunk of new sensor stuff!
-	
+
 	--more new sensor stuff
     --decide if stationary units should be stealth or not
 	if not ud.maxvelocity then
@@ -183,7 +154,13 @@ for name, ud in pairs(UnitDefs) do
 		end
 	end
 	--end more new sensor stuff
-	
+
+    -- reclaimability
+    local reclaimable = not ud.maxvelocity
+    reclaimable = reclaimable and not (ud.customparams and ud.customparams.feartarget)
+    reclaimable = reclaimable and not (ud.customparams and ud.customparams.weaponswithammo)
+    ud.reclaimable = reclaimable
+
     --ship things
 	if ud.floater then
 		ud.turninplace = false
@@ -210,13 +187,13 @@ for name, ud in pairs(UnitDefs) do
 				ud.description = newDescrLine
 			end
 			ud.description = ud.description.." ("..newDescrLine..")"
-			
+
 		end
 		if ud.customparams.armor_front and (tonumber(ud.maxvelocity) or 0) > 0 then
 			ud.usepiececollisionvolumes = true
 		end
 	end
-	
+
 	if tonumber(ud.maxvelocity or 0) > 0 and (not ud.canfly) and tonumber(ud.footprintx) > 1 then
 		-- Make all vehicles push resistant, except con vehicles, so they vacate build spots
 		if (not ud.builder) then
@@ -227,11 +204,11 @@ for name, ud in pairs(UnitDefs) do
 		ud.stealth = false
 		ud.activatewhenbuilt = true
 		--end new sensor stuff
-		
+
 		--local seisSig = tonumber(ud.mass) / 1000 -- 10x smaller than default
 		--if seisSig < 1 then seisSig = 1 end
 		ud.seismicsignature = 1 --seisSig
-		
+
 		--set health
 		local powerBase = modOptions.power_base or 3.25
 		local scaleFactor = modOptions.scale_factor or 50
@@ -252,19 +229,23 @@ for name, ud in pairs(UnitDefs) do
 		if ud.sightdistance then
 			ud.sightdistance = (modOptions.unit_los_mult * ud.sightdistance)
 		end
+
+		if ud.airsightdistance then
+			ud.airsightdistance = (modOptions.unit_los_mult * ud.airsightdistance)
+		end
 --		if ud.radardistance then
 --			ud.radardistance = (modOptions.unit_los_mult * ud.radardistance)
 --		end
 		if ud.seismicdistance then
 			ud.seismicdistance = (modOptions.unit_los_mult * ud.seismicdistance)
-		end			
+		end
 	end
 	if (modOptions.unit_radar_mult) then
 		if ud.radardistance then
 			ud.radardistance = (modOptions.unit_radar_mult * ud.radardistance)
 		end
 	end
-	
+
 	ud.transportbyenemy = false
 	ud.collisionvolumetest = 1
 
@@ -277,12 +258,16 @@ for name, ud in pairs(UnitDefs) do
 			local squadDef = squadDefs[squadName]
 			if squadDef then
 				local addedCost = 0
-				for i, unitName in ipairs(squadDef.members) do
-					local newUD = UnitDefs[unitName]
-					if newUD then
-						addedCost = addedCost + newUD.buildcostmetal
-					end
-				end
+                if squadDef.buildCostMetal then
+                    addedCost = squadDef.buildCostMetal
+                else
+                    for i, unitName in ipairs(squadDef.members) do
+                        local newUD = UnitDefs[unitName]
+                        if newUD then
+                            addedCost = addedCost + newUD.buildcostmetal
+                        end
+                    end
+                end
 				--Spring.Echo("Total squad cost: "..addedCost)
 				if addedCost > 0 then
 					ud.buildcostmetal = ud.buildcostmetal + addedCost
@@ -296,7 +281,35 @@ for name, ud in pairs(UnitDefs) do
 			Spring.Echo("Squad unit not found in squad def files: "..squadName)
 		end
 	end
-	
+	-- sounds
+	local soundCat = ud.customparams.soundcategory
+	if soundCat then
+		soundCat = "sounds/" .. soundCat:lower() -- e.g. "rus_boat"
+		local fullPath = {}
+		for word in soundCat:gmatch("%a+") do
+			table.insert(fullPath, word)
+		end
+		local keys = {"select", "ok", "arrived", "cant", "underattack"}
+		local sounds = {}
+		for _, key in pairs(keys) do
+			sounds[key] = {}
+			for i = #fullPath, 2, -1 do
+				local path = table.concat(fullPath, "/", 1, i)
+				local available = VFS.DirList(path, "*_" .. key .. "*")
+				if #available > 0 then
+					for index, item in pairs(available) do
+						--Spring.Echo("Available", index, item, key)
+						sounds[key][index] = item:sub(8, -5) -- cut off "sounds/" and file extension
+						--Spring.Echo("Adding sound: " .. sounds[key][index] .. " to unit: " .. ud.name)
+					end
+					break
+				end
+				--Spring.Echo("No available " .. key .. " sound for " .. ud.name .. ", trying next level")
+			end
+		end
+		ud.sounds = sounds
+	end
+
 	-- add the unit to gamemaster buildoptions
 	GMBuildOptions[#GMBuildOptions + 1] = name
 	if name == "gmtoolbox" then GM_UD = ud end

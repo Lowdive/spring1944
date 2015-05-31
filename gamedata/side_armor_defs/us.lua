@@ -49,6 +49,8 @@ local USDefs = {
     "USTankYard",
     "USTankYard1",
     "USTankYard2",
+	"USboatyard",
+	"USboatyardlarge",
   },
 
   sandbags  =  {
@@ -130,17 +132,6 @@ local USDefs = {
   "us_sortie_fighter_bomber",
   "us_sortie_attack",
   "us_sortie_paratrooper",
-  },
-  ships  =  {
-    --US--
-  "USLCT",
-  "USPT103",
-  "USPT103-bofors",
-  "USFletcher",
-  "USTacoma",
-  "USLCVP",
-  "USSC",
-  "USLCSS",
   },
 }
 

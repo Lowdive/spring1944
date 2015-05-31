@@ -17,6 +17,7 @@
   collisionVolumeType=ellipsoid;
   [customParams] {
     supplyRange=500;
+    soundcategory=JPN/Yard;
   }
   energyStorage=0.01;
   explodeAs=LARGE_EXPLOSION;
@@ -28,7 +29,7 @@
   maxSlope=10;
   maxWaterDepth=0;
   objectName=JPNVehicleYard.s3o;
-  script=Yard.cob;
+  script=Yard.lua;
   selfDestructAs=LARGE_EXPLOSION;
   [sfxtypes] {
   }
@@ -36,10 +37,9 @@
   showNanoSpray=0;
   side=JPN;
   sightDistance=146;
-  soundcategory=JPNYard;
   stealth=1;
   useBuildingGroundDecal=1;
   workerTime=30;
-  yardMap=ooooooo ooooooo oocccoo oocccoo occccco occccco occccco;
+  yardMap=ooooooo oocccoo occccco occccco occccco occccco occccco;
 }
 

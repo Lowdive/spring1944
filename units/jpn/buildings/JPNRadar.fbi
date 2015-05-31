@@ -15,6 +15,7 @@
   category=BUILDING;
   corpse=jpnradar_abandoned;
   [customParams] {
+    soundcategory=JPN/Yard;
   }
   explodeAs=Large_Explosion;
   footprintX=5;
@@ -25,7 +26,7 @@
   maxSlope=10;
   maxWaterDepth=0;
   objectName=JPNRadar.s3o;
-  script=Radar.cob;
+  script=Yard.lua;
   selfDestructAs=Large_Explosion;
   [sfxtypes] {
   }
@@ -34,7 +35,6 @@
   side=GER;
   sightDistance=146;
   smoothAnim=0;
-  soundcategory=Nothing;
   stealth=1;
   useBuildingGroundDecal=1;
   workerTime=100;

@@ -19,6 +19,7 @@
   corpse=USVehicleYard_Destroyed;
   [customParams] {
     supplyRange=500;
+    soundcategory=US/Yard;
   }
   energyStorage=0.01;
   explodeAs=LARGE_EXPLOSION;
@@ -30,7 +31,7 @@
   maxWaterDepth=0;
   metalMake=0;
   objectName=USVehicleYard.S3O;
-  script=Yard.cob;
+  script=Yard.lua;
   selfDestructAs=LARGE_EXPLOSION;
   [sfxtypes] {
   }
@@ -38,7 +39,6 @@
   showNanoSpray=0;
   sightDistance=700;
   smoothAnim=0;
-  soundcategory=USYard;
   stealth=1;
   useBuildingGroundDecal=1;
   workerTime=50;

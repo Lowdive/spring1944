@@ -19,6 +19,8 @@
     hiddenbuilding=1;
     dontCount=1;
     supplyRange=275;
+    soundcategory=RUS/Infantry;
+    spawnsUnit=ruspartisanrifle;
   }
   energyMake=0;
   energyStorage=100;
@@ -30,6 +32,7 @@
   maxDamage=1500;
   maxSlope=15;
   maxWaterDepth=0;
+  metalUse=5;
   minCloakDistance=300;
   objectName=LogisticsSmall.S3O;
   selfDestructAs=Med_Explosion;
@@ -39,7 +42,6 @@
   side=RUS;
   sightDistance=1;
   smoothAnim=0;
-  soundcategory=RUSInf;
   stealth=1;
   useBuildingGroundDecal=1;
   workerTime=20;

@@ -22,6 +22,10 @@
   [customParams] {
     dontCount=1;
     feartarget=1;
+    maxammo=2;
+    weaponcost=50;
+    weaponswithammo=0;
+    soundcategory=GBR/Infantry;
   }
   damageModifier=0.265;
   flankingBonusMax=1.5;
@@ -42,6 +46,7 @@
   noChaseCategory=FLAG AIR MINE HARDVEH BUILDING;
   objectName=GBRCommando.S3O;
   repairable=0;
+  script=GBRCommando.cob;
   seismicDistance=840;
   seismicSignature=0;
   [sfxtypes] {
@@ -59,7 +64,6 @@
   side=GBR;
   sightDistance=570;
   smoothAnim=0;
-  soundcategory=GBRInf;
   stealth=1;
   turnRate=1010;
   upright=1;

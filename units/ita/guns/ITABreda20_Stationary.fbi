@@ -18,6 +18,7 @@
     maxammo=16;
     weaponcost=2;
     weaponswithammo=2;
+    soundcategory=ITA/Gun;
   }
   footprintX=2;
   footprintZ=2;
@@ -44,16 +45,15 @@
   side=ITA;
   sightDistance=701;
   smoothAnim=0;
-  soundcategory=ITAInf;
   stealth=1;
   useBuildingGroundDecal=1;
   badTargetCategory=FLAG;
 
-  weapon1=breda3520mmaa;
+  weapon1=BredaM3520mmAA;
   badTargetCategory1=BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP DEPLOYED;
   onlyTargetCategory1=AIR;
 
-  weapon2=breda3520mmhe;
+  weapon2=BredaM3520mmHE;
   badTargetCategory2=AIR;
   onlyTargetCategory2=BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED;
 

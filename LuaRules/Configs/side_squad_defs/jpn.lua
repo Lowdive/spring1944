@@ -110,17 +110,15 @@ local jpnDefs = {
 		},
 		name = "Anti-Tank Squad",
 		description = "2 x Type 3 AT Grenade, 1 x Type 4 Rocket Launcher: Anti-Tank Infantry",
-		buildCostMetal = 800,
+		buildCostMetal = 400,
 		buildPic = "JPNType3AT.png",
-		buildTime = 900,
+		buildTime = 400,
 		side = "JPN",
 	},
-	
+
 	["jpn_platoon_daihatsu"] =
 	{
 		members = {
-			"jpnobserv",
-			"jpnobserv",
 			"jpntype99lmg",
 			"jpntype99lmg",
 			"jpnkneemortar",
@@ -140,7 +138,6 @@ local jpnDefs = {
 			"jpnrifle",
 			"jpnrifle",
 			"jpnobserv",
-			"jpnobserv",
 			"jpntype99lmg",
 			"jpntype99lmg",
 			"jpnkneemortar",
@@ -155,12 +152,63 @@ local jpnDefs = {
 			"jpnrifle",
 			"jpnrifle",
 			"jpnrifle",
+			"jpnrifle",
+			"jpnrifle",
+			"jpnrifle",
+			"jpnrifle",
+			"jpntype3at",
+			"jpntype3at",
+			"jpnobserv",
+		},
+        buildCostMetal = 6000,
+		-- other fields not needed for transport squads
+	},
+	["jpn_platoon_amph"] =
+	{
+		members = {
+			"jpnobserv",
+			"jpntype99lmg",
+			"jpntype100smg",
+			"jpntype100smg",
+			"jpntype3at",
+			"jpnrifle",
+			"jpnrifle",
+			"jpnhqengineer",
 			"jpnrifle",
 			"jpnrifle",
 			"jpnrifle",
 			"jpnrifle",
 		},
-		-- other fields not needed for transport squads
+	},
+	["jpn_platoon_hoha"] =
+	{
+		members = {
+
+			"jpntype100smg",
+			"jpntype100smg",
+			"jpntype100smg",
+			"jpntype3at",
+			"jpnrifle",
+			"jpnrifle",
+			"jpnrifle",
+			"jpnrifle",
+			"jpnrifle",
+			"jpntype99lmg",
+		},
+	},
+	["jpn_tankette_platoon_teke"] =
+	{
+		members = {
+			"jpnteke",
+			"jpnteke_hmg",
+		},
+		name = "Tankette Platoon",
+		description = "1 x tankette Te-Ke 37mm, 1 x tankette Te-Ke 7.7mm",
+		buildCostMetal = 1000,
+		buildPic = "JPNteke.png",
+		objectName = "JPNteke_build.s3o",
+		buildTime = 1000,
+		side = "JPN",
 	},
 	["jpn_platoon_tokudaihatsu"] =
 	{

@@ -20,8 +20,8 @@ local gerDefs = {
 		buildTime = 610,
 		side = "GER",
 	},
-	
-	["ger_platoon_rifle"] = 
+
+	["ger_platoon_rifle"] =
 	{
 		members = {
 			"germp40",
@@ -42,8 +42,8 @@ local gerDefs = {
 		buildTime = 1830,
 		side = "GER",
 	},
-	
-	["ger_platoon_assault"] = 
+
+	["ger_platoon_assault"] =
 	{
 		members = {
 			"germp40",
@@ -66,8 +66,8 @@ local gerDefs = {
 		buildTime = 1800,
 		side = "GER",
 	},
-	
-	["ger_platoon_mg"] = 
+
+	["ger_platoon_mg"] =
 	{
 		members = {
 			"germg42",
@@ -82,8 +82,8 @@ local gerDefs = {
 		buildTime = 1350,
 		side = "GER",
 	},
-	
-	["ger_platoon_sniper"] = 
+
+	["ger_platoon_sniper"] =
 	{
 		members = {
 			"gersniper",
@@ -96,8 +96,8 @@ local gerDefs = {
 		buildTime = 1250,
 		side = "GER",
 	},
-	
-	["ger_platoon_mortar"] = 
+
+	["ger_platoon_mortar"] =
 	{
 		members = {
 			"gergrw34",
@@ -112,8 +112,8 @@ local gerDefs = {
 		buildTime = 2260,
 		side = "GER",
 	},
-	
-	["ger_platoon_at"] = 
+
+	["ger_platoon_at"] =
 	{
 		members = {
 			"gerpanzerfaust",
@@ -122,13 +122,13 @@ local gerDefs = {
 		},
 		name = "Anti-Tank Squad",
 		description = "2 x Panzerfaust, 1 x Panzerschrek: Anti-Tank Infantry",
-		buildCostMetal = 900,
+		buildCostMetal = 450,
 		buildPic = "GERPanzerfaust.png",
-		buildTime = 900,
+		buildTime = 450,
 		side = "GER",
 	},
-	
-	["ger_platoon_scout"] = 
+
+	["ger_platoon_scout"] =
 	{
 		members = {
 			"gerobserv",
@@ -141,8 +141,8 @@ local gerDefs = {
 		buildPic = "GERObserv.png",
 		buildTime = 470,
 		side = "GER",
-	},  
-	
+	},
+
 	["ger_platoon_infgun"] =
 	{
 		members = {
@@ -156,7 +156,7 @@ local gerDefs = {
 		buildTime = 1320,
 		side = "GER",
 	},
-	
+
 	["ger_platoon_ssb"] =
 	{
 		members = {
@@ -165,7 +165,7 @@ local gerDefs = {
 			"germg42",
 			"germp40",
 			"germp40",
-			"germp40",			
+			"germp40",
 			"germp40",
 			"germp40",
 			"gerrifle",
@@ -181,9 +181,10 @@ local gerDefs = {
 			"gerrifle",
 			"gerrifle",
 		},
+        buildCostMetal = 3500,
 		-- other fields not needed for transport squads
 	},
-	
+
 	["ger_platoon_mfp"] =
 	{
 		members = {

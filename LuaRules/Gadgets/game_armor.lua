@@ -87,7 +87,7 @@ local GetUnitPosition = Spring.GetUnitPosition
 local GetUnitVectors = Spring.GetUnitVectors
 local ValidUnitID = Spring.ValidUnitID
 
-local vNormalized = GG.Vector.Normalized
+local vNormalized
 
 local sqrt = math.sqrt
 local exp = math.exp
@@ -100,10 +100,10 @@ local SQRT_HALF = sqrt(0.5)
 ----------------------------------------------------------------
 
 function gadget:Initialize()
+  vNormalized = GG.Vector.Normalized
   local armorTypes = Game.armorTypes
 
-  for i = 1, #UnitDefs do
-    local unitDef = UnitDefs[i]
+  for i,  unitDef in pairs(UnitDefs) do
     local customParams = unitDef.customParams
     if customParams.armor_front then
       local armor_front = customParams.armor_front
@@ -122,8 +122,7 @@ function gadget:Initialize()
     end
   end
   
-  for i = 1, #WeaponDefs do
-    local weaponDef = WeaponDefs[i]
+  for i, weaponDef in pairs(WeaponDefs) do
     local customParams = weaponDef.customParams
     if customParams.armor_penetration then
       local armor_penetration = customParams.armor_penetration

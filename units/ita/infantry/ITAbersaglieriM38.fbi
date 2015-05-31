@@ -14,6 +14,7 @@
   [customParams] {
     feartarget=1;
     flagCapRate=1;
+    soundcategory=ITA/Infantry;
   }
   damageModifier=0.265;
   flankingBonusMax=1.5;
@@ -49,7 +50,6 @@
   side=ITA;
   sightDistance=840;
   smoothAnim=0;
-  soundcategory=ITAInf;
   stealth=1;
   turnRate=1010;
   upright=1;
@@ -66,7 +66,7 @@
   onlyTargetCategory2=INFANTRY;
   weaponMainDir2=0 0 1;
 
-  weapon3=bredamod42;
+  weapon3=L_type_grenade;
   maxAngleDif3=170;
   onlyTargetCategory3=BUILDING SOFTVEH OPENVEH HARDVEH SHIP DEPLOYED;
   weaponMainDir3=0 0 1;

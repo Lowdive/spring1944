@@ -16,7 +16,9 @@
   [customParams] {
     dontCount=1;
     feartarget=1;
-    killvoice=1;
+	killvoicecategory=RUS/Infantry/Sniper/RUS_SNIPER_KILL;
+	killvoicephasecount=3;
+    soundcategory=RUS/Infantry/Sniper;
   }
   damageModifier=0.265;
   decloakOnFire=1;
@@ -55,7 +57,6 @@
   side=RUS;
   sightDistance=570;
   smoothAnim=0;
-  soundcategory=RUSSniper;
   stealth=1;
   turnRate=1010;
   upright=1;

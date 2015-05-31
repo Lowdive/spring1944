@@ -16,7 +16,7 @@
   canPatrol=1;
   CanStop=1;
   category=AIR;
-  cruiseAlt=750;
+  cruiseAlt=1500;
   [customParams] {
     enginesound=p51b-;
     enginesoundnr=16;
@@ -27,6 +27,7 @@
     proptexture=prop3.tga;
     weaponcost=-1;
     weaponswithammo=2;
+    SoundCategory=RUS/Air/Il2;
   }
   explodeAs=Vehicle_Explosion_Med;
   fireState=0;
@@ -42,13 +43,13 @@
   maxDamage=436;
   maxElevator=0.0025;
   maxFuel=180;
-  maxPitch=1;
+  maxPitch=0.1;
   maxRudder=0.0019;
   maxSlope=10;
   maxVelocity=14;
   maxWaterDepth=0;
   myGravity=0.6;
-  noChaseCategory=FLAG MINE;
+  noChaseCategory=FLAG MINE AIR INFANTRY BUILDING;
   objectName=RUSIL2.S3O;
   radarDistance=1000;
   repairable=0;
@@ -65,7 +66,6 @@
   Side=US;
   sightDistance=200;
   smoothAnim=1;
-  SoundCategory=RUSIl2;
   stealth=1;
   turnRate=50;
   badTargetCategory=BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP DEPLOYED;
@@ -75,14 +75,14 @@
 
   weapon11=Large_Tracer;
 
-  weapon1=HVARRocket;
+  weapon1=RS82Rocket;
   maxAngleDif1=30;
-  onlyTargetCategory1=HARDVEH SHIP OPENVEH LARGESHIP;
+  onlyTargetCategory1=BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED;
   weaponMainDir1=0 0 1;
 
-  weapon2=HVARRocket;
+  weapon2=RS82Rocket;
   maxAngleDif2=30;
-  onlyTargetCategory2=HARDVEH SHIP OPENVEH LARGESHIP;
+  onlyTargetCategory2=BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED;
   weaponMainDir2=0 0 1;
   weaponSlaveTo2=1;
 
@@ -110,8 +110,8 @@
   weaponSlaveTo6=3;
 
   weapon7=bomb;
-  onlyTargetCategory7=BUILDING HARDVEH SHIP OPENVEH INFANTRY LARGESHIP DEPLOYED;
-  weaponMainDir7=0 -0.18 1;
+  onlyTargetCategory7=BUILDING HARDVEH SHIP OPENVEH LARGESHIP DEPLOYED;
+  weaponMainDir7=0 0 1;
 
   weapon8=m2browningaa;
   maxAngleDif8=90;

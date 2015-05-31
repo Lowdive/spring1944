@@ -6,7 +6,7 @@
   airSightDistance=2500;
   brakeRate=0.9;
   buildCostEnergy=0;
-  buildCostMetal=25;
+  buildCostMetal=50;
   buildTime=25;
   canMove=1;
   category=INFANTRY MINETRIGGER;
@@ -16,6 +16,7 @@
   [customParams] {
     dontCount=1;
     feartarget=1;
+    soundcategory=JPN/Infantry;
   }
   damageModifier=0.265;
   flankingBonusMax=1.5;
@@ -26,13 +27,14 @@
   footprintZ=1;
   iconType=antitank;
   idleAutoHeal=1;
-  init_cloaked=1;
+  // init_cloaked=1;
   mass=50;
   maxDamage=65;
   maxSlope=15;
-  maxVelocity=1.3;
+  // maxVelocity=1.3;
+  maxVelocity=1.6;
   maxWaterDepth=5;
-  minCloakDistance=260;
+  // minCloakDistance=260;
   movementClass=KBOT_Infantry;
   noChaseCategory=BUILDING FLAG INFANTRY AIR MINE;
   objectName=JPNATGrenadier.S3O;
@@ -53,7 +55,6 @@
   showNanoFrame=0;
   side=JPN;
   sightDistance=570;
-  soundcategory=JPNInf;
   stealth=1;
   turnRate=1010;
   upright=1;

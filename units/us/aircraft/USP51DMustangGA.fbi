@@ -16,7 +16,7 @@
   canPatrol=1;
   CanStop=1;
   category=AIR;
-  cruiseAlt=900;
+  cruiseAlt=1500;
   [customParams] {
     enginesound=p51b-;
     enginesoundnr=16;
@@ -26,6 +26,7 @@
     proptexture=prop3.tga;
     weaponcost=-1;
     weaponswithammo=2;
+    soundcategory=US/Air/Fighter;
   }
   explodeAs=Vehicle_Explosion_Med;
   footprintX=4;
@@ -40,13 +41,13 @@
   maxDamage=346.5;
   maxElevator=0.004;
   maxFuel=180;
-  maxPitch=1;
+  maxPitch=0.5;
   maxRudder=0.003;
   maxSlope=10;
   maxVelocity=17.5;
   maxWaterDepth=0;
   myGravity=0.6;
-  noChaseCategory=FLAG MINE BUILDING;
+  noChaseCategory=FLAG MINE AIR INFANTRY BUILDING;
   objectName=USP51DMustangGA.S3O;
   radarDistance=1000;
   repairable=0;

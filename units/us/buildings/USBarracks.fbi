@@ -3,12 +3,12 @@
   name=US Army Barracks;
   description=Infantry Training & Housing Facility;
   buildCostEnergy=0;
-  buildCostMetal=2746;
+  buildCostMetal=2300;
   builder=1;
   buildingGroundDecalSizeX=7;
   buildingGroundDecalSizeY=7;
   buildingGroundDecalType=Dirt2.dds;
-  buildTime=2700;
+  buildTime=2300;
   canBeAssisted=0;
   canMove=1;
   category=BUILDING;
@@ -22,6 +22,7 @@
     separatebuildspot=1;
     supplyRange=500;
     normaltex=unittextures/gbrbarracks_normals.dds;
+    soundcategory=US/Yard;
   }
   energyStorage=0.01;
   explodeAs=Med_Explosion;
@@ -33,7 +34,7 @@
   maxSlope=10;
   maxWaterDepth=0;
   objectName=USBarracks.S3O;
-  script=Barracks.cob;
+  script=Yard.lua;
   selfDestructAs=Med_Explosion;
   [sfxtypes] {
   }
@@ -41,7 +42,6 @@
   showNanoSpray=0;
   sightDistance=146;
   smoothAnim=0;
-  soundcategory=USYard;
   stealth=1;
   useBuildingGroundDecal=1;
   workerTime=20;

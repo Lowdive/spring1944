@@ -21,6 +21,7 @@
     maxammo=4;
     weaponcost=25;
     weaponswithammo=2;
+    soundcategory=JPN/Gun;
   }
   flankingBonusDir=0.0 0.0 1.0;
   flankingBonusMax=1.25;
@@ -53,17 +54,16 @@
   side=JPN;
   sightDistance=701;
   smoothAnim=0;
-  soundcategory=JPNInf;
   stealth=1;
   useBuildingGroundDecal=1;
   badTargetCategory=FLAG;
 
-  weapon1=jpn105mmtype99_he;
+  weapon1=Type91105mmL24HE;
   maxAngleDif1=35;
   onlyTargetCategory1=BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED;
   weaponMainDir1=0 0 1;
 
-  weapon2=jpn105mmtype99_smoke;
+  weapon2=Type91105mmL24Smoke;
   maxAngleDif2=35;
   onlyTargetCategory2=NOTHING;
   weaponMainDir2=0 0 1;

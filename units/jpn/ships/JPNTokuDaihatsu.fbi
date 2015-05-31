@@ -6,8 +6,8 @@
   airSightDistance=1500;
   brakeRate=0.5;
   buildCostEnergy=0;
-  buildCostMetal=1000;
-  buildTime=1000;
+  buildCostMetal=1500;
+  buildTime=1500;
   canMove=1;
   category=SHIP MINETRIGGER;
   corpse=JPNTokuDaihatsu_dead;
@@ -18,7 +18,7 @@
     armor_top=6;
     supplyRange=350;
     hasturnbutton=1;
-	transportsquad=jpn_platoon_tokudaihatsu;
+    soundcategory=JPN/Boat;	transportsquad=jpn_platoon_tokudaihatsu;
   }
   energyMake=0;
   energyUse=0;
@@ -62,12 +62,12 @@
 
 	canAttack=1;
 
-  weapon1=jpntype96_25mm60_aa;
+  weapon1=Type9625mmAA;
   onlyTargetCategory1=AIR;
   weaponMainDir1 = 0 0 -1;
   maxAngleDif1 = 300;
 
-  weapon2=jpntype96_25mm60_he;
+  weapon2=Type9625mmHE;
   onlyTargetCategory2=BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED;
   weaponMainDir2 = 0 0 -1;
   maxAngleDif2 = 300;

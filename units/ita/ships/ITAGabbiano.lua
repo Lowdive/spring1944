@@ -3,8 +3,8 @@ local ITA_Gabbiano = BoatMother:New{
 	description				= "Corvette",
 	acceleration			= 0.15,
 	brakeRate				= 0.14,
-	buildCostMetal			= 10000,
-	buildTime				= 10000,
+	buildCostMetal			= 15000,
+	buildTime				= 15000,
 	category 				= "LARGESHIP SHIP MINETRIGGER",
 	collisionVolumeOffsets	= [[0.0 -12.5 0.0]],
 	collisionVolumeScales	= [[24.0 11.0 150.0]],
@@ -14,7 +14,6 @@ local ITA_Gabbiano = BoatMother:New{
 	maxVelocity				= 1.8,
 	movementClass			= "BOAT_LightPatrol",
 	objectName				= "ITAGabbiano.s3o",
-	soundCategory			= "ITABoat",
 	transportCapacity		= 6, -- 6 x 1fpu turrets
 	turnRate				= 25,	
 	weapons = {	
@@ -32,6 +31,7 @@ local ITA_Gabbiano = BoatMother:New{
 		},
 	},
 	customparams = {
+		soundcategory		= "ITA/Boat",
 		maxammo				= 2,
 		weaponcost			= 40,
 		weaponswithammo		= 2,
@@ -55,7 +55,7 @@ local ITA_Gabbiano_Turret_100mm = BoatChild:New{
 	objectName				= "ITAGabbiano_Turret_100mm.s3o",
   	weapons = {	
 		[1] = {
-			name				= "it100mm47_1928",
+			name				= "OTO100mmL47HE",
 			onlyTargetCategory	= "BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED",
 		},
 	},
@@ -76,12 +76,12 @@ local ITA_Gabbiano_Turret_20mm = BoatChild:New{
 	objectName				= "ITAGabbiano_Turret_20mm.s3o",
   	weapons = {	
 		[1] = {
-			name				= "breda3520mmaa",
+			name				= "BredaM3520mmAA",
 			maxAngleDif			= 270,
 			onlyTargetCategory	= "AIR",
 		},
 		[2] = {
-			name				= "breda3520mmhe",
+			name				= "BredaM3520mmHE",
 			maxAngleDif			= 270,
 			onlyTargetCategory	= "BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED",
 		},
@@ -105,26 +105,26 @@ local ITA_Gabbiano_Turret_Twin20mm = BoatChild:New{
 	objectName				= "ITAGabbiano_Turret_Twin20mm.s3o",
   	weapons = {	
 		[1] = {
-			name				= "breda3520mmaa",
+			name				= "BredaM3520mmAA",
 			maxAngleDif			= 270,
 			onlyTargetCategory	= "AIR",
 			mainDir		= [[0 0 -1]],
 		},
 		[2] = {
-			name				= "breda3520mmaa",
+			name				= "BredaM3520mmAA",
 			maxAngleDif			= 270,
 			onlyTargetCategory	= "AIR",
 			mainDir		= [[0 0 -1]],
 			slaveTo				= 1,
 		},
 		[3] = {
-			name				= "breda3520mmhe",
+			name				= "BredaM3520mmHE",
 			maxAngleDif			= 270,
 			onlyTargetCategory	= "BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED",
 			mainDir		= [[0 0 -1]],
 		},
 		[4] = {
-			name				= "breda3520mmhe",
+			name				= "BredaM3520mmHE",
 			maxAngleDif			= 270,
 			onlyTargetCategory	= "BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED",
 			mainDir		= [[0 0 -1]],
@@ -135,14 +135,13 @@ local ITA_Gabbiano_Turret_Twin20mm = BoatChild:New{
 	    maxammo					= 16, -- TODO: from BMO 37mm
 		aaweapon				= 1,
 		weaponcost				= 3,
-		weaponswithammo			= 2,
+		weaponswithammo			= 4,
 		barrelrecoildist		= 3,
 		barrelrecoilspeed		= 20,
 		turretturnspeed			= 30,
 		elevationspeed			= 45,
 		fearlimit				= 25,
 		facing					= 2,
-		aaweapon				= 1,
     },
 }
 

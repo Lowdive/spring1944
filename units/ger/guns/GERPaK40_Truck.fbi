@@ -5,9 +5,9 @@
   acceleration=0.3;
   brakeRate=0.96;
   buildCostEnergy=0;
-  buildCostMetal=1260;
+  buildCostMetal=840;
   buildPic=GERPaK40.png;
-  buildTime=1260;
+  buildTime=840;
   canMove=1;
   category=MINETRIGGER SOFTVEH;
   corpse=GERSdKfz11_Destroyed;
@@ -16,6 +16,7 @@
     maxammo=4;
     weaponcost=16;
     weaponswithammo=0;
+    soundcategory=GER/Vehicle;
   }
   explodeAs=Vehicle_Explosion_Sm;
   footprintX=3;
@@ -38,7 +39,6 @@
   showNanoFrame=0;
   sightDistance=800;
   smoothAnim=0;
-  soundcategory=GERTank;
   stealth=1;
   trackOffset=10;
   trackStrength=6.5;

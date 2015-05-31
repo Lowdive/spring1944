@@ -13,7 +13,6 @@ local ITA_MS = BoatMother:New{
 	maxVelocity				= 3.2,
 	movementClass			= "BOAT_LightPatrol",
 	objectName				= "ITAMS.s3o",
-	soundCategory			= "ITABoat",
 	transportCapacity		= 2, -- 2 x 1fpu turrets
 	turnRate				= 55,	
 	weapons = {	
@@ -29,6 +28,7 @@ local ITA_MS = BoatMother:New{
 		},
 	},
 	customparams = {
+		soundcategory		= "ITA/Boat",
 		maxammo				= 2,
 		weaponcost			= 40,
 		weaponswithammo		= 2,
@@ -48,12 +48,12 @@ local ITA_MS_Turret_20mm_Front = BoatChild:New{
 	objectName				= "ITAMS_Turret_20mm.s3o",
   	weapons = {	
 		[1] = {
-			name				= "breda3520mmaa",
+			name				= "BredaM3520mmAA",
 			maxAngleDif			= 270,
 			onlyTargetCategory	= "AIR",
 		},
 		[2] = {
-			name				= "breda3520mmhe",
+			name				= "BredaM3520mmHE",
 			maxAngleDif			= 270,
 			onlyTargetCategory	= "BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED",
 		},

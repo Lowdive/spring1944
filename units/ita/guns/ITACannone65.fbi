@@ -20,6 +20,7 @@
     weaponcost=12;
     weaponswithammo=2;
     infgun=1;
+    soundcategory=ITA/Infantry;
   }
   explodeAs=Tiny_Explosion;
   movestate=1;
@@ -31,7 +32,7 @@
   mass=100; // 600
   maxDamage=300;
   maxSlope=10;
-  maxVelocity=0.75;
+  maxVelocity=0.85;
   maxWaterDepth=5;
   movementClass=KBOT_Gun;
   noChaseCategory=FLAG AIR MINE;
@@ -55,20 +56,19 @@
   showNanoFrame=0;
   side=ITA;
   sightDistance=701;
-  soundcategory=ITAInf;
   stealth=1;
   turnRate=140;
   upright=1;
   badTargetCategory=FLAG;
 
-  weapon1=ITACannone65he;
+  weapon1=Cannone65L17HE;
   maxAngleDif1=30;
   onlyTargetCategory1=BUILDING INFANTRY SOFTVEH SHIP LARGESHIP DEPLOYED;
   weaponMainDir1=0 0 1;
 
-  weapon2=ITACannone65heat;
-  maxAngleDif2=20;
+  weapon2=Cannone65L17HEAT;
+  maxAngleDif2=30;
   onlyTargetCategory2=OPENVEH HARDVEH LARGESHIP;
-  weaponMainDir2=0 0 1;
+  weaponMainDir2=0 0 8;
 }
 

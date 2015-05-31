@@ -23,7 +23,8 @@ if (gadgetHandler:IsSyncedCode()) then
 
 local team = {}
 
-local BASE_INCOME = 25
+local modOptions = Spring.GetModOptions()
+local BASE_INCOME = tonumber(modOptions.base_command_income) or 25
 
 function gadget:Initialize()
 	for _, teamID in ipairs(Spring.GetTeamList()) do
@@ -32,7 +33,7 @@ function gadget:Initialize()
 end
 
 function gadget:GameFrame(n)
-	if (n % (1*32) < 0.1) then
+	if (n % (1*30) < 0.1) then
 		for teamID, someThing in pairs(team) do
 			AddTeamResource(teamID, "m", BASE_INCOME)
 			_, _, dead = GetTeamInfo(teamID)

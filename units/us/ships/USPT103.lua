@@ -24,6 +24,7 @@ local US_PT103 = BoatMother:New{
 		},
 	},
 	customparams = {
+		soundcategory = "US/Boat",
 		children = {
 			"US_PT103_Turret_20mm",
 			"US_PT103_Turret_Twin50",
@@ -45,11 +46,11 @@ local US_PT103_Turret_Twin50 = BoatChild:New{
 	weapons = {	
 		[1] = {
 			name				= "m2browning", -- TODO: should be m2browningaa too :/
-			--onlyTargetCategory	= "INFANTRY SOFTVEH AIR OPENVEH TURRET",
+			onlyTargetCategory	= "INFANTRY SOFTVEH AIR OPENVEH TURRET",
 		},
 		[2] = {
 			name				= "m2browning",
-			--onlyTargetCategory	= "INFANTRY SOFTVEH AIR OPENVEH TURRET",
+			onlyTargetCategory	= "INFANTRY SOFTVEH AIR OPENVEH TURRET",
 			slaveTo				= 1,
 		},
 	},

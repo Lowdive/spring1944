@@ -25,6 +25,9 @@
     maxammo=9;
     weaponcost=17;
     weaponswithammo=1;
+    soundcategory=RUS/Tank;
+	killvoicecategory_hardveh=RUS/Tank/RUS_TANK_TANKKILL;
+	killvoicephasecount=3;
   }
   explodeAs=Vehicle_Explosion_Med;
   footprintX=3;
@@ -58,7 +61,6 @@
   side=RUS;
   sightDistance=780;
   smoothAnim=0;
-  soundcategory=RUSTank;
   stealth=1;
   trackOffset=5;
   trackStrength=7;

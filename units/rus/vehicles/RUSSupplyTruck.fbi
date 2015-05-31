@@ -6,19 +6,20 @@
   brakeRate=0.45;
   buildCostEnergy=0;
   buildCostMetal=660;
-  buildPic=RUSZiS5.png;
+  buildPic=RUSSupplyTruck.png;
   buildTime=660;
   canMove=1;
   category=MINETRIGGER SOFTVEH;
   corpse=RUSZiS5_Destroyed;
   [customParams] {
     dontCount=1;
+    soundcategory=RUS/Vehicle;
   }
   energyStorage=1040;
-  explodeAs=Vehicle_Explosion_Sm;
+  explodeAs=Massive_Explosion;
   footprintX=3;
   footprintZ=3;
-  iconType=truck;
+  iconType=truck_ammo;
   idleAutoHeal=2;
   idleTime=1000;
   leaveTracks=1;
@@ -38,7 +39,6 @@
   showNanoFrame=0;
   side=RUS;
   sightDistance=800;
-  soundcategory=RUSVeh;
   stealth=1;
   trackOffset=5;
   trackStrength=6.5;

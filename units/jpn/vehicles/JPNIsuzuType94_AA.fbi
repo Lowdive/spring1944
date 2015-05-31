@@ -11,6 +11,13 @@
   canMove=1;
   category=MINETRIGGER SOFTVEH;
   corpse=JPNIsuzuType94_AA_Burning;
+  [customParams] {
+    lowammolevel=6;
+    maxammo=18;
+    weaponcost=2;
+    weaponswithammo=1;
+    soundcategory=JPN/Vehicle;
+  }
   explodeAs=Vehicle_Explosion_Sm;
   footprintX=3;
   footprintZ=3;
@@ -39,11 +46,13 @@
     explosionGenerator8=custom:XSMALL_MUZZLEFLASH;
     explosionGenerator9=custom:XSMALL_MUZZLEDUST;
   }
+  [customparams] {
+    soundcategory=JPN/Vehicle;
+  }
   showNanoFrame=0;
   side=JPN;
   sightDistance=800;
   smoothAnim=0;
-  soundcategory=JPNVeh;
   stealth=1;
   trackOffset=10;
   trackStrength=6.5;
@@ -54,7 +63,7 @@
   turnRate=400;
   badTargetCategory=FLAG;
 
-  weapon1=jpn_20mmtype98aa;
+  weapon1=Type9820mmAA;
   onlyTargetCategory1=AIR;
 
   weapon2=Large_Tracer;

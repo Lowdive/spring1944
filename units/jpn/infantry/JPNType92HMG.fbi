@@ -13,6 +13,7 @@
   corpse=JPNsoldier_dead;
   [customParams] {
     feartarget=1;
+    soundcategory=JPN/Infantry;
   }
   damageModifier=0.265;
   flankingBonusMax=1.5;
@@ -46,13 +47,12 @@
   side=JPN;
   sightDistance=840;
   smoothAnim=0;
-  soundcategory=JPNInf;
   stealth=1;
   turnRate=1010;
   upright=1;
   badTargetCategory=FLAG;
 
-  //weapon1=BredaM37;
+  //weapon1=Type92MG;
   //onlyTargetCategory1=OPENVEH INFANTRY SOFTVEH DEPLOYED;
 
   weapon2=Small_Tracer;

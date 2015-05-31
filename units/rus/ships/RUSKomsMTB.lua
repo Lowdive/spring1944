@@ -14,7 +14,6 @@ local RUS_KomsMTB = BoatMother:New{
 	maxVelocity				= 4.8,
 	movementClass			= "BOAT_LightPatrol",
 	objectName				= "RUSKomsMTB.s3o",
-	soundCategory			= "RUSBoat",
 	transportCapacity		= 2, -- 2 x 1fpu turrets
 	turnRate				= 350,	
 	weapons = {	
@@ -30,6 +29,9 @@ local RUS_KomsMTB = BoatMother:New{
 		},
 	},
 	customparams = {
+		soundCategory			= "RUS/Boat",
+		killvoicecategory		= "RUS/Boat/RUS_BOAT_KILL",
+		killvoicephasecount		= 3,
 	    maxammo				= 2,
 		weaponcost			= 40,
 		weaponswithammo		= 2,

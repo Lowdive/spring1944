@@ -26,6 +26,7 @@
     weaponcost=16;
     weaponswithammo=1;
 	blockfear=1;
+    soundcategory=JPN/Tank;
   }
   explodeAs=Vehicle_Explosion_Sm;
   footprintX=2;
@@ -59,7 +60,6 @@
   side=JPN;
   sightDistance=750;
   smoothAnim=0;
-  soundcategory=JPNTank;
   stealth=1;
   trackOffset=5;
   trackStrength=7;
@@ -70,10 +70,10 @@
   turnRate=280;
   badTargetCategory=FLAG;
 
-  weapon1=jpnshort120mm_he;
+  weapon1=Short120mmHE;
   onlyTargetCategory1=BUILDING OPENVEH HARDVEH INFANTRY SOFTVEH SHIP LARGESHIP DEPLOYED;
 
-  weapon2=jpntype97_mg;
+  weapon2=Type97MG;
   onlyTargetCategory2=INFANTRY OPENVEH SOFTVEH DEPLOYED;
 	weaponMainDir2 = 0 0 1;
 	maxAngleDif2 = 50;

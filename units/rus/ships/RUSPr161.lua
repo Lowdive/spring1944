@@ -14,7 +14,6 @@ local RUS_Pr161 = BoatMother:New{
 	maxVelocity				= 1.8,
 	movementClass			= "BOAT_RiverSmall",
 	objectName				= "RUSPr161.s3o",
-	soundCategory			= "RUSBoat",
 	transportCapacity		= 7, -- 7 x 1fpu turrets
 	turnRate				= 150,	
 	weapons = {	
@@ -24,6 +23,9 @@ local RUS_Pr161 = BoatMother:New{
 		},
 	},
 	customparams = {
+		soundCategory			= "RUS/Boat",
+		killvoicecategory		= "RUS/Boat/RUS_BOAT_KILL",
+		killvoicephasecount		= 3,
 		children = {
 			"RUS_Turret_45mm_Front",
 			"RUS_Pr161_Turret_85mm_Front",

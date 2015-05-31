@@ -5,6 +5,8 @@ local ITADefs = {
 	"ITABreda30",
 	"ITAalpinifnab43",
 	"ITAalpiniRifle",
+	"ITAalpiniscout",
+	"ITAalpinimortar",
 	"ITAbersaglieriM38",
 	"ITAbersaglieriRifle",
 	"ITAEngineer",
@@ -43,6 +45,8 @@ local ITADefs = {
 	"ITATankyard1",
 	"ITATankyard2",
 	"ITARadar",
+	"ITAboatyard",
+	"ITAboatyardlarge",
   },
 
   sandbags  =  {
@@ -84,6 +88,7 @@ local ITADefs = {
 	--Italy--
 	"itafiat626",
 	"itabreda41",
+	"itabreda61",
 	"itaautocannone100",
 	"itaautocannone75",
 	"itaautocannone90",
@@ -100,6 +105,7 @@ local ITADefs = {
 	"itareggiane2005",
 	"itafiatcr_42",
 	"itamc202",
+	"itamc200",
 	"itamc205",
   },
   
@@ -115,21 +121,12 @@ local ITADefs = {
   "ita_platoon_rifle",
   "ita_platoon_sniper",
 
-  "ita_sortie_recon",
+  	"ita_sortie_recon",
 	"ita_sortie_interceptor",
 	"ita_sortie_fighter",
 	"ita_sortie_attack",
 	"ita_sortie_fighter_bomber",
   
-  },
-  ships  =  {
-	--Italy--
-	"ITAGabbiano",
-	"ITAMAS",
-	"ITAMS",
-	"ITAMZ",
-	"ITAML",
-	"ITAVedetta",
   },
 }
 

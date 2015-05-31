@@ -41,8 +41,6 @@ local mcSetCollideStop = Spring.MoveCtrl.SetCollideStop
 local mcSetVelocity = Spring.MoveCtrl.SetVelocity
 local mcSetRelativeVelocity = Spring.MoveCtrl.SetRelativeVelocity
 
-local uReplaceUnit = GG.Util.ReplaceUnit
-
 local CreateUnit = Spring.CreateUnit
 local DestroyUnit = Spring.DestroyUnit
 local ValidUnitID = Spring.ValidUnitID
@@ -54,6 +52,7 @@ local CallCOBScript = Spring.CallCOBScript
 
 local GetUnitVelocity = Spring.GetUnitVelocity
 local GetUnitPosition = Spring.GetUnitPosition
+local GetUnitCOBValue = Spring.GetUnitCOBValue
 
 do
   local paratrooperInclude = VFS.Include("LuaRules/Configs/paratrooper_defs.lua")
@@ -66,8 +65,7 @@ end
 function gadget:Initialize()
   local SetWatchWeapon = Script.SetWatchWeapon
 
-  for WeaponDefID = 1, #WeaponDefs do
-    local weaponDef = WeaponDefs[WeaponDefID]
+  for WeaponDefID, weaponDef in pairs(WeaponDefs) do
     if weaponDef.customParams.paratrooper then
       SetWatchWeapon(WeaponDefID, true)
       paratrooperWeaponDefIDs[WeaponDefID] = true
@@ -76,7 +74,7 @@ function gadget:Initialize()
 end
 
 function gadget:Explosion(weaponDefID, px, py, pz, ownerID)
-  if paratrooperWeaponDefIDs[weaponDefID] and ValidUnitID(ownerID) then
+  if ownerID and paratrooperWeaponDefIDs[weaponDefID] and ValidUnitID(ownerID) and not (GetUnitCOBValue(ownerID, COB.CRASHING) == 1) then
     local transportDefID = GetUnitDefID(ownerID)
     local transportInfo = transportInfos[transportDefID] or {}
     
@@ -125,7 +123,7 @@ function gadget:MoveCtrlNotify(unitID, unitDefID, unitTeam, data)
   local x,_, z = GetUnitPosition(unitID)
   local groundHeight = GetGroundHeight(x,z)
   if groundHeight > INF_WATER_LEVEL then
-	uReplaceUnit(unitID, paratrooperInfo[2], unitTeam)
+	GG.Util.ReplaceUnit(unitID, paratrooperInfo[2], unitTeam)
   else
 	DestroyUnit(unitID)
   end

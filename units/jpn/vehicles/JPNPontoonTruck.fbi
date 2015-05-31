@@ -13,6 +13,7 @@
   [customParams] {
     buildOutside=1;
     dontCount=1;
+    soundcategory=JPN/Vehicle;
   }
   explodeAs=Vehicle_Explosion_Sm;
   footprintX=3;
@@ -29,8 +30,8 @@
   maxWaterDepth=70;
   movementClass=HOVER_AmphibTruck;
   noChaseCategory=AIR MINE;
-  objectName=RUSPontoonTruck.s3o;
-  releaseHeld=1;
+  objectName=JPNPontoonTruck.s3o;
+  releaseHeld=0;
   script=ruspontoontruck.cob;
   seismicSignature=0;
   selfDestructAs=Vehicle_Explosion_Sm;
@@ -39,7 +40,6 @@
   showNanoFrame=0;
   side=JPN;
   sightDistance=800;
-  soundcategory=JPNVeh;
   stealth=1;
   trackOffset=5;
   trackStrength=6.5;

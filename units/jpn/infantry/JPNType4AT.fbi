@@ -17,6 +17,7 @@
     dontCount=1;
     feartarget=1;
     helptext=Medium range, good accuracy, excellent damage, low rate of fire. Can kill vehicles in one hit. Larger tanks may take several hits. Can move around undetected. Ineffective against infantry.;
+    soundcategory=JPN/Infantry;
   }
   damageModifier=0.265;
   flankingBonusMax=1.5;
@@ -26,13 +27,14 @@
   footprintX=1;
   footprintZ=1;
   iconType=antitank;
-  init_cloaked=1;
+  // init_cloaked=1;
   mass=75;
   maxDamage=100;
   maxSlope=20;
-  maxVelocity=1;
+  // maxVelocity=1;
+  maxVelocity=1.6;
   maxWaterDepth=5;
-  minCloakDistance=310; //230
+  // minCloakDistance=310; //230
   movementClass=KBOT_Infantry;
   noChaseCategory=BUILDING FLAG INFANTRY AIR MINE;
   objectName=JPNAT.S3O;
@@ -54,7 +56,6 @@
   side=JPN;
   sightDistance=570;
   smoothAnim=0;
-  soundcategory=JPNInf;
   stealth=1;
   turnRate=1010;
   upright=1;

@@ -20,6 +20,7 @@
     maxammo=10;
     weaponcost=15;
     weaponswithammo=2;
+    soundcategory=GBR/Infantry;
   }
   damageModifier=0.265;
   flankingBonusMax=1.5;
@@ -30,7 +31,7 @@
   footprintZ=1;
   highTrajectory=1;
   iconType=mortar;
-  mass=100;
+  mass=50;
   maxDamage=280;
   maxSlope=15;
   maxVelocity=1.25;
@@ -54,7 +55,6 @@
   side=GBR;
   sightDistance=840;
   smoothAnim=0;
-  soundcategory=GbrInf;
   stealth=1;
   turnRate=1010;
   upright=1;

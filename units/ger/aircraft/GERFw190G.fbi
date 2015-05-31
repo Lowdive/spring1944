@@ -16,12 +16,13 @@
   canPatrol=1;
   CanStop=1;
   category=AIR;
-  cruiseAlt=750;
+  cruiseAlt=1500;
   [customParams] {
     enginesound=fw190b-;
     enginesoundnr=12;
     feartarget=1;
     proptexture=prop3.tga;
+    soundcategory=GER/Air/Fighter;
   }
   explodeAs=Vehicle_Explosion_Med;
   fireState=0;
@@ -35,9 +36,10 @@
   maxAileron=0.0054;
   maxBank=0.9;
   maxDamage=320;
-  maxElevator=0.0042;
+  maxElevator=0.001;
   maxFuel=60;
-  maxPitch=1;
+  maxPitch=0.5;
+  attackSafetyDistance=200;
   maxRudder=0.003;
   maxSlope=10;
   maxVelocity=17.5;
@@ -66,7 +68,7 @@
   weapon1=bomb;
   maxAngleDif1=20;
   onlyTargetCategory1=BUILDING HARDVEH SHIP LARGESHIP OPENVEH INFANTRY DEPLOYED;
-  weaponMainDir1=0 -0.18 1;
+  weaponMainDir1=0 0 1;
 
   weapon2=mg15115mm;
   maxAngleDif2=10;

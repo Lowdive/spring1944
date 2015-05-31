@@ -16,7 +16,7 @@ local rusDefs = {
 		buildTime = 1150,
 		side = "RUS",
 	},
-	
+
 	 ["rus_platoon_rifle"] =
 	{
 		members = {
@@ -40,7 +40,7 @@ local rusDefs = {
 		buildTime = 1100,
 		side = "RUS",
 	},
-	
+
 
 	["rus_platoon_assault"] =
 	{
@@ -66,8 +66,8 @@ local rusDefs = {
 		buildTime = 1150,
 		side = "RUS",
 	},
-    	
-    ["rus_platoon_partisan"] =
+
+	["rus_platoon_partisan"] =
 	{
 		members = {
 			"ruspartisanrifle",
@@ -90,7 +90,7 @@ local rusDefs = {
 		buildTime = 1050,
 		side = "RUS",
 	},
-	
+
 	["rus_platoon_mg"] =
 	{
 		members = {
@@ -152,7 +152,7 @@ local rusDefs = {
 		side = "RUS",
 	},
 
-    ["rus_platoon_atheavy"] =
+	["rus_platoon_atheavy"] =
 	{
 		members = {
 			"rusrpg43",
@@ -163,12 +163,12 @@ local rusDefs = {
 		},
 		name = "Anti-Tank Assault Squad",
 		description = "3 x RPG-43 Anti-Tank Grenade, 2 x PTRD Anti-Tank Rifle: Heavy Anti-Tank Infantry",
-		buildCostMetal = 750,
+		buildCostMetal = 375,
 		buildPic = "RUSRPG43.png",
-		buildTime = 750,
+		buildTime = 375,
 		side = "RUS",
 	},
-	
+
 	["rus_platoon_scout"] =
 	{
 		members = {
@@ -183,16 +183,16 @@ local rusDefs = {
 		buildTime = 340,
 		side = "RUS",
 	},
-	
+
 	["rus_platoon_tender"] =
 	{
 		members = {
 			"rusobserv",
 			"rusobserv",
 			"rusdp",
+			"ruscommissar",
 			"rusppsh",
 			"rusppsh",
-			"rusppsh",			
 			"rusppsh",
 			"rusppsh",
 			"rus_ni_rifle",
@@ -208,9 +208,10 @@ local rusDefs = {
 			"rusrifle",
 			"rusrifle",
 		},
+        buildCostMetal = 2100,
 		-- other fields not needed for transport squads
 	},
-	
+
 	["rus_platoon_lct"] =
 	{
 		members = {

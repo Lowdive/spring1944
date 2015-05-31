@@ -10,7 +10,7 @@ local usSorties = {
 		buildPic = "USL4.png",
 		buildTime = 1000,
 	},
-  
+
 	us_sortie_interceptor = {
 		members = {
 			"usp51dmustang",
@@ -26,7 +26,7 @@ local usSorties = {
 		buildPic = "USP51DMustang.png",
 		buildTime = 4325,
 	},
-  
+
 	us_sortie_fighter_bomber = {
 		members = {
 			"usp47thunderbolt",
@@ -40,7 +40,7 @@ local usSorties = {
 		buildPic = "USP47Thunderbolt.png",
 		buildTime = 6750,
 	},
-  
+
 	us_sortie_attack = {
 		members = {
 			"usp51dmustangga",
@@ -54,7 +54,7 @@ local usSorties = {
 		buildPic = "USP51DMustangGA.png",
 		buildTime = 6000,
 	},
-  
+
 	us_sortie_paratrooper = {
 		members = {
 			"usc47",

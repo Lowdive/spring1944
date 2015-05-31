@@ -19,6 +19,7 @@
     maxammo=10;
     weaponcost=10;
     weaponswithammo=2;
+    soundcategory=ITA/Infantry;
   }
   damageModifier=0.265;
   flankingBonusMax=1.5;
@@ -30,7 +31,7 @@
   footprintZ=1;
   highTrajectory=1;
   iconType=mortar;
-  mass=100;
+  mass=50;
   maxDamage=170;
   maxSlope=15;
   maxVelocity=1.25;
@@ -56,7 +57,6 @@
   side=ITA;
   sightDistance=840;
   smoothAnim=0;
-  soundcategory=ITAInf;
   stealth=1;
   turnRate=1010;
   upright=1;

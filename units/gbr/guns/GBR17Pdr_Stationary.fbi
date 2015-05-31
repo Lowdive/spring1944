@@ -5,11 +5,11 @@
   activateWhenBuilt=1;
   airSightDistance=2500;
   buildCostEnergy=0;
-  buildCostMetal=1600;
+  buildCostMetal=840;
   buildingGroundDecalSizeX=5;
   buildingGroundDecalSizeY=5;
   buildingGroundDecalType=Dirt2.dds;
-  buildTime=1600;
+  buildTime=840;
   category=DEPLOYED;
   corpse=gbr17pdr_destroyed;
   [customParams] {
@@ -18,6 +18,7 @@
     maxammo=4;
     weaponcost=19;
     weaponswithammo=1;
+    soundcategory=GBR/Gun;
   }
   flankingBonusDir=0.0 0.0 1.0;
   flankingBonusMax=1.25;
@@ -47,7 +48,6 @@
   side=GBR;
   sightDistance=701;
   smoothAnim=0;
-  soundcategory=GbrInf;
   stealth=1;
   useBuildingGroundDecal=1;
   badTargetCategory=FLAG;

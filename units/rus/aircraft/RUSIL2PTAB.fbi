@@ -16,13 +16,14 @@
   canPatrol=1;
   CanStop=1;
   category=AIR;
-  cruiseAlt=750;
+  cruiseAlt=1500;
   [customParams] {
     enginesound=p51b-;
     enginesoundnr=16;
     feartarget=1;
     planevoice=1;
     proptexture=prop3.tga;
+    SoundCategory=RUS/Air/Il2;
   }
   explodeAs=Vehicle_Explosion_Med;
   fireState=0;
@@ -38,13 +39,13 @@
   maxDamage=436;
   maxElevator=0.0025;
   maxFuel=180;
-  maxPitch=1;
+  maxPitch=0.5;
   maxRudder=0.0019;
   maxSlope=10;
   maxVelocity=14;
   maxWaterDepth=0;
   myGravity=0.6;
-  noChaseCategory=FLAG MINE;
+  noChaseCategory=FLAG MINE AIR INFANTRY BUILDING;
   objectName=RUSIL2.S3O;
   radarDistance=1000;
   repairable=0;
@@ -61,7 +62,6 @@
   Side=US;
   sightDistance=200;
   smoothAnim=1;
-  SoundCategory=RUSIl2;
   stealth=1;
   turnRate=50;
   badTargetCategory=BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP DEPLOYED;
@@ -73,7 +73,7 @@
   weapon1=ptab;
   maxAngleDif1=90;
   onlyTargetCategory1=OPENVEH SHIP LARGESHIP HARDVEH;
-  weaponMainDir1=0 -0.18 1;
+  weaponMainDir1=0 0 1;
 
   weapon2=VYa23mm;
   maxAngleDif2=30;

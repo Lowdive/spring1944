@@ -47,6 +47,8 @@ local GBRDefs = {
     "GBRTankYard",
     "GBRTankYard1",
     "GBRTankYard2",
+    "GBRboatyardlarge",
+    "GBRboatyard",
   },
 
   sandbags  =  {
@@ -118,19 +120,6 @@ local GBRDefs = {
   "gbr_sortie_interceptor",
   "gbr_sortie_fighter_bomber",
   "gbr_sortie_attack",
-  },
-  ships  =  {
-    --Britain--
-  "GBRLCT",
-  "GBRFairmileD",
-  "GBRLCSL",
-  "GBRHuntII",
-  "GBRFlower",
-  "GBROClass",
-  "GBRMonitor",
-  "GBRLCA",
-  "GBRLCG",
-  "GBRLCGM",
   },
 }
 

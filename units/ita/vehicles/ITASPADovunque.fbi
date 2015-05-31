@@ -18,14 +18,15 @@
   [customParams] {
     lowammolevel=6;
     maxammo=19;
-    weaponcost=10;
+    weaponcost=2;
     weaponswithammo=2;
 	hasturnbutton=1;
+    soundcategory=ITA/Vehicle;
   }
   explodeAs=Vehicle_Explosion_Sm;
   footprintX=3;
   footprintZ=3;
-  iconType=aatruck;
+  iconType=aacar;
   leaveTracks=1;
   mass=453;
   maxDamage=453;
@@ -54,7 +55,6 @@
   side=ITA;
   sightDistance=810;
   smoothAnim=0;
-  soundcategory=ITATank;
   stealth=1;
   trackOffset=10;
   trackStrength=6.5;
@@ -65,7 +65,7 @@
   turnRate=405;
   badTargetCategory=FLAG;
 
-  weapon1=breda3520mmaa;
+  weapon1=BredaM3520mmAA;
   	onlyTargetCategory1=AIR;
 
 //  weapon2=breda3520mmhe;

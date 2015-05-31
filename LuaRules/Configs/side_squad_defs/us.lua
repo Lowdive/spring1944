@@ -3,7 +3,7 @@ local usDefs = {
 	 -- US Platoons and Squads --
 	 ----------------------------
 
-    ["us_platoon_hq"] =
+	["us_platoon_hq"] =
 	{
 		members = {
 			"usgirifle",
@@ -21,7 +21,7 @@ local usDefs = {
 		side = "US",
 	},
 
-	["us_platoon_rifle"] = 
+	["us_platoon_rifle"] =
 	{
 		members = {
 			"usgithompson",
@@ -44,8 +44,8 @@ local usDefs = {
 		buildTime = 1675,
 		side = "US",
 	},
-	
-	["us_platoon_assault"] = 
+
+	["us_platoon_assault"] =
 	{
 		members = {
 			"usgithompson",
@@ -68,8 +68,8 @@ local usDefs = {
 		buildTime = 1540,
 		side = "US",
 	},
-	
-	["us_platoon_mg"] = 
+
+	["us_platoon_mg"] =
 	{
 		members = {
 			"usgimg",
@@ -84,8 +84,8 @@ local usDefs = {
 		buildTime = 1050,
 		side = "US",
 	},
-	
-	["us_platoon_sniper"] = 
+
+	["us_platoon_sniper"] =
 	{
 		members = {
 			"usgisniper",
@@ -98,8 +98,8 @@ local usDefs = {
 		buildTime = 1240,
 		side = "US",
 	},
-	
-	["us_platoon_mortar"] = 
+
+	["us_platoon_mortar"] =
 	{
 		members = {
 			"usm1mortar",
@@ -114,8 +114,8 @@ local usDefs = {
 		buildTime = 1850,
 		side = "US",
 	},
-	
-	["us_platoon_at"] = 
+
+	["us_platoon_at"] =
 	{
 		members = {
 			"usgibazooka",
@@ -124,13 +124,13 @@ local usDefs = {
 		},
 		name = "Anti-Tank Squad",
 		description = "3 x Bazooka: Anti-Tank Infantry",
-		buildCostMetal = 700,
+		buildCostMetal = 350,
 		buildPic = "usgibazooka.png",
-		buildTime = 700,
+		buildTime = 350,
 		side = "US",
 	},
-	
-	["us_platoon_scout"] = 
+
+	["us_platoon_scout"] =
 	{
 		members = {
 			"usobserv",
@@ -144,8 +144,8 @@ local usDefs = {
 		buildTime = 440,
 		side = "US",
 	},
-	
-	["us_platoon_flame"] = 
+
+	["us_platoon_flame"] =
 	{
 		members = {
 			"usgiflamethrower",
@@ -160,8 +160,8 @@ local usDefs = {
 		buildTime = 800,
 		side = "US",
 	},
-	
-	["us_platoon_infgun"] = 
+
+	["us_platoon_infgun"] =
 	{
 		members = {
 			"usobserv",
@@ -174,7 +174,7 @@ local usDefs = {
 		buildTime = 1290,
 		side = "US",
 	},
-	
+
 	["us_platoon_lcvp"] =
 	{
 		members = {
@@ -187,7 +187,7 @@ local usDefs = {
 			"usgibar",
 			"usgithompson",
 			"usgithompson",
-			"usgithompson",	
+			"usgithompson",
 			"usgithompson",
 			"usgithompson",
 			"usgithompson",
@@ -204,9 +204,10 @@ local usDefs = {
 			"usgirifle",
 			"usgirifle",
 		},
+        buildCostMetal = 3500,
 		-- other fields not needed for transport squads
 	},
-	
+
 	["us_platoon_lct"] =
 	{
 		members = {

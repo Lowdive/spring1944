@@ -14,6 +14,7 @@
   [customParams] {
     buildOutside=1;
     dontCount=1;
+    soundcategory=ITA/Vehicle;
   }
   explodeAs=Vehicle_Explosion_Sm;
   footprintX=3;
@@ -30,8 +31,8 @@
   maxWaterDepth=70;
   movementClass=HOVER_AmphibTruck;
   noChaseCategory=AIR MINE;
-  objectName=GERPontoonRaft_Truck.s3o;
-  releaseHeld=1;
+  objectName=ITAPontoonTruck.s3o;
+  releaseHeld=0;
   seismicSignature=0;
   selfDestructAs=Vehicle_Explosion_Sm;
   [sfxtypes] {
@@ -39,7 +40,6 @@
   showNanoFrame=0;
   side=ITA;
   sightDistance=800;
-  soundcategory=GERTank;
   stealth=1;
   trackOffset=5;
   trackStrength=6.5;

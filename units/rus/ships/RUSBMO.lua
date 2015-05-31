@@ -14,7 +14,6 @@ local RUS_BMO = BoatMother:New{
 	maxVelocity				= 2.2,
 	movementClass			= "BOAT_LightPatrol",
 	objectName				= "RUSBMO.s3o",
-	soundCategory			= "RUSBoat",
 	transportCapacity		= 4, -- 4 x 1fpu turrets
 	turnRate				= 300,	
 	weapons = {	
@@ -24,6 +23,9 @@ local RUS_BMO = BoatMother:New{
 		},
 	},
 	customparams = {
+		soundCategory			= "RUS/Boat",
+		killvoicecategory		= "RUS/Boat/RUS_BOAT_KILL",
+		killvoicephasecount		= 3,
 		children = {
 			"RUS_Turret_37mm_Front", 
 			"RUS_Turret_45mm_Rear", 

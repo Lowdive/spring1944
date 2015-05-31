@@ -10,7 +10,7 @@ local rusSorties = {
 		buildPic = "RUSPo2.png",
 		buildTime = 1000,
 	},
-  
+
 	rus_sortie_interceptor = {
 		members = {
 			"rusyak3",
@@ -26,7 +26,7 @@ local rusSorties = {
 		buildPic = "RUSYak3.png",
 		buildTime = 3940,
 	},
-  
+
 	rus_sortie_fighter = {
 		members = {
 			"rusla5fn",
@@ -42,7 +42,7 @@ local rusSorties = {
 		buildPic = "RUSLa5FN.png",
 		buildTime = 4500,
 	},
-  
+
 	rus_sortie_attack = {
 		members = {
 			"rusil2",
@@ -56,7 +56,7 @@ local rusSorties = {
 		buildPic = "RUSIL2.png",
 		buildTime = 6750,
 	},
-  
+
 	rus_sortie_tankbuster = {
 		members = {
 			"rusil2ptab",
@@ -81,9 +81,9 @@ local rusSorties = {
 		alwaysAttack = 1,
 		name = "Partisan Supply Drop Sortie",
 		description = "1 x Po-2 Kukuruznik (Partisan)",
-		buildCostMetal = 2000,
+		buildCostMetal = 500,
 		buildPic = "RUSPo2Partisan.png",
-		buildTime = 2000,
+		buildTime = 500,
 	},
 }
 

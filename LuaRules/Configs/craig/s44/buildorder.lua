@@ -176,7 +176,7 @@ gadget.unitBuildOrder = UnitBag{
 		"itasemovente47",
 		"itaab41",
 		"itaas37",
-		"itaspadovunque",
+		"itaautocannone75",
 	},
 	itasupplydepot = UnitArray{
 		"itaas37",
@@ -186,6 +186,7 @@ gadget.unitBuildOrder = UnitBag{
 		"ital6_40lf",
 		"itam1542", "itam1542", "itam1542",
 		"itasemovente75_18",
+		"itasemovente90",
 	},
 		itaelitebarracks = UnitArray{
 		-- Works J
@@ -197,9 +198,9 @@ gadget.unitBuildOrder = UnitBag{
 		itaspyard = UnitArray{
 		-- Works J
 		"itabreda41",
-		"itaautocannone75", "itaautocannone75", "itaautocannone75",
+		"itaautocannone75",
 		"itasemovente47",
-		"itaautocannone100",
+		"itaautocannone100","itaautocannone100",
 		"itaautocannone90",
 	},
 		itatankyard1 = UnitArray{
@@ -237,11 +238,11 @@ gadget.unitBuildOrder = UnitBag{
 	jpnvehicleyard = UnitArray{
 		"jpnriki",
 		--"jpnisuzutx40",
-		"jpnhoha",
-		--"jpnisuzutype94_aa",
-		"jpnteke",
 		"jpnhago",
-		"jpnhonii",
+		--"jpnisuzutype94_aa",
+		"jpn_tankette_platoon_teke",
+		"jpnhago",
+		"jpn_tankette_platoon_teke",
 	},
 	jpnsupplydepot = UnitArray{
 		"jpnhoha",
@@ -249,10 +250,10 @@ gadget.unitBuildOrder = UnitBag{
 	jpntankyard = UnitArray{
 	
 		"jpnriki",
-		"jpnhago",
-		"jpnshinhotochiha",
-		"jpnchihe",
-		"jpnhoro",
+		"jpnhago","jpnhonii",
+		"jpnchiha",
+		"jpnchihe","jpnchihe",
+		"jpnchiha",
 	},
 	
 }

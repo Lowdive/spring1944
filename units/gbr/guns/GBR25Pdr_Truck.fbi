@@ -16,6 +16,7 @@
     maxammo=4;
     weaponcost=18;
     weaponswithammo=0;
+    soundcategory=GBR/Vehicle;
   }
   explodeAs=Vehicle_Explosion_Sm;
   footprintX=3;
@@ -38,13 +39,12 @@
   showNanoFrame=0;
   sightDistance=800;
   smoothAnim=0;
-  soundcategory=GBRVeh;
   stealth=1;
   trackOffset=10;
   trackStrength=6.5;
   trackStretch=1;
   trackType=Stdtank;
-  trackWidth=13;
+  trackWidth=18;
   turninplace=0;
   turnRate=440;
   onlyTargetCategory1=BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED;

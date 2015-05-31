@@ -6,8 +6,8 @@
   airSightDistance=1500;
   brakeRate=0.15;
   buildCostEnergy=0;
-  buildCostMetal=900;
-  buildTime=900;
+  buildCostMetal=600;
+  buildTime=600;
   canMove=1;
   category=MINETRIGGER HARDVEH;
   //collisionVolumeType=box;
@@ -21,11 +21,12 @@
     armor_side=16;
     armor_top=6;
     hasturnbutton=1;
-    lowammolevel=8;
-    maxammo=30;
+    lowammolevel=7;
+    maxammo=15;
     weaponcost=8;
     weaponswithammo=2;
 	blockfear=1;
+    soundcategory=JPN/Tank;
   }
   explodeAs=Vehicle_Explosion_Sm;
   footprintX=2;
@@ -59,7 +60,6 @@
   side=JPN;
   sightDistance=750;
   smoothAnim=0;
-  soundcategory=JPNTank;
   stealth=1;
   trackOffset=4;
   trackStrength=7;
@@ -70,10 +70,10 @@
   turnRate=280;
   badTargetCategory=FLAG;
 
-  weapon1=jpn37mmtype94_he;
+  weapon1=Type9437mmHE;
   onlyTargetCategory1=BUILDING OPENVEH HARDVEH INFANTRY SOFTVEH SHIP LARGESHIP DEPLOYED;
 
-  weapon2=jpn37mmtype94_ap;
+  weapon2=Type9437mmAP;
   onlyTargetCategory2=OPENVEH HARDVEH;
 
   weapon3=.50calproof;

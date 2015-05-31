@@ -6,8 +6,8 @@
   airSightDistance=1500;
   brakeRate=0.15;
   buildCostEnergy=0;
-  buildCostMetal=950;
-  buildTime=950;
+  buildCostMetal=1200;
+  buildTime=1200;
   canMove=1;
   category=MINETRIGGER HARDVEH;
   //collisionVolumeType=box;
@@ -22,6 +22,7 @@
     armor_top=15;
     hasturnbutton=1;
 	blockfear=1;
+    soundcategory=GBR/Tank;
   }
   explodeAs=Vehicle_Explosion_Sm;
   footprintX=2;
@@ -38,7 +39,7 @@
   movementClass=TANK_Light;
   noChaseCategory=FLAG AIR MINE;
   objectName=GBRKangaroo.S3O;
-  releaseHeld=1;
+  releaseHeld=0;
   seismicSignature=0;
   selfDestructAs=Vehicle_Explosion_Sm;
   [sfxtypes] {
@@ -55,7 +56,6 @@
   side=GBR;
   sightDistance=720;
   smoothAnim=0;
-  soundcategory=GBRTank;
   stealth=1;
   trackOffset=10;
   trackStrength=6.5;
@@ -63,7 +63,7 @@
   trackType=Stdtank;
   trackWidth=15;
   transportCapacity=12;
-  transportMass=750;
+  transportMass=600;
   transportSize=1;
   transportUnloadMethod=0;
   turninplace=0;

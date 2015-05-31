@@ -10,9 +10,9 @@ local JPNDefs = {
 	"JPNType100SMG",
 	"JPNType3AT",
 	"JPNType4AT",
-	"JPNType98HMG",
 	"JPNType99LMG",
 	"JPNType4Mortar_mobile",
+	"JPNType92HMG",
   },
   
   guns  =  {
@@ -29,8 +29,6 @@ local JPNDefs = {
 	"JPNHQ",
 	"JPNATYard",
 	"JPNBarracks",
-	"JPNBoatyard",
-	"JPNBoatyardlarge",
 	"JPNGunyard",
 	"JPNRadar",
 	"JPNSPYard",
@@ -45,11 +43,13 @@ local JPNDefs = {
 	"JPNVehicleYard",
 	"JPNVehYard_Landing",
 	"JPNVehyard_tank",
+	"JPNboatyardlarge",
+	"JPNboatyard",
   },
 
   sandbags  =  {
 	--Japan--
-	"jpntype98hmg_dugin",
+	"jpntype92hmg_dugin",
   },
 
 
@@ -59,6 +59,10 @@ local JPNDefs = {
 	"JPNShinhotoChiHa",
 	"JPNChiHa120mm",
 	"JPNHoNiIII",
+	"JPNHaGo",
+	"JPNTeKe",
+	"JPNTeKe_HMG",
+	"JPNKaMi",
 	},
 	
   mediumtanks  =  {
@@ -74,12 +78,8 @@ local JPNDefs = {
 	"JPNHoNiI",
 	"JPNHoNiII",
 	"JPNHoRo",
-	"JPNTeKe",
-	"JPNHaGo",
-	"JPNKaMi",
   },
 
-    --**Germany**--
   unarmouredVehicles  =  {
 	--Japan--
 	"jpnisuzutx40",
@@ -94,11 +94,14 @@ local JPNDefs = {
 
   planes  =  {
 	--Japan--
-	"jpnki102",
 	"jpnki43",
 	"jpnki51",
 	"jpnki76",
 	"jpnki84",
+  },
+  hardplanes  =  {
+	--Japan--
+	"jpnki102",
   },
   
     squadSpawners  =  {
@@ -115,14 +118,6 @@ local JPNDefs = {
 	"jpn_sortie_divebomber",
 	"jpn_sortie_interceptor",
 	"jpn_sortie_fighter",
-  },
-  ships  =  {
-	--Japan--
-	"JPNAbTei",
-	"JPNDaihatsu",
-	"jpntokudaihatsu",
-	"JPNTypeNo1AuxSC",
-	"JPNSeta",
   },
 }
 

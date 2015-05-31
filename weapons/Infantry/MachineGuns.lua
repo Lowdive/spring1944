@@ -5,7 +5,7 @@ local MGClass = Weapon:New{
   areaOfEffect       = 1,
   avoidFeature       = true,
   avoidFriendly      = false,
-  burnblow           = true, -- used?
+  burnblow           = false,
   collideFeature     = true,
   collideFriendly    = false,
   collisionSize      = 2.5,
@@ -109,14 +109,15 @@ local MG42_Deployed = MG42:New{
 }
 -- Anti Air MG42
 local MG42AA = MG42:New{
+  accuracy	     = 400,
   canAttackGround    = false,
-  predictBoost       = 0.75,
+  predictBoost       = 0.25,
+  movingAccuracy     = 800,
   range              = 1170,
   sprayAngle         = 460,
-  customparams = { -- don't cause fear, should cause Aircraft fear?
+  customparams = { 
     no_range_adjust    = true,
-    fearaoe            = nil,
-    fearid             = nil,
+    fearid             = 701,
   }
 }
 
@@ -149,15 +150,15 @@ local Maxim = MGClass:New{
 }
 -- Maxim AA
 local MaximAA = Maxim:New{
+  accuracy	     = 400,
   burst              = 7,
   burstRate          = 0.103,
   canAttackGround    = false,
-  movingAccuracy     = 400,
-  predictBoost       = 0.75,
+  movingAccuracy     = 800,
+  predictBoost       = 0.25,
   range              = 1050,
   customparams = {
     no_range_adjust    = true,
-    fearaoe            = 1,
     fearid             = 701,
   }
 }
@@ -183,6 +184,102 @@ local M1919A4Browning_Deployed = M1919A4Browning:New{
   range              = 1020,
   sprayAngle         = 400,
 }
+
+-- Breda 30 (ITA)
+local Breda30 = MGClass:New{
+  burst              = 3,
+  burstrate          = 0.1,
+  movingAccuracy     = 2667,
+  name               = [[Breda 30 Light Machine Gun]],
+  range              = 675,
+  reloadtime         = 2.6,
+  soundStart         = [[ITA_Breda30]],
+  sprayAngle         = 260,
+}
+
+-- Breda M37 (ITA)
+local BredaM37 = MGClass:New{
+  burst              = 9,
+  burstRate          = 0.16,
+  movingAccuracy     = 6222,
+  name               = [[Breda M37 Heavy Machinegun]],
+  range              = 1090,
+  reloadTime         = 3.1,
+  soundStart         = [[ITA_M37]],
+  sprayAngle         = 260,
+}
+
+-- Breda M38 (ITA)
+local BredaM38 = MGClass:New{
+  burst              = 7,
+  burstRate          = 0.16,
+  movingAccuracy     = 6222,
+  name               = [[Breda M38 mounted Machinegun]],
+  range              = 870,
+  reloadTime         = 3.2,
+  soundStart         = [[ITA_M37]],
+  sprayAngle         = 320,
+}
+
+-- 7.7mm Breda SAFAT Air MG (ITA)
+local BredaSafat03 = MGClass:New{
+  burst				 = 6,
+  burstRate          = 0.05,
+  canAttackGround    = false,
+  name               = [[7.7mm Breda SAFAT]],
+  range              = 825,
+  heightBoostFactor  = 0,
+  reloadTime         = 0.55,
+  sprayAngle        = 900,
+  soundStart         = [[ITA_Breda30]],
+  weaponType         = [[Cannon]],
+  customparams = {
+    no_range_adjust    = true,
+  }
+}
+
+-- Type 97, also used for Type 99 (JPN)
+local Type97MG = MGClass:New{
+  burst              = 6,
+  burstRate          = 0.1,
+  movingAccuracy     = 6222,
+  name               = [[Type 97 7.7mm Machinegun]],
+  range              = 870,
+  reloadTime         = 2.8,
+  soundStart         = [[JPN_Type99_LMG]],
+  sprayAngle         = 320,
+}
+
+-- Type 92 (JPN)
+local Type92MG = MGClass:New{
+  burst              = 8,
+  burstRate          = 0.073,
+  movingAccuracy     = 6222,
+  name               = [[Type 97 7.7mm Machinegun]],
+  range              = 1100,
+  reloadTime         = 2.8,
+  soundStart         = [[JPN_Type98_HMG]],
+  sprayAngle         = 320,
+} 
+
+-- 7.7mm TE-4 Air MG (JPN)
+local TE4 = MGClass:New{
+  accuracy	     = 400,
+  burst		     = 6,
+  burstRate          = 0.15,
+  canAttackGround    = false,
+  name               = [[7.7mm TE-4 Machinegun]],
+  range              = 925,
+  predictBoost       = 0.2,
+  reloadTime         = 1.5,
+  soundStart         = [[JPN_TE4_MG]],
+  weaponType         = [[Cannon]],
+  customparams = {
+    no_range_adjust    = true,
+    fearid             = 701,
+  }
+}
+
 
 -- Large calibre (12.7mm) MG's
 -- Vickers 50 cal (GBR)
@@ -215,17 +312,16 @@ local M2Browning = HeavyMGClass:New{
 }
 -- M2 Browning AA
 local M2BrowningAA = M2Browning:New{
+  accuracy	     = 600,
   burst              = 3,
   canAttackGround    = false,
-  predictBoost       = 1,
-  movingAccuracy     = 200,
+  movingAccuracy     = 1200,
+  predictBoost       = 0.25,
   range              = 1170,
+  sprayAngle        = 250,
   reloadTime         = 0.375,
-  soundStart         = [[US_50CAL]],
-  sprayAngle         = 150,
   customparams = {
     no_range_adjust    = true,
-    fearaoe            = 1,
     fearid             = 701,
   }
 }
@@ -233,17 +329,107 @@ local M2BrowningAA = M2Browning:New{
 local M2BrowningAMG = M2Browning:New{
   burst             = 3,
   burstRate         = 0.085,
-  predictBoost      = 0.75,
   range             = 900,
+  heightBoostFactor = 0,
   reloadTime        = 0.3,
   soundStart        = [[US_50CALAir]],
-  sprayAngle        = 250,
+  sprayAngle        = 1050,
   tolerance         = 1100, --?
+  weaponType         = [[Cannon]],
   customparams = {
     no_range_adjust    = true,
   }
 
 }
+
+-- Breda M1931 (ITA)
+local BredaM1931 = HeavyMGClass:New{
+  name               = [[Breda M1931 13mm Heavy Machine Gun]],
+  range              = 880,
+  reloadTime         = 4,
+  soundStart         = [[US_50CAL]],
+  sprayAngle         = 300;
+}
+
+--Breda M1931 AA
+local BredaM1931AA = BredaM1931:New{
+  accuracy	     = 400,
+  burst              = 6,
+  burstRate          = 0.109,
+  canAttackGround    = false,
+  movingAccuracy     = 800,
+  predictBoost       = 0.25,
+  range              = 1300,
+  reloadTime         = 1.5,
+  sprayAngle         = 300,
+  customparams = {
+    no_range_adjust    = true,
+    fearid             = 701,
+  }
+}
+
+-- .50 Caliber Breda SAFAT Air MG (ITA)
+local BredaSafat05 = HeavyMGClass:New{
+  burst				 = 6,
+  burstRate          = 0.125,
+  canAttackGround    = false,
+  name               = [[.50 Caliber Breda SAFAT]],
+  range              = 900,
+  heightBoostFactor  = 0,
+  reloadTime         = 1.2,
+  sprayAngle        = 1050,
+  soundStart         = [[ITA_breda12_7mm]],
+  weaponType         = [[Cannon]],
+  customparams = {
+    no_range_adjust    = true,
+  }
+}
+
+
+-- Type 93 (JPN)
+local Type93HMG = HeavyMGClass:New{
+  name               = [[Type 93 13mm Heavy Machine Gun]],
+  range              = 880,
+  reloadTime         = 4,
+  soundStart         = [[US_50CAL]],
+  sprayAngle         = 300,
+}
+
+-- Type 93 AA
+local Type93AA = Type93HMG:New{
+  accuracy	     = 400,
+  burst              = 6,
+  burstRate          = 0.109,
+  movingAccuracy     = 800,
+  predictBoost       = 0.25,
+  range              = 1300,
+  reloadTime         = 1.5,
+  sprayAngle         = 300,
+  customparams = {
+    no_range_adjust    = true,
+    fearid             = 701,
+  }
+}
+
+-- Type 1 Ho-103 12.7mm Air MG (JPN)
+local Type1Ho103 = HeavyMGClass:New{
+  burst			= 8,
+  burstRate          = 0.085,
+  canAttackGround    = false,
+  name               = [[Type1 Ho-103 12.7mm]],
+  range              = 800,
+  heightBoostFactor  = 0,
+  reloadTime         = 0.8,
+  soundStart         = [[US_50CALAir]],
+  sprayAngle         = 1050,
+  weaponType         = [[Cannon]],
+  customparams = {
+    no_range_adjust    = true,
+  }
+}
+
+
+
 
 -- Return only the full weapons
 return lowerkeys({
@@ -261,6 +447,13 @@ return lowerkeys({
   MaximAA = MaximAA,
   M1919A4Browning = M1919A4Browning,
   M1919A4Browning_Deployed = M1919A4Browning_Deployed,
+  Breda30 = Breda30,
+  BredaM37 = BredaM37,
+  BredaM38 = BredaM38,
+  BredaSafat03 = BredaSafat03,
+  Type97MG = Type97MG,
+  Type92MG = Type92MG,
+  TE4 = TE4,
   -- 13mm
   Twin05CalVickers = Twin05CalVickers,
   DShK = DShK,
@@ -268,4 +461,10 @@ return lowerkeys({
   M2Browning = M2Browning,
   M2BrowningAA = M2BrowningAA,
   M2BrowningAMG = M2BrowningAMG,
+  BredaM1931 = BredaM1931,
+  BredaM1931AA = BredaM1931AA,
+  BredaSafat05 = BredaSafat05,
+  Type93HMG = Type93HMG,
+  Type93AA = Type93AA,
+  Type1Ho103 = Type1Ho103,
 })

@@ -13,6 +13,7 @@
   [customParams] {
     buildOutside=1;
     dontCount=1;
+    soundcategory=ITA/Vehicle;
   }
   explodeAs=Vehicle_Explosion_Sm;
   footprintX=3;
@@ -21,6 +22,7 @@
   idleAutoHeal=2;
   idleTime=1000;
   leaveTracks=1;
+  loadingRadius=120;
   mass=300;
   maxDamage=300;
   maxReverseVelocity=2.25;
@@ -30,7 +32,7 @@
   movementClass=TANK_Truck;
   noChaseCategory=AIR MINE;
   objectName=ITAFiat626.s3o;
-  releaseHeld=1;
+  releaseHeld=0;
   seismicSignature=0;
   selfDestructAs=Vehicle_Explosion_Sm;
   [sfxtypes] {
@@ -38,7 +40,6 @@
   showNanoFrame=0;
   side=ITA;
   sightDistance=800;
-  soundcategory=ItaVeh;
   stealth=1;
   trackOffset=5;
   trackStrength=6.5;
@@ -47,10 +48,10 @@
   trackWidth=12;
   transportCapacity=15;
   transportMass=750;
-  transportRadius=50;
   transportSize=1;
-  transportUnloadMethod=2;
+  transportUnloadMethod=0;
   turninplace=0;
   turnRate=440;
+  unloadSpread=2;
 }
 

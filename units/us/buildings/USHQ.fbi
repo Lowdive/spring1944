@@ -26,6 +26,7 @@
     hq=1;
     refillamount=1e+06;
     supplyRange=500;
+    soundcategory=US/Yard/HQ;
   }
   energyMake=0;
   energyStorage=0.01;
@@ -39,6 +40,7 @@
   metalMake=0;
   objectName=USHQ.S3O;
   onoffable=1;
+  script=Yard.lua;
   selfDestructAs=Huge_Explosion;
   [sfxtypes] {
   }
@@ -47,7 +49,6 @@
   showPlayerName=1;
   sightDistance=146;
   smoothAnim=0;
-  soundcategory=USYard;
   stealth=1;
   useBuildingGroundDecal=1;
   workerTime=20;

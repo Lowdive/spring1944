@@ -176,7 +176,7 @@ local function GetUnitFinalPosition(uID)
 	
 	local ux, uy, uz = spGetUnitPosition(uID)
 	
-	local cmds = spGetCommandQueue(uID)
+	local cmds = spGetCommandQueue(uID, -1)
 	for i = #cmds, 1, -1 do
 		
 		local cmd = cmds[i]
@@ -660,11 +660,11 @@ function widget:Update(deltaTime)
 	if dimmAlpha <= 0 then
 		
 		dimmNodes = {}
-		widgetHandler:RemoveWidgetCallIn("Update", self)
+		WG.RemoveWidgetCallIn("Update", self)
 		
 		if #fNodes == 0 then
-			widgetHandler:RemoveWidgetCallIn("DrawWorld", self)
-			widgetHandler:RemoveWidgetCallIn("DrawInMiniMap", self)
+			WG.RemoveWidgetCallIn("DrawWorld", self)
+			WG.RemoveWidgetCallIn("DrawInMiniMap", self)
 		end
 	end
 end

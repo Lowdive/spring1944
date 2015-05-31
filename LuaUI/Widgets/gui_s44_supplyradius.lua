@@ -343,20 +343,22 @@ local function DrawTrucks()
 	for i=1,#visibleUnits do
 		local unitID = visibleUnits[i]
 		local unitDefID = GetUnitDefID(unitID)
-		local cp = UnitDefs[unitDefID].customParams or {}
-		local radius = (cp.supplyrange or 0) * GetSupplyRangeModifier(myTeamID)
-		--Spring.Echo('truck', radius)
-		local unitTeam = GetUnitTeam(unitID)
-		local x, _, z = GetUnitPosition(unitID)
-		if AreTeamsAllied(unitTeam, myTeamID) then
-			if generalTruckDefIDs[unitDefID] then
-				glColor(previewColor)
-				DrawSupplyRingFull(generalTruckDefInfo, x, z, radius)
-			elseif halftrackDefIDs[unitDefID] then
-				--glColor(previewColor)
-				--DrawSupplyRingFull(halftrackDefInfo, x, z)
-				glColor(color)
-				DrawSupplyRingFull(halftrackDefInfo, x, z, radius)
+		if unitDefID then
+			local cp = UnitDefs[unitDefID].customParams or {}
+			local radius = (cp.supplyrange or 0) * GetSupplyRangeModifier(myTeamID)
+			--Spring.Echo('truck', radius)
+			local unitTeam = GetUnitTeam(unitID)
+			local x, _, z = GetUnitPosition(unitID)
+			if AreTeamsAllied(unitTeam, myTeamID) then
+				if generalTruckDefIDs[unitDefID] then
+					glColor(previewColor)
+					DrawSupplyRingFull(generalTruckDefInfo, x, z, radius)
+				elseif halftrackDefIDs[unitDefID] then
+					--glColor(previewColor)
+					--DrawSupplyRingFull(halftrackDefInfo, x, z)
+					glColor(color)
+					DrawSupplyRingFull(halftrackDefInfo, x, z, radius)
+				end
 			end
 		end
 	end
@@ -624,8 +626,7 @@ function widget:Initialize()
 
 	myTeamID = GetMyTeamID()
 
-	for unitDefID=1,#UnitDefs do
-		local unitDef = UnitDefs[unitDefID]
+	for unitDefID, unitDef in pairs(UnitDefs) do
 		if (unitDef.customParams.supplyrange and unitDef.speed == 0) then
 			local radius = unitDef.customParams.supplyrange or DEFAULT_SUPPLY_RANGE
 			local numSegments = ceil(radius / segmentLength)
@@ -651,7 +652,7 @@ function widget:Initialize()
 
 	--remove self if unused
 	if (not inUse) then
-		widgetHandler:RemoveWidget()
+		WG.RemoveWidget(self)
 	end
 
 	Reset()

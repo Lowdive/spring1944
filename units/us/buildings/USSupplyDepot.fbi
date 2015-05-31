@@ -11,6 +11,7 @@
   buildingGroundDecalType=Dirt2.dds;
   buildTime=3600;
   canBeAssisted=0;
+  canMove=1;
   category=BUILDING;
   collisionVolumeScales=96 15 76;
   collisionVolumeOffsets=14 0 5;
@@ -20,6 +21,7 @@
   [customParams] {
     dontCount=1;
     supplyRange=2000;
+    soundcategory=US/Yard;
   }
   energyMake=0;
   energyStorage=500;
@@ -32,7 +34,7 @@
   maxWaterDepth=0;
   objectName=USCP.S3O;
   selfDestructAs=massive_explosion;
-  script=yard.cob;
+  script=Yard.lua;
   [sfxtypes] {
   }
   showNanoFrame=0;
@@ -40,7 +42,6 @@
   side=US;
   sightDistance=1;
   smoothAnim=0;
-  soundcategory=USInf;
   stealth=1;
   useBuildingGroundDecal=1;
   workerTime=30;

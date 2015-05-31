@@ -1,13 +1,13 @@
 [unitinfo] {
   unitname=GBRAECMkII;
   name=AEC Armoured Car Mk II;
-  description=Heavy Armoured Car;
+  description=Fast Light Tank Destroyer/Armoured Car;
   acceleration=0.03;
   airSightDistance=1500;
   brakeRate=0.09;
   buildCostEnergy=0;
-  buildCostMetal=1900;
-  buildTime=1900;
+  buildCostMetal=1300;
+  buildTime=1300;
   canMove=1;
   category=MINETRIGGER OPENVEH;
   //collisionVolumeType=box;
@@ -26,6 +26,7 @@
     maxammo=10; // 40 rounds
     weaponcost=10;
     weaponswithammo=2;
+    soundcategory=GBR/Vehicle;
   }
   energyUse=0;
   explodeAs=Vehicle_Explosion_Sm;
@@ -40,7 +41,7 @@
   maxVelocity=3; //4
   maxWaterDepth=15;
   movementClass=TANK_Car;
-  noChaseCategory=BUILDING FLAG INFANTRY AIR DEPLOYED MINE;
+  noChaseCategory=FLAG AIR MINE;
   objectName=GBRAECMkIII.S3O;
   seismicSignature=0;
   selfDestructAs=Vehicle_Explosion_Sm;
@@ -62,35 +63,23 @@
   side=GBR;
   sightDistance=750;
   smoothAnim=0;
-  soundcategory=GBRSP;
   stealth=1;
   trackOffset=10;
   trackStrength=6.5;
   trackStretch=1;
   trackType=Stdtank;
-  trackWidth=13;
+  trackWidth=19;
   turninplace=0;
   turnRate=405;
   badTargetCategory=FLAG;
 
-  weapon1=qf6pdr57mmhe;
+  weapon1=qf6pdr57mmap;
   weaponMainDir1=0 16 1;
-  maxAngleDif1=210;
-  badTargetCategory1=OPENVEH HARDVEH;
-  onlyTargetCategory1=BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED;
+  maxAngleDif2=110;
+  onlyTargetCategory1=OPENVEH HARDVEH;
 
-  weapon2=qf6pdr57mmap;
-  weaponMainDir2=0 16 1;
-  maxAngleDif2=210;
-  onlyTargetCategory2=OPENVEH HARDVEH;
+  weapon2=.30calproof;
 
-  weapon3=BESA;
-  weaponMainDir3=0 16 1;
-  maxAngleDif3=210;
-  onlyTargetCategory3=INFANTRY SOFTVEH DEPLOYED;
-
-  weapon4=.30calproof;
-
-  weapon5=Small_Tracer;
+  weapon3=Small_Tracer;
 }
 

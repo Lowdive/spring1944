@@ -3,7 +3,7 @@ local gbrDefs = {
 	 -- GBR Platoons and Squads --
 	 -----------------------------
 
-    ["gbr_platoon_hq"] =
+	["gbr_platoon_hq"] =
 	{
 		members = {
 			"gbrbren",
@@ -20,7 +20,7 @@ local gbrDefs = {
 		buildTime = 800,
 		side = "GBR",
 	},
-	
+
 	 ["gbr_platoon_rifle"] =
 	{
 		members = {
@@ -123,9 +123,9 @@ local gbrDefs = {
 		},
 		name = "PIAT Anti-Tank Squad",
 		description = "3 x PIAT: Anti-Tank Infantry",
-		buildCostMetal = 860,
+		buildCostMetal = 430,
 		buildPic = "GBRPIAT.png",
-		buildTime = 860,
+		buildTime = 430,
 		side = "GBR",
 	},
 
@@ -143,7 +143,7 @@ local gbrDefs = {
 		buildTime = 580,
 		side = "GBR",
 	},
-	
+
 	["gbr_platoon_commando"] =
 	{
 		members = {
@@ -156,10 +156,11 @@ local gbrDefs = {
 		buildTime = 970,
 		side = "GBR",
 	},
-	
+
 	["gbr_platoon_commando_lz"] =
 	{
 		members = {
+            "gbrgliderresource",
 			"gbrcommando",
 			"gbrcommando",
 			"gbrcommando",
@@ -174,7 +175,7 @@ local gbrDefs = {
 		buildTime = 1800,
 		side = "GBR",
 	},
-	
+
 	["gbr_platoon_glider_horsa"] =
 	{
 		members = {
@@ -207,7 +208,7 @@ local gbrDefs = {
 		buildTime = 4000,
 		side = "GBR",
 	},
-	
+
 	["gbr_platoon_lca"] =
 	{
 		members = {
@@ -216,7 +217,7 @@ local gbrDefs = {
 			"gbrbren",
 			"gbrsten",
 			"gbrsten",
-			"gbrsten",			
+			"gbrsten",
 			"gbrsten",
 			"gbrsten",
 			"gbrrifle",
@@ -232,9 +233,10 @@ local gbrDefs = {
 			"gbrrifle",
 			"gbrrifle",
 		},
+        buildCostMetal = 4000,
 		-- other fields not needed for transport squads
 	},
-	
+
 	["gbr_platoon_lct"] =
 	{
 		members = {

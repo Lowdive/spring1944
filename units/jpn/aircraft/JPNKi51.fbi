@@ -19,7 +19,7 @@
   canPatrol=1;
   CanStop=1;
   category=AIR;
-  cruiseAlt=1500;
+  cruiseAlt=1600;
   [customParams] {
     enginesound=po2-;
     enginesoundnr=11;
@@ -28,6 +28,7 @@
     maxammo=4;
     weaponcost=0;
     weaponswithammo=4;
+    SoundCategory=JPN/Air;
   }
   explodeAs=Vehicle_Explosion_Med;
   footprintX=4;
@@ -66,26 +67,28 @@
   turnRate=50;
   badTargetCategory=BUILDING OPENVEH HARDVEH SHIP DEPLOYED;
 
-  weapon1=jpn_bomb50kg;
-  maxAngleDif1=20;
+  weapon1=Bomb50kg;
+  maxAngleDif1=10;
   onlyTargetCategory1=BUILDING HARDVEH SHIP LARGESHIP OPENVEH DEPLOYED;
   weaponMainDir1=0 0 1;
 
-  weapon2=jpn_bomb50kg;
-  maxAngleDif2=20;
+  weapon2=Bomb50kg;
+  maxAngleDif2=10;
   onlyTargetCategory2=BUILDING HARDVEH SHIP LARGESHIP OPENVEH DEPLOYED;
   weaponMainDir2=0 0 1;
+  weaponSlaveTo2=1;
 
-  weapon3=jpn_bomb50kg;
-  maxAngleDif3=20;
+  weapon3=Bomb50kg;
+  maxAngleDif3=10;
   onlyTargetCategory3=BUILDING HARDVEH SHIP LARGESHIP OPENVEH DEPLOYED;
   weaponMainDir3=0 0 1;
-  weaponSlaveTo3=2;
+  weaponSlaveTo3=1;
 
-  weapon4=jpn_bomb50kg;
-  maxAngleDif4=20;
+  weapon4=Bomb50kg;
+  maxAngleDif4=10;
   onlyTargetCategory4=BUILDING HARDVEH SHIP LARGESHIP OPENVEH DEPLOYED;
   weaponMainDir4=0 0 1;
+  weaponSlaveTo4=1;
 
   weapon5=Type1Ho103;
   maxAngleDif5=10;
@@ -99,9 +102,9 @@
 
 
   weapon7=TE4;
-  maxAngleDif7=50;
+  maxAngleDif7=70;
   onlyTargetCategory7=AIR;
-  weaponMainDir7=0 1 -1;
+  weaponMainDir7=0 1 -9;
 
   weapon8=Medium_Tracer;
 }

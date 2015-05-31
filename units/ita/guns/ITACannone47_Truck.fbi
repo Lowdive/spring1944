@@ -5,9 +5,9 @@
   acceleration=0.3;
   brakeRate=0.96;
   buildCostEnergy=0;
-  buildCostMetal=680;
+  buildCostMetal=400;
   buildPic=ITACannone47_truck.png;
-  buildTime=680;
+  buildTime=400;
   canMove=1;
   category=MINETRIGGER SOFTVEH;
   corpse=ITAFiat626_Abandoned;
@@ -16,6 +16,7 @@
     maxammo=4;
     weaponcost=10;
     weaponswithammo=0;
+    soundcategory=ITA/Vehicle;
   }
   explodeAs=Vehicle_Explosion_Sm;
   footprintX=3;
@@ -41,7 +42,6 @@
   showNanoFrame=0;
   side=ITA;
   sightDistance=800;
-  soundcategory=ITAVeh;
   stealth=1;
   trackOffset=5;
   trackStrength=6.5;

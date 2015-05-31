@@ -23,12 +23,15 @@
     armor_top=10;
     supplyRange=200;
 	hasturnbutton=1;
+	transportsquad=jpn_platoon_amph;
+    soundcategory=JPN/Vehicle;
   }
   explodeAs=Vehicle_Explosion_Sm;
   footprintX=3;
   footprintZ=3;
   iconType=halftrack;
   leaveTracks=1;
+  loadingRadius=50;
   mass=1600;
   maxDamage=1600;
   maxReverseVelocity=0.95;
@@ -38,7 +41,7 @@
   movementClass=HOVER_AmphibTruck;
   noChaseCategory=FLAG AIR MINE HARDVEH BUILDING;
   objectName=JPNKaTsu.s3o;
-  releaseHeld=1;
+  releaseHeld=0;
   seismicSignature=0;
   selfDestructAs=Vehicle_Explosion_Sm;
   [sfxtypes] {
@@ -55,7 +58,6 @@
   side=JPN;
   sightDistance=840;
   smoothAnim=0;
-  soundcategory=JPNVeh;
   stealth=1;
   trackOffset=10;
   trackStrength=6.5;
@@ -64,19 +66,19 @@
   trackWidth=20;
   transportCapacity=30;
   transportMass=750;
-  transportRadius=50;
   transportSize=1;
-  transportUnloadMethod=2;
+  transportUnloadMethod=0;
   turninplace=0;
   turnRate=400;
+  unloadSpread=2;
   badTargetCategory=FLAG;
 
-  weapon1=jpn13mmtype93;
+  weapon1=Type93HMG;
   onlyTargetCategory1=OPENVEH INFANTRY SOFTVEH SHIP LARGESHIP DEPLOYED;
 	weaponMainDir1 = 1 0 0;
 	maxAngleDif1 = 200;
 
-  weapon2=jpn13mmtype93;
+  weapon2=Type93HMG;
   onlyTargetCategory2=OPENVEH INFANTRY SOFTVEH SHIP LARGESHIP DEPLOYED;
 	weaponMainDir2 = -1 0 0;
 	maxAngleDif2 = 200;

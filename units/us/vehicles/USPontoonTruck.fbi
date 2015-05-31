@@ -14,6 +14,7 @@
   [customParams] {
 	buildOutside=1;
     dontCount=1;
+    soundcategory=US/Vehicle;
   }
   explodeAs=Vehicle_Explosion_Sm;
   footprintX=3;
@@ -31,7 +32,7 @@
   movementClass=HOVER_AmphibTruck;
   noChaseCategory=AIR MINE;
   objectName=USPontoonTruck.s3o;
-  releaseHeld=1;
+  releaseHeld=0;
   seismicSignature=0;
   selfDestructAs=Vehicle_Explosion_Sm;
   [sfxtypes] {
@@ -39,7 +40,6 @@
   showNanoFrame=0;
   side=US;
   sightDistance=800;
-  soundcategory=USVeh;
   stealth=1;
   trackOffset=5;
   trackStrength=6.5;

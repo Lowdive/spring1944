@@ -5,22 +5,24 @@
   activateWhenBuilt=1;
   airSightDistance=2500;
   buildCostEnergy=0;
-  buildCostMetal=900;
+  buildCostMetal=450;
   buildingGroundDecalSizeX=5;
   buildingGroundDecalSizeY=5;
   buildingGroundDecalType=Dirt2.dds;
-  buildTime=900;
+  buildTime=450;
   category=DEPLOYED;
   cloakCost=0;
   cloakCostMoving=0;
   corpse=RUSZiS2_Destroyed;
   [customParams] {
-	hiddenbuilding=1;
+    dontCount=1;
+    hiddenbuilding=1;
     feartarget=1;
     lowammolevel=1;
     maxammo=4;
     weaponcost=10;
     weaponswithammo=1;
+    soundcategory=RUS/Gun;
   }
   flankingBonusDir=0.0 0.0 1.0;
   flankingBonusMax=1.25;
@@ -52,7 +54,6 @@
   side=RUS;
   sightDistance=701;
   smoothAnim=0;
-  soundcategory=RUSGun;
   stealth=1;
   useBuildingGroundDecal=1;
   badTargetCategory=FLAG;

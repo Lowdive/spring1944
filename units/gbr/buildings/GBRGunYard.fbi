@@ -18,6 +18,7 @@
   collisionVolumeOffsets=0 0 0;
   [customParams] {
     supplyRange=500;
+    soundcategory=GBR/Yard;
   }
   energyStorage=0.01;
   explodeAs=Large_Explosion;
@@ -34,10 +35,9 @@
   }
   showNanoFrame=0;
   showNanoSpray=0;
-  script=Yard.cob;
+  script=Yard.lua;
   side=GBR;
   sightDistance=146;
-  soundcategory=GBRYard;
   stealth=1;
   useBuildingGroundDecal=1;
   workerTime=30;

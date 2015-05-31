@@ -25,8 +25,6 @@ local TransferUnit			= Spring.TransferUnit
 
 if (gadgetHandler:IsSyncedCode()) then -- SYNCED
 
-local DelayCall = GG.Delay.DelayCall
-
 -- Constants
 local MIN_HEALTH = 1 -- No fewer HP than this
 local HEALTH_RESTORE_LEVEL = 0.5 -- What % of maxHP to restore turret function
@@ -42,9 +40,20 @@ local passedCmds = {[CMD.ATTACK] = true, [CMD.FIRE_STATE] = true, [CMD.STOP] = t
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
-	if cp then
-		motherCache[unitID] = cp.mother and {} or nil -- to be populated in UnitLoaded
-		childCache[unitID] = cp.child -- ditto
+	if cp.mother then
+		motherCache[unitID] = {}
+		local toRemove = {CMD.LOAD_UNITS, CMD.UNLOAD_UNITS}
+		for _, cmdID in pairs(toRemove) do
+			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
+			Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+		end
+	elseif cp.child then
+		childCache[unitID] = true
+		local toRemove = {CMD.MOVE_STATE, CMD.MOVE}
+		for _, cmdID in pairs(toRemove) do
+			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
+			Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+		end
 	end
 end
 
@@ -79,6 +88,10 @@ local function DisableChild(childID, disable)
 end
 
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
+	if childCache[attackerID] == unitID then
+		return 0
+	end
+	
 	if not childCache[unitID] then return damage end
 	-- unit is a child
 	local health = Spring.GetUnitHealth(unitID)

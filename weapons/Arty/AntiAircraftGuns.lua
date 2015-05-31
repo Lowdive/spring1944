@@ -2,12 +2,13 @@
 
 -- AA Gun Base Class
 local AAGunClass = Weapon:New{
+  accuracy           = 200,
   burnblow           = true,
   collisionSize      = 2,
   explosionSpeed     = 30,
   impulseFactor      = 0,
   intensity          = 0.9,
-  predictBoost       = 0, -- this seems very strange for an AA weapon!
+  predictBoost       = 0.2, 
   size               = 1e-5,
   soundHitDry        = [[GEN_Explo_Flak1]],
   soundStart         = [[GEN_37mmAA]],
@@ -24,7 +25,7 @@ local AAGunClass = Weapon:New{
 
 -- AA Round Class
 local AAGunAAClass = Weapon:New{
-  areaOfEffect       = 60,
+  areaOfEffect       = 30,
   canattackground    = false,
   collisionSize      = 5,
   cylinderTargeting  = 2.5,

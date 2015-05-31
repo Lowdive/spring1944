@@ -14,17 +14,17 @@ local JPN_TypeNo1AuxSC = BoatMother:New{
 	maxVelocity				= 1.1,
 	movementClass			= "BOAT_LightPatrol",
 	objectName				= "JPNTypeNo1AuxSC.s3o",
-	soundCategory			= "JPNBoat",
 	transportCapacity		= 2, -- 2 x 1fpu turrets
 	turnRate				= 55,	
 	
 	weapons = {	
 		[1] = { -- give primary weapon for ranging
-			name				= "jpntype96_25mm60_he",
+			name				= "Type9625mmHE",
 			onlyTargetCategory	= "BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED",
 		},
 	},
 	customparams = {
+		soundcategory = "JPN/Boat",
 		children = {
 			"JPN_SC_turret_25mm_front",
 			"JPN_SC_turret_25mm_rear",
@@ -41,12 +41,12 @@ local JPN_SC_Turret_25mm_Front = BoatChild:New{
 	objectName				= "JPNTypeNo1AuxSC_turret_25mm.s3o",
   	weapons = {	
 		[1] = {
-			name				= "jpntype96_25mm60_aa",
+			name				= "Type9625mmAA",
 			maxAngleDif			= 270,
 			onlyTargetCategory	= "AIR",
 		},
 		[2] = {
-			name				= "jpntype96_25mm60_he",
+			name				= "Type9625mmHE",
 			maxAngleDif			= 270,
 			onlyTargetCategory	= "BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED",
 		},

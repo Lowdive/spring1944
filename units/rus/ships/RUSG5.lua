@@ -14,7 +14,6 @@ local RUS_G5 = BoatMother:New{
 	maxVelocity				= 5.3,
 	movementClass			= "BOAT_LightPatrol",
 	objectName				= "RUSG5.s3o",
-	soundCategory			= "RUSBoat",
 	transportCapacity		= 2, -- 2 x 1fpu turrets
 	turnRate				= 300,	
 	weapons = {	
@@ -24,6 +23,9 @@ local RUS_G5 = BoatMother:New{
 		},
 	},
 	customparams = {
+		soundCategory			= "RUS/Boat",
+		killvoicecategory		= "RUS/Boat/RUS_BOAT_KILL",
+		killvoicephasecount		= 3,
 		children = {
 			"RUS_G5_Turret_DshK", 
 			"RUS_G5_Turret_M-8", 

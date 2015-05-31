@@ -5,6 +5,7 @@ local PistolClass = Weapon:New{
   areaOfEffect       = 1,
   avoidFeature       = true,
   avoidFriendly      = false,
+  burnblow           = false,
   collideFeature     = true,
   collideFriendly    = false,
   collisionSize      = 2.5,
@@ -14,7 +15,6 @@ local PistolClass = Weapon:New{
   fireStarter        = 0,
   id                 = 1, -- used?
   impactonly         = 1,
-  intensity          = 0.0001,
   interceptedByShieldType = 8,
   laserFlareSize     = 0.0001,
   movingAccuracy     = 888,
@@ -70,10 +70,27 @@ local TT33 = PistolClass:New{
   },
 }
 
+-- Beretta M1934 (ITA)
+local BerettaM1934 = PistolClass:New{
+  name               = [[Beretta M1934]],
+  reloadtime         = 1, -- intended?
+  soundStart         = [[ITA_BerettaM34]],
+  sprayAngle         = 50, -- intended?
+}
+
+local NambuType14 = PistolClass:New{
+  name               = [[Nambu Type 14 8mm]],
+  reloadtime         = 1, -- intended?
+  soundStart         = [[ITA_BerettaM34]],
+  sprayAngle         = 50, -- intended?
+}
+
 -- Return only the full weapons
 return lowerkeys({
   Webley = Webley,
   WaltherP38 = WaltherP38,
   M1911A1Colt = M1911A1Colt,
   TT33 = TT33,
+  BerettaM1934 = BerettaM1934,
+  NambuType14 = NambuType14,
 })

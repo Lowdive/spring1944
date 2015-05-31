@@ -26,6 +26,9 @@
     maxammo=4;
     weaponcost=63;
     weaponswithammo=1;
+    soundcategory=RUS/Tank/Zveroboy;
+	killvoicecategory=RUS/Tank/Zveroboy/RUS_ISU_KILL;
+	killvoicephasecount=3;
   }
   explodeAs=Vehicle_Explosion_Large;
   footprintX=3;
@@ -62,7 +65,6 @@
   side=RUS;
   sightDistance=720;
   smoothAnim=0;
-  soundcategory=RUSZveroboy;
   stealth=1;
   trackOffset=5;
   trackStrength=7;

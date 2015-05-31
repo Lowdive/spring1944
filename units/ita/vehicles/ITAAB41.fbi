@@ -25,6 +25,7 @@
     weaponcost=10;
     weaponswithammo=2;
 	hasturnbutton=1;
+    soundcategory=ITA/Vehicle;
   }
   explodeAs=Vehicle_Explosion_Sm;
   footprintX=3;
@@ -58,7 +59,6 @@
   side=ITA;
   sightDistance=810;
   smoothAnim=0;
-  soundcategory=ITATank;
   stealth=1;
   trackOffset=10;
   trackStrength=6.5;
@@ -69,12 +69,12 @@
   turnRate=405;
   badTargetCategory=FLAG;
 
-  weapon1=breda3520mmhe;
+  weapon1=BredaM3520mmHE;
 	weaponMainDir1=0 0 1;
 	maxAngleDif1=350;
   onlyTargetCategory1=BUILDING INFANTRY SOFTVEH AIR OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED;
 
-  weapon2=breda3520mmap;
+  weapon2=BredaM3520mmAP;
 	weaponMainDir2=0 0 1;
 	maxAngleDif2=350;
   onlyTargetCategory2=OPENVEH HARDVEH;
@@ -85,7 +85,7 @@
   onlyTargetCategory3=OPENVEH INFANTRY SOFTVEH DEPLOYED;
 
   weapon4=BredaM38;
-  onlyTargetCategory3=OPENVEH INFANTRY SOFTVEH DEPLOYED;
+  onlyTargetCategory4=OPENVEH INFANTRY SOFTVEH DEPLOYED;
 	weaponMainDir4=0 0 -1;
 	maxAngleDif4=45;
 

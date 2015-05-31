@@ -17,6 +17,7 @@
   collisionVolumeType=ellipsoid;
   [customParams] {
     supplyRange=500;
+    soundcategory=ITA/Yard;
   }
   energyStorage=0.01;
   explodeAs=LARGE_EXPLOSION;
@@ -28,7 +29,7 @@
   maxSlope=10;
   maxWaterDepth=0;
   objectName=ITAGunYard.s3o;
-  script=Yard.cob;
+  script=Yard.lua;
   selfDestructAs=LARGE_EXPLOSION;
   [sfxtypes] {
   }
@@ -36,7 +37,6 @@
   showNanoSpray=0;
   side=ITA;
   sightDistance=146;
-  soundcategory=ITAYard;
   stealth=1;
   useBuildingGroundDecal=1;
   workerTime=50;

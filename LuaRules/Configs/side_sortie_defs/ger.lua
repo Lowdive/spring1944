@@ -10,7 +10,7 @@ local gerSorties = {
 		buildPic = "GERFi156.png",
 		buildTime = 1000,
 	},
-  
+
 	ger_sortie_interceptor = {
 		members = {
 			"gerbf109",
@@ -26,7 +26,7 @@ local gerSorties = {
 		buildPic = "GERBf109.png",
 		buildTime = 3940,
 	},
-  
+
 	ger_sortie_fighter = {
 		members = {
 			"gerfw190",
@@ -42,7 +42,7 @@ local gerSorties = {
 		buildPic = "GERFw190.png",
 		buildTime = 4500,
 	},
-  
+
 	ger_sortie_fighter_bomber = {
 		members = {
 			"gerfw190g",
@@ -56,7 +56,7 @@ local gerSorties = {
 		buildPic = "GERFw190G.png",
 		buildTime = 6750,
 	},
-  
+
 	ger_sortie_attack = {
 		members = {
 			"gerju87g",
@@ -71,7 +71,7 @@ local gerSorties = {
 		buildPic = "GERJu87G.png",
 		buildTime = 5400,
 	},
-  
+
 	ger_sortie_flying_bomb = {
 		members = {
 			"gerv1",

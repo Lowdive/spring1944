@@ -24,8 +24,9 @@
     lowammolevel=6;
     maxammo=25;
     weaponcost=8;
-    weaponswithammo=2;
+    weaponswithammo=3;
 	hasturnbutton=1;
+    soundcategory=ITA/Tank;
   }
   explodeAs=Vehicle_Explosion_Med;
   footprintX=3;
@@ -59,7 +60,6 @@
   side=ITA;
   sightDistance=750;
   smoothAnim=0;
-  soundcategory=ITATank;
   stealth=1;
   trackOffset=5;
   trackStrength=7;
@@ -72,29 +72,38 @@
 
   maxAngleDif1=210;
   maxAngleDif2=210;
+  maxAngleDif3=210;
   weaponMainDir1=0 16 1;
   weaponMainDir2=0 16 1;
+  weaponMainDir3=0 16 1;
 
-  weapon1=ita47mml40he;
-  onlyTargetCategory1=BUILDING INFANTRY SOFTVEH SHIP LARGESHIP DEPLOYED;
+  weapon1=CannoneDa47mml40HE;
+  onlyTargetCategory1=BUILDING INFANTRY SOFTVEH SHIP OPENVEH HARDVEH LARGESHIP DEPLOYED;
 
-  weapon2=ita47mml40ap;
+  weapon2=CannoneDa47mml40AP;
   onlyTargetCategory2=OPENVEH HARDVEH;
 
-  weapon3=BredaM38;
-  onlyTargetCategory3=INFANTRY SOFTVEH DEPLOYED;
+  weapon3=CannoneDa47mml40HEAT;
+  onlyTargetCategory3=OPENVEH HARDVEH;
 
-	weapon4=BredaM38;
-	onlyTargetCategory4=INFANTRY SOFTVEH DEPLOYED;
-	weaponMainDir4=0 0 1;
-	maxAngleDif4=30;
+  weapon4=BredaM38;
+  onlyTargetCategory4=INFANTRY SOFTVEH DEPLOYED;
+  weaponMainDir4=0 0 1;
+  maxAngleDif4=10;
 
 	weapon5=BredaM38;
 	onlyTargetCategory5=INFANTRY SOFTVEH DEPLOYED;
-	weaponSlaveTo5=4;
+	weaponMainDir5=0 0 1;
+	maxAngleDif5=30;
 
-  weapon6=.50calproof;
+	weapon6=BredaM38;
+	onlyTargetCategory6=INFANTRY SOFTVEH DEPLOYED;
+	weaponMainDir6=0 0 1;
+	weaponSlaveTo6=4;
+	maxAngleDif6=30;
 
-  weapon7=Small_Tracer_Green;
+  weapon7=.50calproof;
+
+  weapon8=Small_Tracer_Green;
 }
 

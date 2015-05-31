@@ -54,6 +54,13 @@ local itaunits =
     "itatankobstacle",
   },
 
+  itabreda61 =
+  {
+    "itaatminesign",
+    "itaapminesign",
+    "itatankobstacle",
+  },
+  
   itabarracks =
   {
     "itahqengineer",
@@ -132,9 +139,11 @@ local itaunits =
   itavehicleyard =
   {
 	"itabreda41",
+	"itabreda61",
 	"itafiat626",
 	"itaab41",
 	"itaas37",
+	"itaautocannone75",
 	"itasemovente47",
 	"itaspadovunque",
   },
@@ -142,9 +151,11 @@ local itaunits =
    itavehicleyard1 =
   {
 	"itabreda41",
+	"itabreda61",
 	"itafiat626",
 	"itaab41",
 	"itaas37",
+	"itaautocannone75",
 	"itasemovente47",
 	"itaspadovunque",
 	"ital6_40lf",
@@ -155,6 +166,7 @@ local itaunits =
 	"ital6_40lf",
 	"itam1542",
 	"itasemovente75_18",
+	"itasemovente90",
 	--"itasemovente75_34",
 	--"itap40",
 	--"itapanzeriv",

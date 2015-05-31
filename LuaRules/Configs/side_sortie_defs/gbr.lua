@@ -10,7 +10,7 @@ local gbrSorties = {
 		buildPic = "GBRAuster.png",
 		buildTime = 1000,
 	},
-  
+
 	gbr_sortie_interceptor = {
 		members = {
 			"gbrspitfiremkxiv",
@@ -26,7 +26,7 @@ local gbrSorties = {
 		buildPic = "GBRSPitfireMkXIV.png",
 		buildTime = 5000,
 	},
-  
+
 	gbr_sortie_fighter_bomber = {
 		members = {
 			"gbrspitfiremkix",
@@ -40,7 +40,7 @@ local gbrSorties = {
 		buildPic = "GBRSpitfireMkIX.png",
 		buildTime = 6750,
 	},
-  
+
 	gbr_sortie_attack = {
 		members = {
 			"gbrtyphoon",
@@ -54,7 +54,7 @@ local gbrSorties = {
 		buildPic = "GBRTyphoon.png",
 		buildTime = 6000,
 	},
-  
+
 	gbr_sortie_glider_horsa = {
 		members = {
 			"gbrhorsa",
@@ -68,7 +68,7 @@ local gbrSorties = {
 		description = "3 x Commando, 8 x Rifle, 2 x Sten SMG, 3 x Bren LMG, 2 x PIAT, 1 x Scout, 1 x 3\" Mortar, 1 x 75mm Pack Howitzer",
 		buildCostMetal = 5625,
 		buildPic = "GBRHorsa.png",
-		buildTime = 5625,
+		buildTime = 6750,
 	},
 }
 

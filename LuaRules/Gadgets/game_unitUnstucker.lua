@@ -6,7 +6,7 @@ function gadget:GetInfo()
     date      = "1 May 2014",
     license   = "GNU LGPL, v2.1 or later",
     layer     = 100,
-    enabled   = true  --  loaded by default?
+    enabled   = false  --  loaded by default?
   }
 end
 
@@ -80,7 +80,7 @@ local function ProcessUnit(unitID)
 				-- is it in a transport?
 				if not spGetUnitTransporter(unitID) then
 					-- does it have any move related orders?
-					local commands = spGetUnitCommands(unitID)
+					local commands = spGetUnitCommands(unitID, 1)
 					-- we really only need first command
 					if commands and #commands > 0 then
 						local tmpCommand = commands[1]
