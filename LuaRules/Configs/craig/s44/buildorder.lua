@@ -151,6 +151,22 @@ gadget.unitBuildOrder = UnitBag{
 		"usm4a4sherman", "usm4a4sherman", "usm4a4sherman",
 		"usm10wolverine",
 	},
+	ustankyard1 = UnitArray{
+		-- Works J
+		"usm5stuart",
+		"usm4a4sherman", "usm4a376sherman", "usm4a3105sherman",
+		"usm10wolverine",
+	},
+	ustankyard2 = UnitArray{
+		-- Works J
+		"usm5stuart",
+		"usm4a4sherman", "usm4jumbo", "usm4a3105sherman",
+		"usm10wolverine",
+	},
+	usspyard = UnitArray{
+		-- Works J
+		"usm7priest",
+	},
 		-- ITALY
 	itahq = UnitArray{
 		-- Works J
@@ -295,6 +311,9 @@ gadget.baseBuildOrder = {
 		"usstorage", "usstorage",
 		"ustankyard",
 		"ussupplydepot",
+		"usspyard",
+		"ustankyard1",
+		"ustankyard2",
 	},
 		ita = UnitArray{
 		-- Works J
@@ -328,6 +347,7 @@ gadget.baseBuilders = UnitSet{
 	"rusengineer",
 	"rusk31",
 	"ushqengineer",
+	"ushqaiengineer",
 	"usgmcengvehicle",
 	"itahqengineer",
 	"itaengineer", 

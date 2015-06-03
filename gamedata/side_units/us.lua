@@ -37,6 +37,24 @@ local usunits = {
     "pontoonraft",
   },
 
+  ushqaiengineer =
+  {
+    "usbarracks",
+    "usvehicleyard",
+    "usgunyard",
+    "usradar",
+    "usstorage",
+    "usspyard",
+    "usatminesign",
+    "usapminesign",
+    "ustankobstacle",
+    --"sandbags",
+    "ustankyard1",
+    "ustankyard2",
+    "rubberdingy",
+    "pontoonraft",
+  },
+
   usbarracks =
   {
     "ushqengineer",
