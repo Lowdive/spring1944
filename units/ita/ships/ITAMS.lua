@@ -1,4 +1,4 @@
-local ITA_MS = BoatMother:New{
+local ITA_MS = ArmedBoat:New{
 	name					= "MS type CRDA 60 t.",
 	description				= "Large Torpedo boat",
 	acceleration			= 0.3,
@@ -42,7 +42,7 @@ local ITA_MS = BoatMother:New{
 	},
 }
 
-local ITA_MS_Turret_20mm_Front = BoatChild:New{
+local ITA_MS_Turret_20mm_Front = OpenBoatTurret:New{
 	name					= "20mm Turret",
 	description				= "AA Turret",
 	objectName				= "ITAMS_Turret_20mm.s3o",
@@ -67,7 +67,6 @@ local ITA_MS_Turret_20mm_Front = BoatChild:New{
 		barrelrecoilspeed		= 20,
 		turretturnspeed			= 45,
 		elevationspeed			= 45,
-		fearlimit				= 25,
     },
 }
 
@@ -76,7 +75,7 @@ local ITA_MS_Turret_20mm_Rear = ITA_MS_Turret_20mm_Front:New{
 		[1] = {
 			mainDir		= [[0 0 -1]],
 		},
-		[1] = {
+		[2] = {
 			mainDir		= [[0 0 -1]],
 		},
 	},

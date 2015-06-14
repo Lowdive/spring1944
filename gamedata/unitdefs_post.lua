@@ -223,6 +223,10 @@ for name, ud in pairs(UnitDefs) do
 			ud.maxdamage = (powerBase ^ logMass)*scaleFactor
 			--Spring.Echo(name, "changed health to", ud.maxdamage)
 		end
+
+		if cp.mother then
+			ud.maxdamage = ud.mass * 2
+		end
 	end
 
 	if (modOptions.unit_los_mult) then
@@ -309,7 +313,14 @@ for name, ud in pairs(UnitDefs) do
 		end
 		ud.sounds = sounds
 	end
-
+	if ud.weapons then
+		for _, weapon in pairs(ud.weapons) do
+			if weapon.name:lower():find("tracer") or weapon.name:lower():find("noweapon") then
+				weapon.name = "TracerHack"
+			end
+		end
+	end
+	
 	-- add the unit to gamemaster buildoptions
 	GMBuildOptions[#GMBuildOptions + 1] = name
 	if name == "gmtoolbox" then GM_UD = ud end

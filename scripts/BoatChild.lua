@@ -1,11 +1,12 @@
 local unitDefID = Spring.GetUnitDefID(unitID)
 local teamID = Spring.GetUnitTeam(unitID)
+local GetUnitHealth = Spring.GetUnitHealth
 unitDefID = Spring.GetUnitDefID(unitID)
 unitDef = UnitDefs[unitDefID]
 info = GG.lusHelper[unitDefID]
- 
+
 local turretTurnSpeed = info.turretTurnSpeed
-local elevationSpeed = info.elevationSpeed 
+local elevationSpeed = info.elevationSpeed
 local barrelRecoilDist = info.barrelRecoilDist
 local barrelRecoilSpeed = info.barrelRecoilSpeed
 local aaWeapon = info.aaWeapon
@@ -20,9 +21,11 @@ local numRockets = info.numRockets
 local MIN_HEALTH = 1
 local FEAR_LIMIT = info.fearLimit or 20
 local PINNED_LEVEL = 0.8 * FEAR_LIMIT
+local SUPPRESSED_FIRE_RATE_PENALTY = 2
 
 local curFear = 0
 local isDisabled = false
+local isPinned = false
 local aaAiming = false
 local curRocket = 1
 
@@ -49,6 +52,15 @@ local backBlast = piece("backblast")
 local rockets = {}
 if numRockets > 0 then findPieces(rockets, "r_rocket") end
 
+local function DisabledSmoke()
+	while (1 == 1) do
+		if isDisabled then
+			EmitSfx(base, SFX.BLACK_SMOKE)
+		end
+		Sleep(500)
+	end
+end
+
 function Disabled(state)
 	isDisabled = state
 end
@@ -56,6 +68,7 @@ end
 
 function script.Create()
 	--Spring.Echo("OH HAI", rearFacing)
+	StartThread(DisabledSmoke)
 	Turn(turret, y_axis, math.rad(90 * facing))
 	if flare then
 		Hide(flare)
@@ -67,7 +80,7 @@ function script.Create()
 end
 
 function script.AimWeapon(weaponID, heading, pitch)
-	if isDisabled then return false end -- don't even animate if we are disabled
+	if isDisabled or isPinned then return false end -- don't even animate if we are pinned/disabled
 	Signal(2 ^ weaponID) -- 2 'to the power of' weapon ID
 	SetSignalMask(2 ^ weaponID)
 	if aaWeapon and aaWeapon == weaponID then
@@ -119,7 +132,7 @@ function script.Shot(weaponID)
 			if curRocket > numRockets then curRocket = 1 end
 		else
 			EmitSfx(flare or flares[weaponID], SFX.CEG + weaponID)
-			local barrelToMove = barrel or barrels[weaponID] 
+			local barrelToMove = barrel or barrels[weaponID]
 			if barrelToMove then
 				Move(barrelToMove, z_axis, -barrelRecoilDist)
 				WaitForMove(barrelToMove, z_axis)
@@ -129,11 +142,11 @@ function script.Shot(weaponID)
 	end
 end
 
-function script.AimFromWeapon(weaponID) 
+function script.AimFromWeapon(weaponID)
 	return sleeve
 end
 
-function script.QueryWeapon(weaponID) 
+function script.QueryWeapon(weaponID)
 	if aaWeapon and weaponID > numBarrels then
 		weaponID = weaponID - numBarrels
 	end
@@ -146,35 +159,35 @@ local function SetWeaponReload(multiplier)
 	end
 end
 
-local currFearState = 0
+local currFearState = "none"
 local fearChanged = false
 
 local function FearRecovery()
 	Signal(1) -- we _really_ only want one copy of this running at any time
 	SetSignalMask(1)
-	currFearState = 1
+	currFearState = "suppressed"
 	while curFear > 0 do
 		Sleep(1000)
 		curFear = curFear - 1
 		Spring.SetUnitRulesParam(unitID, "suppress", curFear)
-		if curFear > PINNED_LEVEL then
-			fearChanged = currFearState == 2
-			currFearState = 2
+		if curFear >= PINNED_LEVEL then
+			fearChanged = currFearState == "pinned"
+			currFearState = "pinned"
 			if fearChanged then
 				-- TODO: crew hiding anim
-				Disabled(true)
+				isPinned = true
 			end
 		else
-			fearChanged = currFearState == 1
-			currFearState = 1
+			fearChanged = currFearState == "suppressed"
+			currFearState = "suppressed"
 			if fearChanged then
 				-- reduce fire rate when suppressed but not pinned
-				SetWeaponReload(1.2)
-				Disabled(false)
+				SetWeaponReload(SUPPRESSED_FIRE_RATE_PENALTY)
+				isPinned = false
 			end
 		end
 	end
-	currFearState = 0
+	currFearState = "none"
 	SetWeaponReload(1.0)
 end
 
