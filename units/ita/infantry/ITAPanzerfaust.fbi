@@ -1,21 +1,20 @@
 [unitinfo] {
-  unitname=US101stBazooka;
-  name=Airborne Bazooka;
-  description=Airborne Heavy Anti-Tank Infantry;
+  unitname=ITAPanzerfaust;
+  name=Panzerfaust 60;
+  description=Anti-Tank Infantry;
   acceleration=0.375;
   airSightDistance=2500;
   brakeRate=0.9;
   buildCostEnergy=0;
   buildCostMetal=50;
-  buildPic=USGIBazooka.png;
   buildTime=50;
   canMove=1;
   category=INFANTRY MINETRIGGER;
-  corpse=USsoldier_dead;
+  corpse=ITAsoldier_dead;
   [customParams] {
     dontCount=1;
     feartarget=1;
-    soundcategory=US/Infantry;
+    soundcategory=ITA/Infantry;
   }
   damageModifier=0.265;
   flankingBonusMax=1.5;
@@ -25,16 +24,17 @@
   footprintX=1;
   footprintZ=1;
   iconType=antitank;
-  // init_cloaked=1;
-  mass=75;
-  maxDamage=140;
-  maxSlope=20;
-  // maxVelocity=1;
-  maxVelocity=1.6;
+  mass=50;
+  maxDamage=80;
+  maxSlope=15;
+  // maxVelocity=1.3;
+  maxVelocity=1;
   maxWaterDepth=5;
   movementClass=KBOT_Infantry;
   noChaseCategory=BUILDING FLAG INFANTRY AIR MINE;
-  objectName=USParaHAT.S3O;
+  objectName=ITAPanzerfaust.S3O;
+  repairable=0;
+  script=GERPanzerfaust.cob;
   seismicDistance=840;
   seismicSignature=0;
   [sfxtypes] {
@@ -49,15 +49,15 @@
     explosionGenerator8=custom:XSMALL_MUZZLEDUST;
   }
   showNanoFrame=0;
-  side=US;
+  side=ITA;
   sightDistance=570;
   smoothAnim=0;
   stealth=1;
   turnRate=1010;
   upright=1;
-  badTargetCategory=BUILDING FLAG INFANTRY SOFTVEH OPENVEH DEPLOYED;
+  badTargetCategory=FLAG;
 
-  weapon1=M9A1Bazooka;
+  weapon1=Panzerfaust;
   onlyTargetCategory1=BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED;
 }
 

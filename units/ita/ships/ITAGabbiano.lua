@@ -18,23 +18,13 @@ local ITA_Gabbiano = ArmedBoat:New{
 	turnRate				= 25,	
 	weapons = {	
 		[1] = {
-			name				= "ita450mmtorpedo",
-			onlyTargetCategory	= "LARGESHIP",
-			mainDir				= [[1 0 1]],
-			maxAngleDif			= 90,
-		},
-		[2] = {
-			name				= "ita450mmtorpedo",
-			onlyTargetCategory	= "LARGESHIP",
-			mainDir				= [[-1 0 1]],
-			maxAngleDif			= 90,
+			name				= "OTO100mmL47HE",
+			maxAngleDif			= 270,
+			onlyTargetCategory	= "BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED",
 		},
 	},
 	customparams = {
 		soundcategory		= "ITA/Boat",
-		maxammo				= 2,
-		weaponcost			= 40,
-		weaponswithammo		= 2,
 		children = {
 			"ITA_Gabbiano_Turret_100mm", 
 			"ITA_Gabbiano_Turret_20mm", 
@@ -61,9 +51,10 @@ local ITA_Gabbiano_Turret_100mm = OpenBoatTurret:New{
 		},
 	},
 	customparams = {
-		maxammo					= 30,
+		maxammo					= 18,
 		weaponcost				= 18,
 		weaponswithammo			= 1,
+
 		barrelrecoildist		= 7,
 		barrelrecoilspeed		= 10,
 		turretturnspeed			= 25,
@@ -88,14 +79,15 @@ local ITA_Gabbiano_Turret_20mm = OpenBoatTurret:New{
 		},
 	},
 	customparams = {
-	    maxammo					= 16, -- TODO: from BMO 37mm
-		aaweapon				= 1,
-		weaponcost				= 3,
+		maxammo					= 14,
+		weaponcost				= 4,
 		weaponswithammo			= 2,
+
 		barrelrecoildist		= 3,
 		barrelrecoilspeed		= 20,
 		turretturnspeed			= 45,
 		elevationspeed			= 45,
+		aaweapon				= 1,
     },
 }
 
@@ -119,15 +111,16 @@ local ITA_Gabbiano_Turret_Twin20mm = OpenBoatTurret:New{
 		},
 	},
 	customparams = {
-	    maxammo					= 16, -- TODO: from BMO 37mm
-		aaweapon				= 1,
-		weaponcost				= 3,
+		maxammo					= 14,
+		weaponcost				= 4,
 		weaponswithammo			= 2,
+
 		barrelrecoildist		= 3,
 		barrelrecoilspeed		= 20,
 		turretturnspeed			= 30,
 		elevationspeed			= 45,
 		facing					= 2,
+		aaweapon				= 1,
     },
 }
 
