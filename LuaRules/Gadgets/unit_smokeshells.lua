@@ -9,7 +9,10 @@ function gadget:GetInfo()
     enabled   = true  --  loaded by default?
   }
 end
-
+-- Mindecloakdistance under smoke
+-- default sniper has 220, let's make this a bit worse
+local Mindecloakdist = 250
+local CLOAK_TIMEOUT = 128
 -- how often to check units
 local UPDATE_PERIOD = 32
 local UPDATE_OFFSET = 5
@@ -45,21 +48,12 @@ if (not gadgetHandler:IsSyncedCode()) then
 end
 
 local SMOKE_WEAPON = 2 -- WARNING! Assume all smoke weapons will be in this slot
-local CMD_SMOKE = GG.CustomCommands.GetCmdID("CMD_SMOKE")
 local CMD_SMOKEGEN = GG.CustomCommands.GetCmdID("CMD_SMOKEGEN")
-
-local smokeCmdDesc = {
-	id 		 = CMD_SMOKE,
-  type   = CMDTYPE.ICON_MODE,
-	action = "togglesmoke",
-	tooltip = 'Toggle between High Explosive and Smoke rounds',
-	params = {0, 'Fire HE', 'Fire Smoke'},
-}
 
 local smokeGenCmdDesc = {
 	id 		 = CMD_SMOKEGEN,
 	type   = CMDTYPE.ICON,
-	name = "  Smoke  \n  Screen  ",
+	name = "Smoke Screen",
 	action = "smokegen",
 	tooltip = 'Activate Smoke generator',
 	hidden = false,
@@ -85,17 +79,15 @@ function gadget:Initialize()
 			Script.SetWatchWeapon(weaponId, true)
 		end
 	end
+	
+	local allUnits = Spring.GetAllUnits()
+	for i=1,#allUnits do
+		local unitID = allUnits[i]
+		gadget:UnitCreated(unitID, Spring.GetUnitDefID(unitID))
+	end
 end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID)
-	local weapons = UnitDefs[unitDefID].weapons
-	if weapons and #weapons > 1 then
-		local hasSmoke = WeaponDefs[weapons[SMOKE_WEAPON].weaponDef].customParams.smokeradius
-		local noButton = WeaponDefs[weapons[SMOKE_WEAPON].weaponDef].customParams.nosmoketoggle
-		if hasSmoke and not noButton then
-			InsertUnitCmdDesc(unitID, smokeCmdDesc)
-		end
-	end
 	-- smoke generator
 	local params = UnitDefs[unitDefID].customParams
 	if params then
@@ -113,33 +105,17 @@ end
 
 function ChangeSmokeGenStatus(unitID, smokeGenEnabled)
 	local cmdDescID = FindUnitCmdDesc(unitID, CMD_SMOKEGEN)
-    local disabledSmokeCmd = {}
-    for k,v in pairs(smokeGenCmdDesc) do
-        disabledSmokeCmd[k] = v
-    end
-    disabledSmokeCmd.disabled = not smokeGenEnabled
-	EditUnitCmdDesc(unitID, cmdDescID, disabledSmokeCmd)
+	if cmdDescID then
+		local disabledSmokeCmd = {}
+		for k,v in pairs(smokeGenCmdDesc) do
+			disabledSmokeCmd[k] = v
+		end
+		disabledSmokeCmd.disabled = not smokeGenEnabled
+		EditUnitCmdDesc(unitID, cmdDescID, disabledSmokeCmd)
+	end
 end
 
 function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	if cmdID == CMD_SMOKE then
-		local cmdDescID = Spring.FindUnitCmdDesc(unitID, CMD_SMOKE)
-		if not cmdDescID then return false end
-		if cmdParams[1] == 1 then
-			Spring.CallCOBScript(unitID, "SwitchToSmoke", 0)
-		else
-			Spring.CallCOBScript(unitID, "SwitchToHE", 0)
-		end
-        --you can't edit a single value in the params table for
-        --editUnitCmdDesc, so we generate a new table
-        local updatedCmdParams = {
-            cmdParams[1],
-            smokeCmdDesc.params[2],
-            smokeCmdDesc.params[3]
-        }
-		Spring.EditUnitCmdDesc(unitID, cmdDescID, { params = updatedCmdParams}) 
-		return false
-	end
 	if cmdID == CMD_SMOKEGEN then
 		-- has our generator recharged?
 		if (SmokeGenCooldowns[unitID] or 0) == 0 then
@@ -192,7 +168,8 @@ function ApplySmoke(unitID)
 	local oldAirLos = GetUnitSensorRadius(unitID, "airLos")
 	local oldSeismic = GetUnitSensorRadius(unitID, "seismic")
 
-	if oldSight > 0 then
+	-- On first round oldLos = 0, check that to avoid overwriting it in later rounds
+	if oldSight > 0 and SmokedUnits[unitID].oldLos == 0 then
 		SmokedUnits[unitID].oldLos = oldSight
 	end
 	if oldRadar > 0 then
@@ -205,16 +182,24 @@ function ApplySmoke(unitID)
 		SmokedUnits[unitID].oldSeismic = oldSeismic
 	end
 
-
 	SetUnitRulesParam(unitID, "smoked", 1)
 	-- make the unit blind
-	SetUnitSensorRadius(unitID, "los", 0)
+	SetUnitSensorRadius(unitID, "los", 180)
 	SetUnitSensorRadius(unitID, "radar", 0)
 	SetUnitSensorRadius(unitID, "airLos", 0)
 	SetUnitSensorRadius(unitID, "seismic", 0)
 
 	-- hide the unit
-	SetUnitCloak(unitID, 2)
+	local tmpUDID = GetUnitDefID(unitID)
+	if tmpUDID then
+		if UnitDefs[tmpUDID].canCloak then
+			SetUnitCloak(unitID, 2)
+			else
+			SetUnitCloak(unitID, 2, Mindecloakdist)
+			Spring.SetUnitRulesParam(unitID, 'mindecloakdist', Mindecloakdist)
+		end
+		Spring.SetUnitRulesParam(unitID, 'decloak_activity_frame', Spring.GetGameFrame())
+	end
 	--SetUnitCloak(unitID, true) this is redundant, I'm pretty sure.
 	Spring.SetUnitStealth(unitID, true)
 	-- affect the weapons
@@ -229,6 +214,7 @@ function ApplySmoke(unitID)
 			end
 		end
 	end
+	SmokedUnits[unitID].smokeApplied = true
 end
 
 function RemoveSmoke(unitID)
@@ -237,16 +223,18 @@ function RemoveSmoke(unitID)
 	local defaultRadar = SmokedUnits[unitID].oldRadar
 	local defaultAirLos = SmokedUnits[unitID].oldAirLos
 	local defaultSeismic = SmokedUnits[unitID].oldSeismic
+	local defaultMincloak = SmokedUnits[unitID].oldMincloak
 
 	SetUnitRulesParam(unitID, "smoked", 0)
-	-- set the unit's los to that value
+	-- Set sensor values back to unit defaults
+	-- airLos seems to also set los in current engine (104.0.1). That's why airLos has to be set first.
+	SetUnitSensorRadius(unitID, "airLos", defaultAirLos)
 	SetUnitSensorRadius(unitID, "los", defaultLos)
 	SetUnitSensorRadius(unitID, "radar", defaultRadar)
-	SetUnitSensorRadius(unitID, "airLos", defaultAirLos)
 	SetUnitSensorRadius(unitID, "seismic", defaultSeismic)
 
 	-- unhide the unit
-	SetUnitCloak(unitID, 1)
+	--SetUnitCloak(unitID, 1)
 	-- and make it cloak/stealth by its own if it can
 	local tmpUDID = GetUnitDefID(unitID)
 	if tmpUDID then
@@ -270,6 +258,38 @@ function RemoveSmoke(unitID)
 			end
 		end
 	end
+	SmokedUnits[unitID].smokeApplied = false
+end
+
+local lastCloaked = {}
+local lastDecloaked = {}
+-- AllowUnitCloak(unitID, enemyID) -> return cloakStatus
+-- enemyID is nil if there is no unit within minCloakDistance
+-- called every SlowUpdate to check if you want to stay cloaked
+function gadget:AllowUnitCloak(unitID, enemyID)
+	--Spring.Echo("AllowUnitCloak", enemyID)
+	if SmokedUnits[unitID] then
+		local checkID = Spring.GetUnitNearestEnemy(unitID, 5000, false)
+		local separation = checkID and Spring.GetUnitSeparation(unitID, checkID) or "no enemy"
+		local name = UnitDefs[Spring.GetUnitDefID(unitID)].name
+		--Spring.Echo("SmokedUnit", name, unitID, enemyID, checkID, separation, SmokedUnits[unitID].underSmoke, Spring.GetUnitRulesParam(unitID, 'mindecloakdist'))
+	end
+	local n = Spring.GetGameFrame()
+	local canCloak = (enemyID == nil) and (((lastDecloaked[unitID] or 0) + CLOAK_TIMEOUT) < n)
+	if canCloak then 
+		lastCloaked[unitID] = n 
+	end
+	--Spring.Echo(unitID, enemyID, "I last cloaked in frame", lastCloaked[unitID], lastDecloaked[unitID], canCloak)
+	return canCloak
+end
+
+-- AllowUnitDecloak(unitID, objectID, weaponID) -> return allowToDecloak
+-- called when building or firing
+-- also every SlowUpdate if already cloaked?
+function gadget:AllowUnitDecloak(unitID, objectID, weaponID)
+	--Spring.Echo("AllowUnitDecloak", unitID, objectID, weaponID)
+	lastDecloaked[unitID] = Spring.GetGameFrame()
+	return true
 end
 
 function gadget:GameFrame(n)
@@ -299,8 +319,8 @@ function gadget:GameFrame(n)
 	if n % UPDATE_PERIOD == UPDATE_OFFSET then
 		-- mark smoked units as not smoked first (to keep track of units leaving smoked area)
 		for i, tmpUnit in pairs(SmokedUnits) do
-			if tmpUnit.isSmoked then
-				SmokedUnits[i].isSmoked = false
+			if tmpUnit.underSmoke then
+				SmokedUnits[i].underSmoke = false
 			end
 		end
 		-- loop through all the smokes, search for units
@@ -312,9 +332,9 @@ function gadget:GameFrame(n)
 						for _, unitID in ipairs(unitsInSmoke) do
 							-- mark units for smoke effect
 							if (SmokedUnits[unitID]) then
-								SmokedUnits[unitID].isSmoked = true
+								SmokedUnits[unitID].underSmoke = true
 							else
-								SmokedUnits[unitID] = {isSmoked = true, oldLos = 0, oldRadar = 0,
+								SmokedUnits[unitID] = {underSmoke = true, oldLos = 0, oldRadar = 0,
                                     oldAirLos = 0, oldSeismic = 0}
 							end
 						end
@@ -324,14 +344,18 @@ function gadget:GameFrame(n)
 		end
 		-- now loop trough units again, and apply/unapply smoke effects based on marks
 		for UnitID, tmpUnit in pairs(SmokedUnits) do
-			if not tmpUnit.isSmoked then
+			if not tmpUnit.underSmoke then
 				-- remove effect from unit
 				RemoveSmoke(UnitID)
 				-- remove unit from tracking
 				SmokedUnits[UnitID] = nil
-			else
-				-- apply effect to unit
-				ApplySmoke(UnitID)
+				Spring.SetUnitRulesParam(UnitID, 'decloak_activity_frame', n)
+			elseif ((Spring.GetUnitRulesParam(UnitID, 'decloak_activity_frame') or 0) + CLOAK_TIMEOUT) < n then
+				if not SmokedUnits[UnitID].smokeApplied then
+					-- apply effect to unit
+					GG.cloakedUnits[UnitID] = Spring.GetUnitDefID(UnitID)
+					ApplySmoke(UnitID)
+				end
 			end
 		end
 		-- process smoke generator cooldown

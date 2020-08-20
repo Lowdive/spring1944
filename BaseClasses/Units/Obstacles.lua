@@ -5,18 +5,19 @@ local Mine = Unit:New{
 	kamikaze				= true,
 	maxDamage				= 10,
 	maxWaterDepth			= 50,
-	objectName				= "APMine.S3O", -- never seen
-	minCloakDistance		= 1e-07,
+	objectName				= "GEN/APMine.S3O", -- never seen
+	minCloakDistance		= 3,
 	script					= "Mine.cob",
 	selfDestructCountdown	= 1,
 	sightDistance			= 160,
 	stealth					= true,
-	useBuildingGroundDecal	= true,
+	useBuildingGroundDecal	= false,
 	yardmap					= "y",
-	
+
 	customparams = {
+		damageGroup			= "mines",
 		hiddenbuilding		= true,
-		dontcount			= true,
+		dontcount			= 1,
 		ismine				= true,
 	}
 }
@@ -24,11 +25,10 @@ local Mine = Unit:New{
 local MineSign = Mine:New{
 	buildCostMetal			= 360,
 	buildingGroundDecalType	= "",
-	buildTime				= 360,
 	category				= "FLAG",
 	minCloakDistance		= 160,
-	objectName				= "MineSign.S3O",
-	script					= "null.cob",
+	objectName				= "GEN/MineSign.S3O",
+	script					= "null.lua",
 	sightDistance			= 1,
 	yardmap					= "o",
 	useBuildingGroundDecal	= false,
@@ -38,7 +38,6 @@ local TankObstacle = Unit:New{
 	name					= "Tank Obstacle",
 	description				= "Blocks Tracked & Wheeled Vehicles",
 	buildCostMetal			= 10,
-	buildTime				= 10,
 	category				= "BUILDING",
 	corpse					= "TankObstacle",
 	footprintX				= 2,
@@ -47,13 +46,14 @@ local TankObstacle = Unit:New{
 	maxDamage				= 8000,
 	maxSlope				= 20,
 	maxWaterDepth			= 50,
-	objectName				= "TankObstacle.S3O",
-	script					= "null.cob",
+	objectName				= "GEN/TankObstacle.S3O",
+	script					= "null.lua",
 	yardmap					= "yy yy",
 
   	customparams = {
+		damageGroup			= "heavyTanks",
 		hiddenbuilding		= true,
-		dontcount			= true,
+		dontcount			= 1,
 		isobstacle			= true,
 	},
 }

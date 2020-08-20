@@ -17,6 +17,7 @@ end
 -- OpenGL
 local glBeginEnd               = gl.BeginEnd
 local glBlending               = gl.Blending
+local glBlendFunc              = gl.BlendFunc
 local glClear                  = gl.Clear
 local glColor                  = gl.Color
 local glDepthMask              = gl.DepthMask
@@ -322,9 +323,9 @@ function DrawIconQuad(iconPos, color)
 	local ymin = rectMinY
 	local ymax = rectMaxY
 	glColor(color)
-	glBlending(GL_SRC_ALPHA, GL_ONE)
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE)
 	glRect(xmin, ymin, xmax, ymax)
-	glBlending(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 end
 
 -- Mouse functions
@@ -401,7 +402,7 @@ end
 
 function widget:DrawScreen()
 	unitCounts, transID = SortedUnits()--spGetSelectedUnitsCounts()
-	unitTypes = unitCounts.n;
+	unitTypes = unitCounts.n
 	if transID then unitTypes = unitTypes + 1 end
 	if (unitTypes <= 0) then
 		countsTable = {}
@@ -472,7 +473,14 @@ function widget:DrawScreen()
 	end
 	glColor(1,1,1,1)
 	-- draw the highlights
-	if (not widgetHandler:InTweakMode() and (mouseIcon >= 0)) then
+	-- 104 bug: attempt to call method 'InTweakMode' (a nil value)
+	local inTweak
+	if widgetHandler.InTweakMode then
+		inTweak = widgetHandler:InTweakMode()
+	else
+		inTweak = widgetHandler.tweakMode
+	end
+	if (not inTweak and (mouseIcon >= 0)) then
 		if (lb or mb or rb) then
 			DrawIconQuad(mouseIcon, { 1, 0, 0, 0.333 })  --  red highlight
 		else

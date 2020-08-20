@@ -1,46 +1,9 @@
 -- Smallarms - Infantry Rifles
-
--- Rifle Base Class
-local RifleClass = Weapon:New{
-  accuracy           = 100,
-  areaOfEffect       = 1,
-  avoidFeature       = true,
-  avoidFriendly      = false,
-  burnblow           = false,
-  collideFeature     = true,
-  collideFriendly    = false,
-  collisionSize      = 2.5,
-  coreThickness      = 0.15,
-  duration           = 0.01,
-  explosionGenerator = [[custom:Bullet]],
-  fireStarter        = 0,
-  id                 = 2, -- used for cob based fear from rifle/smg
-  impactonly         = 1,
-  impulsefactor      = 0.1,
-  intensity          = 0.9,
-  interceptedByShieldType = 8,
-  laserFlareSize     = 0.0001,
-  movingAccuracy     = 888,
-  rgbColor           = [[1.0 0.75 0.0]],
-  sprayAngle         = 100,
-  thickness          = 0.4,
-  tolerance          = 6000,
-  turret             = true,
-  weaponType         = [[LaserCannon]],
-  weaponVelocity     = 1500,
-  customparams = {
-    damagetype         = [[smallarm]],
-  },
-  damage = {
-    default            = 33,
-  },
-}
-
 -- Implementations
 
 -- SMLE No. 4 Mk. I (GBR)
 local Enfield = RifleClass:New{
-  accuracy           = 50, -- overwrites default
+  accuracy           = 150, -- overwrites default
   name               = [[Lee-Enfield No. 4 Mk. I]],
   range              = 680,
   reloadtime         = 2.5,
@@ -91,7 +54,7 @@ local MosinNagant = RifleClass:New{
 -- SVT (USSR)
 local SVT = RifleClass:New{
   name               = [[SVT-40]],
-  range              = 535,
+  range              = 575,
   reloadtime         = 2,
   rgbColor           = [[0.0 0.7 0.0]], -- overwrites default
   soundStart         = [[RUS_SVT]],
@@ -100,7 +63,7 @@ local SVT = RifleClass:New{
 
 -- Carcano 91/38 (ITA)
 local Mod91 = RifleClass:New{
-  accuracy           = 95, -- overwrites default
+  accuracy           = 195, -- overwrites default
   name               = [[Carcano Mod.91/38]],
   range              = 610,
   reloadtime         = 2.6,
@@ -112,22 +75,65 @@ local Mod91 = RifleClass:New{
 
 -- Carcano 91/41 (ITA)
 local Mod91_41 = Mod91:New{
-  accuracy           = 65,
+  accuracy           = 165,
   name               = [[Carcano Mod.91/41]],
-  range              = 640,
+  range              = 644,
+}
+-- Breda Mod. 1935 PG
+local Breda_35PG = Mod91:New{
+  reloadtime         = 1.5,
+  accuracy           = 185,
+  name               = [[Breda Mod. 1935 PG]],
+  range              = 614,
 }
 
 -- Arisaka type 99 (JPN)
 local Arisaka99 = RifleClass:New{
-  accuracy           = 95, -- overwrites default
+  accuracy           = 185, -- overwrites default
   name               = [[Arisaka Type 99]],
   range              = 630,
   reloadtime         = 2.5,
   soundStart         = [[JPN_Arisaka_Type99]],
 }
 
+-- Sweden
+-- Ag M/42
+local AgM42 = RifleClass:New{
+  name               = [[Automatgevär m/42]],
+  range              = 595,
+  reloadtime         = 1.7,
+  soundStart         = [[AG_M_42]],
+  damage = {
+    default            = 30,
+  },
+}
 
+-- Gevar M/38
+local Gevar_M_38 = RifleClass:New{
+	accuracy           = 175, -- 
+	name               = [[6,5 mm Gevär m/38]],
+	range              = 630,
+	reloadtime         = 2.4,
+  damage = {
+    default            = 30,
+  },
+	soundStart         = [[SWE_M_38_rifle]],
+}
 
+-- Partisan rifle
+local HVAM96 = RifleClass:New(K98k):New{
+	name				= [[m/96 Partisan rifle]],
+	soundStart			= [[HVA_M_96]],
+}
+
+-- Hungary
+-- FÉG 35M
+local HUN_FEG35M = RifleClass:New{
+	name               = [[FÉG 35M]],
+	range              = 670,
+	reloadtime         = 2.9,
+	soundStart         = [[HUN_FEG_35M]],
+}
 
 -- Sniper Rifle Base Class
 local SniperRifleClass = RifleClass:New{
@@ -144,6 +150,7 @@ local SniperRifleClass = RifleClass:New{
     damagetype         = [[smallarm]],
     fearaoe            = 90,
     fearid             = 401,
+	scriptanimation    = [[sniper]],
   },
   damage = {
     default              = 625,
@@ -193,6 +200,16 @@ local Arisaka99Sniper = SniperRifleClass:New{
   soundStart         = [[JPN_Arisaka_Type99]],
 }
 
+local Gevar_M_38_Sniper = SniperRifleClass:New{
+	name			= "6,5 mm Gevдr m/41 Sniper",
+	soundStart		= [[SWE_M_38_rifle]],
+}
+
+local FEG_35M_Sniper = SniperRifleClass:New{
+	name			= "FÉG 35M Sniper Model",
+	soundStart         = [[HUN_FEG_35M]],
+}
+
 -- Return only the full weapons
 return lowerkeys({
   Enfield = Enfield,
@@ -202,6 +219,7 @@ return lowerkeys({
   MosinNagant = MosinNagant,
   Mod91 = Mod91,
   Mod91_41 = Mod91_41,
+  Breda_35PG=Breda_35PG,
   Arisaka99 = Arisaka99,
   -- sniper weapons
   Enfield_T = Enfield_T,
@@ -211,4 +229,10 @@ return lowerkeys({
   SVT = SVT,
   Mod91Sniper = Mod91Sniper,
   Arisaka99Sniper = Arisaka99Sniper,
+  AgM42 = AgM42,
+  Gevar_M_38 = Gevar_M_38,
+  Gevar_M_38_Sniper = Gevar_M_38_Sniper,
+  HVAM96 = HVAM96,
+  feg35m = HUN_FEG35M,
+  feg35m_sniper = FEG_35M_Sniper,
 })

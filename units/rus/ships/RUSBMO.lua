@@ -1,70 +1,67 @@
 local RUS_BMO = ArmedBoat:New{
 	name					= "BMO Class Subchaser",
 	description				= "Armoured light patrol ship",
+	movementClass			= "BOAT_RiverSmall",
 	acceleration			= 0.1,
 	brakeRate				= 0.05,
 	buildCostMetal			= 1700,
-	buildTime				= 1700,
 	collisionVolumeOffsets	= [[0.0 -9.0 0.0]],
 	collisionVolumeScales	= [[24.0 12.0 160.0]],
-	corpse					= "RUSBMO_dead",
 	mass					= 5620,
 	maxDamage				= 5880, --+10% because it has armor
 	maxReverseVelocity		= 1.1,
-	maxVelocity				= 2.2,
-	movementClass			= "BOAT_LightPatrol",
-	objectName				= "RUSBMO.s3o",
+	maxVelocity				= 3.12,
 	transportCapacity		= 4, -- 4 x 1fpu turrets
-	turnRate				= 300,	
+	turnRate				= 100,	
 	weapons = {	
 		[1] = { -- give primary weapon for ranging
 			name				= "M1939_61k37mmaa",
-			onlyTargetCategory	= "BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED",
 		},
 	},
 	customparams = {
-		soundCategory			= "RUS/Boat",
 		killvoicecategory		= "RUS/Boat/RUS_BOAT_KILL",
 		killvoicephasecount		= 3,
 		children = {
-			"RUS_Turret_37mm_Front", 
-			"RUS_Turret_45mm_Rear", 
-			"RUS_BMO_Turret_DshKAA", 
-			"RUS_BMO_Turret_Vickers", 
+			"RUSTurret_37mm_Front", 
+			"RUSTurret_45mm_Rear", 
+			"RUSBMO_Turret_DshKAA", 
+			"RUSBMO_Turret_Vickers", 
 		},
 		deathanim = {
 			["z"] = {angle = -30, speed = 10},
 		},
+		smokegenerator		=	1,
+		smokeradius		=	300,
+		smokeduration		=	40,
+		smokecooldown		=	30,
+		smokeceg		=	"SMOKESHELL_Medium",
+
 	},
 }
 
 local RUS_Turret_37mm_Front = PartiallyEnclosedBoatTurret:New{ -- Used on multiple vessels
 	name					= "37mm Turret",
 	description				= "Primary Turret",
-	objectName				= "RUSBMO_Turret_37mm.s3o",
+	objectName				= "<SIDE>/RUSBMO_Turret_37mm.s3o",
   	weapons = {	
 		[1] = {
 			name				= "M1939_61k37mmaa",
 			maxAngleDif			= 270,
-			badTargetCategory	= "BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP DEPLOYED",
-			onlyTargetCategory	= "AIR",
 		},
 		[2] = {
 			name				= "M1939_61k37mmhe",
 			maxAngleDif			= 270,
-			onlyTargetCategory	= "BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED",
 		},
 	},
 	customparams = {
 		maxammo					= 14,
-		weaponcost				= 6,
-		weaponswithammo			= 2,
 
 		barrelrecoildist		= 4,
 		barrelrecoilspeed		= 20,
 		turretturnspeed			= 90,
 		elevationspeed			= 90,
 		aaweapon				= 1,
+
     },
 }
 local RUS_Turret_37mm_Rear = RUS_Turret_37mm_Front:New{
@@ -78,23 +75,21 @@ local RUS_Turret_37mm_Rear = RUS_Turret_37mm_Front:New{
 	},
 	customparams = {
 		facing					= 2,
+		defaultheading1		= math.rad(180),
     },
 }
 
 local RUS_BMO_Turret_DshKAA = OpenBoatTurret:New{
 	name					= "BMO DshK Turret",
 	description				= "Heavy Machinegun Turret",
-	objectName				= "RUSBMO_Turret_DshKAA.s3o",
 	weapons = {	
 		[1] = { -- original BMO used twin_dshk but we can use 2 actual weapons here
 			name				= "dshk",
-			onlyTargetCategory	= "INFANTRY SOFTVEH AIR OPENVEH TURRET",
 			mainDir		= [[0 0 -1]],
 			maxAngleDif			= 358,
 		},
 		[2] = {
 			name				= "dshk",
-			onlyTargetCategory	= "INFANTRY SOFTVEH AIR OPENVEH TURRET",
 			mainDir		= [[0 0 -1]],
 			maxAngleDif			= 358,
 			slaveTo				= 1,
@@ -106,23 +101,21 @@ local RUS_BMO_Turret_DshKAA = OpenBoatTurret:New{
 		turretturnspeed			= 80,
 		elevationspeed			= 45,
 		facing					= 2,
+		defaultheading1		= math.rad(180),
 	},
 }
 
 local RUS_BMO_Turret_Vickers = OpenBoatTurret:New{
 	name					= "BMO Vickers .50cal Turret",
 	description				= "Heavy Machinegun Turret",
-	objectName				= "RUSBMO_Turret_Vickers.s3o",
 	weapons = {	
 		[1] = {
 			name				= "dshk", --"twin05calVickers",
-			onlyTargetCategory	= "INFANTRY SOFTVEH AIR OPENVEH TURRET",
 			mainDir		= [[0 0 -1]],
 			maxAngleDif			= 270,
 		},
 		[2] = {
 			name				= "dshk", --"twin05calVickers",
-			onlyTargetCategory	= "INFANTRY SOFTVEH AIR OPENVEH TURRET",
 			mainDir		= [[0 0 -1]],
 			maxAngleDif			= 270,
 		},
@@ -133,29 +126,28 @@ local RUS_BMO_Turret_Vickers = OpenBoatTurret:New{
 		turretturnspeed			= 60,
 		elevationspeed			= 35,
 		facing					= 2,
+		defaultheading1		= math.rad(180),
 	},
 }
 
 local RUS_Turret_45mm_Front = OpenBoatTurret:New{ -- Used on multiple vessels
 	name					= "45mm Turret",
 	description				= "Primary Turret",
-	objectName				= "RUSBMO_Turret_45mm.s3o",
+	objectName				= "<SIDE>/RUSBMO_Turret_45mm.s3o",
   	weapons = {	
 		[1] = {
 			name				= "M1937_40k45mmhe",
 			maxAngleDif			= 300,
-			onlyTargetCategory	= "BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED",
 		},
 	},
 	customparams = {
 		maxammo					= 16,
-		weaponcost				= 8,
-		weaponswithammo			= 1,
 
 		barrelrecoildist		= 4,
 		barrelrecoilspeed		= 20,
 		turretturnspeed			= 25,
 		elevationspeed			= 30,
+
     },
 }
 local RUS_Turret_45mm_Rear = RUS_Turret_45mm_Front:New{
@@ -166,15 +158,16 @@ local RUS_Turret_45mm_Rear = RUS_Turret_45mm_Front:New{
 	},
 	customparams = {
 		facing					= 2,
+		defaultheading1		= math.rad(180),
     },
 }
 
 return lowerkeys({
 	["RUSBMO"] = RUS_BMO,
-	["RUS_Turret_37mm_Front"] = RUS_Turret_37mm_Front,
-	["RUS_Turret_37mm_Rear"] = RUS_Turret_37mm_Rear,
-	["RUS_Turret_45mm_Front"] = RUS_Turret_45mm_Front,
-	["RUS_Turret_45mm_Rear"] = RUS_Turret_45mm_Rear,
-	["RUS_BMO_Turret_DshKAA"] = RUS_BMO_Turret_DshKAA,
-	["RUS_BMO_Turret_Vickers"] = RUS_BMO_Turret_Vickers,
+	["RUSTurret_37mm_Front"] = RUS_Turret_37mm_Front,
+	["RUSTurret_37mm_Rear"] = RUS_Turret_37mm_Rear,
+	["RUSTurret_45mm_Front"] = RUS_Turret_45mm_Front,
+	["RUSTurret_45mm_Rear"] = RUS_Turret_45mm_Rear,
+	["RUSBMO_Turret_DshKAA"] = RUS_BMO_Turret_DshKAA,
+	["RUSBMO_Turret_Vickers"] = RUS_BMO_Turret_Vickers,
 })

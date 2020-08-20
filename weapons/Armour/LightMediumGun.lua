@@ -1,77 +1,22 @@
 -- Armour - Light-Medium Gun (50 to 57mm)
-
--- LightMediumGun Base Class
-local LightMediumGunClass = Weapon:New{
-  accuracy           = 100,
-  avoidFeature		 = false,
-  collisionSize      = 4,
-  impulseFactor      = 0,
-  intensity          = 0.25,
-  leadBonus          = 0.5,
-  leadLimit          = 0,
-  movingAccuracy     = 600,
-  separation         = 2, 
-  size               = 1,
-  soundStart         = [[GER_50mm]], -- move later?
-  stages             = 50,
-  tolerance          = 300,
-  turret             = true,
-  weaponType         = [[Cannon]],
-  customparams = {
-    cegflare           = "MEDIUM_MUZZLEFLASH",
-  }
-}
-
--- HE Round Class
-local LightMediumGunHEClass = Weapon:New{
-  accuracy           = 300,
-  edgeEffectiveness  = 0.25,
-  explosionGenerator = [[custom:HE_Medium]],
-  explosionSpeed     = 30, -- needed?
-  name               = [[HE Shell]],
-  rgbColor           = [[0.5 0.5 0.0]],
-  soundHitDry        = [[GEN_Explo_2]],
-  customparams = {
-    damagetype         = [[explosive]],
-    fearaoe            = 50,
-    fearid             = 301,
-  },
-}
-
--- AP Round Class
-local LightMediumGunAPClass = Weapon:New{
-  areaOfEffect       = 10,
-  canattackground    = false,
-  colormap           = [[ap_colormap.png]],
-  edgeEffectiveness  = 0.1,
-  explosionGenerator = [[custom:AP_Medium]],
-  explosionSpeed     = 100, -- needed?
-  impactonly         = 1,
-  name               = [[AP Shell]],
-  soundHitDry        = [[GEN_Explo_1]],
-  customparams = {
-    damagetype         = [[kinetic]],
-  },  
-}
-
 -- Implementations
 
 -- QF 6Pdr 57mm (GBR)
-local QF6Pdr57mm = LightMediumGunClass:New{
+local QF6Pdr57mm = LightMediumGun:New{
   name               = [[QF 6 Pdr Mk.?]],
   range              = 1200,
   reloadTime         = 4.95,
 }
 
-local QF6Pdr57mmHE = QF6Pdr57mm:New(LightMediumGunHEClass, true):New{
+local QF6Pdr57mmHE = LightMediumHE:New(QF6Pdr57mm, true):New{
   areaOfEffect       = 55,
   weaponVelocity     = 1100,
   damage = {
     default            = 760,
   },  
 }
-local QF6Pdr57mmAP = QF6Pdr57mm:New(LightMediumGunAPClass, true):New{
-  weaponVelocity     = 1670,
+local QF6Pdr57mmAP = MediumAP:New(QF6Pdr57mm, true):New{
+  weaponVelocity     = 1800,
   customparams = {
     armor_penetration_1000m = 66,
     armor_penetration_100m  = 86,
@@ -82,36 +27,51 @@ local QF6Pdr57mmAP = QF6Pdr57mm:New(LightMediumGunAPClass, true):New{
 }
 
 -- Naval QF 6-Pounder Mk IIA - uses only HE
-local QF6Pdr57MkIIAHE = QF6Pdr57mm:New(LightMediumGunHEClass, false):New{
+local QF6Pdr57MkIIAHE = LightMediumHE:New(QF6Pdr57mm, false):New{
 	name		= [[QF 6-Pounder Mk IIA]],
-	-- autoloader, 40 shots per minute
-	reloadTime	= 1.5,
+	-- autoloader, 50 shots per minute
+	reloadTime	= 1.2, 
 	areaOfEffect       = 55,
-	weaponVelocity     = 1100,
+	movingAccuracy     = 300,
+	weaponVelocity     = 1210,
 	damage = {
 		default		= 760,
 	},
 }
 
+-- Swedish naval 57mm gun 	57mm/26.9 Finspång QF M/1895
+-- stats from http://www.navypedia.org/arms/sweden/sw_guns.htm
+local SWE_57mmM95 = LightMediumHE:New(QF6Pdr57mm, false):New{
+	name		= [[57mm/26.9 Finspång QF M/1895]],
+	-- 20 rounds per minute
+	reloadTime	= 3,
+	areaOfEffect	= 50,
+	movingAccuracy     = 300,
+	weaponVelocity	= 1040,
+	damage = {
+		default		= 835,
+	},
+}
+
 -- KwK39 L60 50mm (GER)
-local KwK50mmL60 = LightMediumGunClass:New{
+local KwK50mmL60 = LightMediumGun:New{
   name               = [[5cm KwK39 L/60]],
   range              = 1125,
   reloadTime         = 4.95,
 }
 
-local KwK50mmL60HE = KwK50mmL60:New(LightMediumGunHEClass, true):New{
+local KwK50mmL60HE = LightMediumHE:New(KwK50mmL60, true):New{
   areaOfEffect       = 55,
   weaponVelocity     = 1100,
   damage = {
     default            = 330, -- much lower than 6pdr?
   },  
 }
-local KwK50mmL60AP = KwK50mmL60:New(LightMediumGunAPClass, true):New{
+local KwK50mmL60AP = MediumAP:New(KwK50mmL60, true):New{
   weaponVelocity     = 1670,
   customparams = {
-    armor_penetration_1000m = 44,
-    armor_penetration_100m  = 67,
+    armor_penetration_1000m = 47,
+    armor_penetration_100m  = 69,
   },
   damage = {
     default            = 1435,
@@ -119,14 +79,14 @@ local KwK50mmL60AP = KwK50mmL60:New(LightMediumGunAPClass, true):New{
 }
 
 -- ZiS-2 57mm (RUS)
-local ZiS257mm = LightMediumGunClass:New{
+local ZiS257mm = LightMediumGun:New{
   name               = [[ZiS-2 57mm]],
   range              = 1180,
   reloadTime         = 4.95,
 }
 
 -- Currently only AP used
-local ZiS257mmAP = ZiS257mm:New(LightMediumGunAPClass, true):New{
+local ZiS257mmAP = MediumAP:New(ZiS257mm, true):New{
   weaponVelocity     = 1980,
   customparams = {
     armor_penetration_1000m = 64,
@@ -138,20 +98,21 @@ local ZiS257mmAP = ZiS257mm:New(LightMediumGunAPClass, true):New{
 }
 
 -- Type 97 57mm (JPN)
-local Type9757mm = LightMediumGunClass:New{
+local Type9757mm = LightMediumGun:New{
   name               = [[Type 97 57mm]],
   range              = 980,
+  movingAccuracy     = 300,  -- mainly because of naval use
   reloadTime         = 4.0,
 }
 
-local Type9757mmHE = Type9757mm:New(LightMediumGunHEClass, true):New{
+local Type9757mmHE = LightMediumHE:New(Type9757mm, true):New{
   areaOfEffect       = 57,
-  weaponVelocity     = 800,
+  weaponVelocity     = 620,
   damage = {
     default            = 1400,
   },  
 }
-local Type9757mmAP = Type9757mm:New(LightMediumGunAPClass, true):New{
+local Type9757mmAP = MediumAP:New(Type9757mm, true):New{
   weaponVelocity     = 1518,
   customparams = {
     armor_penetration_1000m = 25,
@@ -162,6 +123,24 @@ local Type9757mmAP = Type9757mm:New(LightMediumGunAPClass, true):New{
   },
 }
 
+-- 57 mm pansarvärnskanon m/43 (SWE)
+local PvKanM43 = LightMediumGun:New{
+	name               = [[57 mm pansarvärnskanon m/43]],
+	range              = 1200,
+	reloadTime         = 4.95,
+	soundStart			= [[PVKAN_M_43]],
+}
+
+local PvKanM43AP = MediumAP:New(PvKanM43, true):New{
+	weaponVelocity     = 1670,
+	customparams = {
+		armor_penetration_1000m = 66,
+		armor_penetration_100m  = 86,
+	},
+	damage = {
+		default            = 1795,
+	},
+}
 
 -- Return only the full weapons
 return lowerkeys({
@@ -177,5 +156,7 @@ return lowerkeys({
   -- Type 97 57mm
   Type9757mmHE = Type9757mmHE,
   Type9757mmAP = Type9757mmAP,
-  
+  -- Sweden
+  PvKanM43AP = PvKanM43AP,
+  SWE_57mmM95 = SWE_57mmM95,
 })

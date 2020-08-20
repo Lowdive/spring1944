@@ -1,12 +1,12 @@
 function gadget:GetInfo()
 	return {
 		name      = "Partisan Spawner",
-		desc      = "Spawns partisans around RUSPResource",
+		desc      = "Spawns partisans around ruspartisansupplies",
 		author    = "FLOZi",
 		date      = "28/01/2010",
 		license   = "GPL v2",
 		layer     = -5,
-		enabled   = false --  loaded by default?
+		enabled   = true --  loaded by default?
 	}
 end
 -- function localisations
@@ -27,9 +27,9 @@ local GetUnitCommands	    = Spring.GetUnitCommands
 -- Unsynced Ctrl
 local GiveOrderToUnit	    = Spring.GiveOrderToUnit
 -- constants
-local SPAWNER_UD = UnitDefNames['ruspresource']
+local SPAWNER_UD = UnitDefNames['ruspartisansupplies']
 local INTERVAL = 5 -- 5 seconds
-local SPAWN_LIMIT = 15 -- Number of partisans a single supply dump can support at once
+local SPAWN_LIMIT = 5 -- Number of partisans a single supply dump can support at once
 local ENEMY_TOO_CLOSE_RADIUS = SPAWNER_UD.customParams['supplyrange']
 local STALL_THRESHOLD = 50 -- command < this number, your spawn points start decaying
 
@@ -117,31 +117,35 @@ if (gadgetHandler:IsSyncedCode()) then
 
 		if n % (INTERVAL * 30) < 0.1 then
 			for spawnerID, numSpawned in pairs(spawners) do
-                local nearbyEnemy = GetUnitNearestEnemy(spawnerID, ENEMY_TOO_CLOSE_RADIUS, false)
+                --local nearbyEnemy = GetUnitNearestEnemy(spawnerID, ENEMY_TOO_CLOSE_RADIUS, false)
                 local teamID = GetUnitTeam(spawnerID)
                 local availableCommand = GetTeamResources(teamID, "metal")
                 local stalling = availableCommand < STALL_THRESHOLD
 
                 -- flags don't count as nearby enemies
+				--[[
                 if nearbyEnemy then
                     local ud = UnitDefs[GetUnitDefID(nearbyEnemy)]
                     if ud and ud.customParams and ud.customParams.flag then
                         nearbyEnemy = nil
                     end
                 end
+				]]--
 
 				if (not spawnQueue[spawnerID]) 
                         and (numSpawned < SPAWN_LIMIT) 
-                        and (not nearbyEnemy) 
+                        --and (not nearbyEnemy) 
                         and (not stalling) then
                     AddToSpawnQueue(spawnerID, unitNamesToSpawn[spawnerID])
 				end
 
                 -- they expire without command support
                 -- TODO: some notification if they're about to pop
+				--[[
                 if stalling then
                     AddUnitDamage(spawnerID, HEALTH_DECAY_AMOUNT)
                 end
+				]]--
 			end
 		end
 	end

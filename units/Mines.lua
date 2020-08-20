@@ -11,6 +11,7 @@ local GBRSatchelCharge = Mine:New{
 	useBuildingGroundDecal		= false,
 	customparams = {
 		candetonate 				= true,
+		normaltex 				= "",
 	},
 }
 
@@ -24,8 +25,10 @@ local APMine = Mine:New{
 	weapons = {
 		[1] = {
 			name					= "APMine",
-			onlyTargetCategory		= "MINETRIGGER",
 		}
+	},
+	customparams = {
+		normaltex 				= "",
 	},
 }
 
@@ -38,9 +41,10 @@ local ATMine = Mine:New{
 	weapons = {
 		[1] = {
 			name					= "ATMine",
-			badTargetCategory		= "SOFTVEH",
-			onlyTargetCategory		= "SOFTVEH OPENVEH HARDVEH",
 		}
+	},
+	customparams = {
+		normaltex 				= "",
 	},
 }
 
@@ -51,17 +55,19 @@ local APMineSign = MineSign:New{
 	maxSlope				= 3,
 	customparams = {
 		minetype				= "apminesign",
+		normaltex 				= "",
 	},
 }
 
 local ATMineSign = MineSign:New{
-    buildCostMetal              = 180,
-    buildTime				    = 180,
+	buildCostMetal              = 180,
+	buildTime				    = 180,
 	name						= "AT Minefield",
 	description					= "Warning! AT Mines!",
 	maxSlope				= 15,
 	customparams = {
 		minetype				= "atminesign",
+		normaltex 				= "",
 	},
 }
 
@@ -76,7 +82,7 @@ for _, side in pairs(Sides) do
 	units[side .. "atminesign"] = ATMineSign:New{}
 	-- tank trap just uses plain base class for now...
 	-- .. may do side specific models later
-	units[side .. "tankobstacle"] = TankObstacle:New{} 
+	units[side .. "tankobstacle"] = TankObstacle:New{}
 end
 
 return lowerkeys(units)

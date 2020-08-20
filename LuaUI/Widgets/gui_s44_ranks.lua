@@ -28,7 +28,7 @@ local ruRanks = {}
 ----------------------------------------------------------------
 --config
 ----------------------------------------------------------------
-local iconSize = 0.5
+local iconSize = 0.4
 local maxScale = 7
 local lineWidth = 0.25
 local defaultRanks = usRanks
@@ -48,6 +48,7 @@ local GetUnitPosition = Spring.GetUnitPosition
 local GetUnitDefID = Spring.GetUnitDefID
 local GetUnitRadius = Spring.GetUnitRadius
 local GetUnitHeight = Spring.GetUnitHeight
+local IsGUIHidden = Spring.IsGUIHidden
 
 local glCreateList = gl.CreateList
 local glCallList = gl.CallList
@@ -70,8 +71,7 @@ local glTexRect = gl.TexRect
 
 local glLineWidth = gl.LineWidth
 
-local glSmoothing = gl.Smoothing
-local glBlending = gl.Blending
+local glBlendFunc = gl.BlendFunc
 local glDepthTest = gl.DepthTest
 
 local strSub = string.sub
@@ -1593,6 +1593,9 @@ local function GetRankList(rank, prefix)
 		rankTable = geRanks
 	elseif prefix == "us" then
 		rankTable = usRanks
+	else
+		-- generic option = US to have at least something
+		rankTable = usRanks
 	end
 	
 	for i = 1,#rankTable do
@@ -1655,8 +1658,9 @@ function widget:Shutdown()
 end
 
 function widget:DrawWorld()
-	glSmoothing(false, true, false)
-	glBlending(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+	if IsGUIHidden() then return end
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 	glLineWidth(lineWidth)
 	local visibleUnits = GetVisibleUnits(-1, 0, false)
 	if not visibleUnits then return end
@@ -1668,5 +1672,4 @@ function widget:DrawWorld()
 		end
 	end
 	glLineWidth(1)
-	glSmoothing(false, false, false)
 end

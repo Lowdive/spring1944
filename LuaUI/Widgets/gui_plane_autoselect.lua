@@ -3,7 +3,7 @@ function widget:GetInfo()
   return {
     name      = "1944 Aircraft Selection Buttons",
     desc      = "Automatically creates selection buttons for newly entered aircraft.",
-    author    = "Ray Modified by Godde, Szunti",
+    author    = "Ray Modified by Godde, Szunti, kmar",
     date      = "Sep 6, 2011",
     license   = "GNU GPL, v2 or later",
     layer     = 0,
@@ -14,7 +14,7 @@ end
 -----------------------------
 -- Customisable parameters
 -----------------------------
-local MAX_ICONS = 10
+local MAX_ICONS = 15
 local ICON_SIZE_X = 70
 local ICON_SIZE_Y = 70
 local CONDENSE = false -- show one icon for all planes of same type
@@ -34,6 +34,7 @@ local insert                   = table.insert
 -- OpenGL
 ----------------
 local glBlending               = gl.Blending
+local glBlendFunc              = gl.BlendFunc
 local glClear                  = gl.Clear
 local glColor                  = gl.Color
 local glCulling                = gl.Culling
@@ -54,6 +55,7 @@ local glTexture                = gl.Texture
 local glTranslate              = gl.Translate
 local glUnit                   = gl.Unit
 local glUnitShape              = gl.UnitShape
+local glDrawGroundCircle	   = gl.DrawGroundCircle
 
 
 -----------------
@@ -61,6 +63,8 @@ local glUnitShape              = gl.UnitShape
 -----------------
 local GetUnitDefDimensions   = Spring.GetUnitDefDimensions
 local GetUnitDefID           = Spring.GetUnitDefID
+local GetUnitHealth 		 = Spring.GetUnitHealth
+local GetUnitRulesParam 	 = Spring.GetUnitRulesParam
 local GetMyTeamID            = Spring.GetMyTeamID
 local GetTeamUnitsSorted     = Spring.GetTeamUnitsSorted
 local GetModKeyState         = Spring.GetModKeyState
@@ -116,9 +120,9 @@ local activePress = false
 
 local function IsPlane(unitID)
 	local udef = GetUnitDefID(unitID)
-	local ud = UnitDefs[udef] 
+	local ud = UnitDefs[udef]
 	if ud.canFly == true then  --- can fly
-		return true 
+		return true
     end
 	return false
 end
@@ -134,7 +138,7 @@ local function DrawBoxes(number)
 	while (ct < number) do
 		ct = ct + 1
 		local X2 = X1 + ICON_SIZE_X
-		
+
 		glShape(GL_LINE_LOOP, {
 	    { v = { X1, Y_MIN } },
 	    { v = { X2, Y_MIN } },
@@ -142,12 +146,12 @@ local function DrawBoxes(number)
 	    { v = { X1, Y_MAX } },
 		})
 		X1 = X2
-		
+
 	end
 end
 
 local function SetupModelDrawing()
-  glDepthTest(true) 
+  glDepthTest(true)
   glDepthMask(true)
   glCulling(GL_FRONT)
   glLighting(true)
@@ -171,7 +175,7 @@ local function RevertModelDrawing()
 end
 
 local function CenterUnitDef(unitDefID)
-  local ud = UnitDefs[unitDefID] 
+  local ud = UnitDefs[unitDefID]
   if (not ud) then
     return
   end
@@ -215,40 +219,40 @@ end
 
 local function DrawUnitModels(number)
 	if not drawTable then
-		return -1 
+		return -1
 	end
-	
+
 	local ct = 0
 	local X1, X2
 	glTexture(false)
 	SetupModelDrawing()
-	
+
 	glScissor(true)
 	while (ct < number) do
 		ct = ct + 1
-		
+
 		glPushMatrix()
 		X1 = X_MIN+(ICON_SIZE_X*(ct-1))
 		X2 = X1+ICON_SIZE_X
-		
+
 		glScissor(X1, Y_MIN, X2 - X1, Y_MAX - Y_MIN)
-	
+
 		glTranslate(0.5*(X2+X1), 0.5*(Y_MAX+Y_MIN), 0)
 		glRotate(-90.0, 1, 0, 0)
-		
+
 		CenterUnitDef(drawTable[ct].unitDefID)
-		
+
 		glUnitShape(drawTable[ct].unitDefID, GetMyTeamID())
-		
+
 		glScissor(false)
 		glPopMatrix()
-		
+
 		if CONDENSE then
 			local NumberCondensed = #drawTable[ct].units
 			if NumberCondensed > 1 then
 				glText(NumberCondensed, (X1 + X2) * 0.5, Y_MAX + 2, ICON_SIZE_Y * 0.25, "oc")
 			end
-			
+
 		end
 	end
 	RevertModelDrawing()
@@ -256,43 +260,64 @@ end
 
 local function DrawUnitBuildPics(number)
 	if not drawTable then
-		return -1 
+		return -1
 	end
-	
+
 	local ct = 0
 	local X1, X2
 	X1 = X_MIN
-	
+
 	glColor(1,1,1,1)
 	while (ct < number) do
 		ct = ct + 1
 		X2 = X1+ICON_SIZE_X
-		
+
 		glTexture("#" .. drawTable[ct].unitDefID)
 		glTexRect(X1, Y_MIN, X2, Y_MAX)
 		glTexture(false)
-				
+
 		X1 = X2
-		
+
 		if CONDENSE then
 			local NumberCondensed = #drawTable[ct].units
 			if NumberCondensed > 1 then
-				glText(NumberCondensed, (X1 + X2) * 0.5, Y_MAX + 2,ICON_SIZE_Y * 0.25, "oc")
+				glText(NumberCondensed, (X1 - ICON_SIZE_X / 2), Y_MAX + 2,ICON_SIZE_Y * 0.25, "oc")
 			end
-			
+			--++kmar 07-01-2016 added fuel indicator for unstacked aircraft
+		else
+
+
+			local sHP, sMaxHP = GetUnitHealth(drawTable[ct].units)
+			local sRatio = sHP/sMaxHP
+
+			if sRatio > 0.75 then
+				glColor(0,1,0)
+			else
+				if sRatio > 0.5 then
+					glColor(1,1,0)
+				else
+					glColor(1,0,0)
+				end
+			end
+			glRect( X1 - ICON_SIZE_X, Y_MAX, X1 - ICON_SIZE_X*(1 - (sHP/sMaxHP) ), Y_MAX - 4)
+			glColor(1,1,1)
+			local sFuel = floor(GetUnitRulesParam(drawTable[ct].units, "fuel") or 0)
+			glText(sFuel, X1, Y_MIN + 2,ICON_SIZE_Y * 0.18, "or")
+			----kmar 07-01-2016
 		end
+
 	end
 end
 
 local function MouseOverIcon(x, y)
 	if not drawTable then return -1 end
-	
+
 	local NumOfIcons = #drawTable
 	if (x < X_MIN)   then return -1 end
 	if (x > X_MAX)   then return -1 end
 	if (y < Y_MIN)   then return -1 end
 	if (y > Y_MAX)   then return -1 end
-  
+
 	local icon = floor((x-X_MIN)/ICON_SIZE_X)
 	if (icon < 0) then
 		icon = 0
@@ -307,17 +332,17 @@ end
 function DrawIconQuad(iconPos, color)
   local X1 = X_MIN + (ICON_SIZE_X * iconPos)
   local X2 = X1 + ICON_SIZE_X
-  
+
   glColor(color)
-  glBlending(GL_SRC_ALPHA, GL_ONE)
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE)
   glShape(GL_QUADS, {
     { v = { X1, Y_MIN } },
     { v = { X2, Y_MIN } },
     { v = { X2, Y_MAX } },
     { v = { X1, Y_MAX } },
   })
-  
-  glBlending(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 end
 
 
@@ -341,7 +366,7 @@ function widget:Initialize()
    -- return false
   end
 ]]--
-	
+
 end
 
 --[[function widget:GetConfigData(data)
@@ -376,7 +401,7 @@ function widget:Update()
 				end
 			end
 		else
-		
+
 		end
 	end
 
@@ -385,7 +410,7 @@ function widget:Update()
 	else
 		CONDENSE = false
 	end
-		
+
 end
 
 
@@ -403,7 +428,7 @@ end
 		left = 0
 		right = (MAX_ICONS*ICON_SIZE_X)/vsx
 	end
-	if top > 1 then 
+	if top > 1 then
 		top = 1
 		bottom = 1 - ICON_SIZE_Y/vsy
 	end
@@ -411,7 +436,7 @@ end
 		bottom = 0
 		top = ICON_SIZE_Y/vsy
 	end
-	
+
 	POSITION_X = 0.5*(right+left)
 	POSITION_Y = 0.5*(top+bottom)
 end
@@ -423,11 +448,11 @@ end
 
 function widget:MouseWheel(up, value)
 	if not widgetHandler:InTweakMode() then return false end
-	
+
 	local x,y,_,_,_ = Spring.GetMouseState()
 	local iconNum = MouseOverIcon(x, y)
   if iconNum < 0 then return false end
-	
+
 	if up then
 		MAX_ICONS = MAX_ICONS + 1
 	else
@@ -439,7 +464,7 @@ end]]
 
 function widget:DrawScreen()
 
-	--[[if widgetHandler:InTweakMode() then	
+	--[[if widgetHandler:InTweakMode() then
 		DrawBoxes(MAX_ICONS)
 		local line1 = "Idle cons tweak mode"
 		local line2 = "Click and drag here to move icons around, hover over icons and move mouse wheel to change max number of icons"
@@ -450,7 +475,7 @@ function widget:DrawScreen()
 
 	local noOfIcons = 0
 	drawTable = {}
-	
+
 	for unitDefID, units in pairs(PlaneList) do
 		if CONDENSE then
 			insert(drawTable, {unitDefID = unitDefID, units = units})
@@ -462,7 +487,7 @@ function widget:DrawScreen()
 			noOfIcons = noOfIcons + #units
 		end
 
-	
+
 	end
 	if noOfIcons > MAX_ICONS then
 		noOfIcons = MAX_ICONS
@@ -470,7 +495,7 @@ function widget:DrawScreen()
 		return
 	end
 	glClear(GL_DEPTH_BUFFER_BIT)
-	
+
 	DrawBoxes(noOfIcons)
 	DrawUnitIcons(noOfIcons)
 
@@ -483,21 +508,28 @@ function widget:DrawScreen()
 			DrawIconQuad(icon, { 0, 0.1, 0.8, 0.433 })
 		end
 	end
-  
+
 end
 
 --]]
 
 function widget:DrawWorld()
-	if widgetHandler:InTweakMode() then return -1 end
-	
+	-- 104 bug: attempt to call method 'InTweakMode' (a nil value)
+	local inTweak
+	if widgetHandler.InTweakMode then
+		inTweak = widgetHandler:InTweakMode()
+	else
+		inTweak = widgetHandler.tweakMode
+	end
+	if inTweak then return -1 end
+
 	local x,y,_,_,_ = GetMouseState()
 	local iconNum = MouseOverIcon(x, y)
   if iconNum < 0 then
 		mouseOnUnitID = nil
 		return -1
 	end
-	
+
 	local unitID = drawTable[iconNum+1].units
 	local unitDefID = drawTable[iconNum+1].unitDefID
 	if Clicks[unitDefID] == nil then
@@ -506,24 +538,35 @@ function widget:DrawWorld()
 	if type(unitID) == 'table' then
 		unitID = unitID[fmod(Clicks[unitDefID]+1, #unitID)+1]
 	end
-	
+
 	mouseOnUnitID = unitID
 	-- hilight the unit we are about to click on
 	glUnit(unitID, true)
-end
+	local ux, uy, uz = GetUnitPosition(mouseOnUnitID)
 
+	-- should help for cases when currently selected plane dies
+	if ux and uy and uz then
+		glDrawGroundCircle( ux, uy, uz, 3200, 24 ) --++kmar 07-01-2016 Might be a bit over kill, although a 8 sided circle isn't hard to draw i think
+		glDrawGroundCircle( ux, uy, uz, 1600, 20 ) --and no, this is not how i imagined it, but it is kinda more usefull then how i imagined it
+		glDrawGroundCircle( ux, uy, uz, 800, 16 )
+		glDrawGroundCircle( ux, uy, uz, 400, 12 )
+		glDrawGroundCircle( ux, uy, uz, 200, 8 )
+	end
+end
 
 function widget:DrawInMiniMap(sx, sz)
 	if not mouseOnUnitID then return -1 end
-	
+
 	local ux, uy, uz = GetUnitPosition(mouseOnUnitID)
   if (not ux or not uy or not uz) then
     return
   end
 	local xr = ux*MINIMAP_X_MUL
-	local yr = 1 - uz*MINIMAP_X_MUL
+	local yr = 1 - uz*MINIMAP_Y_MUL --might fix minimap rectangle highlighting
 	glColor(1,0,0)
-	glRect(xr*sx, yr*sz, (xr*sx)+5, (yr*sz)+5)
+	--glRect((xr*sx)-2, (yr*sz)-2, (xr*sx)+2, (yr*sz)+2) --++kmar 07-01-2016 changed a rectangle on the minimap to a huge cross to be way more noticable when in panic
+	glRect(xr*sx, 0, (xr*sx)+1, Game.mapY*512)
+	glRect(0, yr*sz, Game.mapX*512, (yr*sz)+1)
 end
 
 
@@ -537,13 +580,13 @@ end
 function widget:MouseRelease(x, y, button)
   if not activePress then return -1 end
   activePress = false
-	
+
   local iconNum = MouseOverIcon(x, y)
 	if iconNum < 0 then return -1 end
-	
-  local unitID = drawTable[iconNum+1].units	
+
+  local unitID = drawTable[iconNum+1].units
 	local unitDefID = drawTable[iconNum+1].unitDefID
-	
+
 	if type(unitID) == 'table' then
 		if Clicks[unitDefID] then
 			Clicks[unitDefID] = Clicks[unitDefID] + 1
@@ -552,16 +595,16 @@ function widget:MouseRelease(x, y, button)
 		end
 		unitID = unitID[fmod(Clicks[unitDefID], #unitID)+1]
 	end
-	
+
   local alt, ctrl, meta, shift = GetModKeyState()
-  
+
   if (button == 1) then -- left mouse
-  	SelectUnitArray({unitID})
+  	SelectUnitArray({unitID}, shift) -- ++kmar 05-01-2016 - allow shift clicking to append
   elseif (button == 2) then -- middle mouse
-    SelectUnitArray({unitID})
-    SendCommands({"viewselection"})   
+    SelectUnitArray({unitID}, shift) -- ++kmar 05-01-2016
+    SendCommands({"viewselection"})
   end
-	
+
   return -1
 end
 

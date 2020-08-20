@@ -1,5 +1,22 @@
+local info = GG.lusHelper[unitDefID]
+
+local SetUnitNoSelect = Spring.SetUnitNoSelect
+
+local CreateUnit = Spring.CreateUnit
+local AttachUnit = Spring.UnitScript.AttachUnit
+
 local base = piece("base") or piece("building")
 local radar = piece("radar")
+
+-- Compositing
+local childrenPieces = {}
+local children = info.children
+
+if info.customAnimsName then
+	info.customAnims = include("anims/yard/" .. info.customAnimsName .. ".lua")
+end
+
+local customAnims = info.customAnims
 
 local function DamageSmoke(smokePieces)
 	-- emit some smoke if the unit is damaged
@@ -34,6 +51,21 @@ local function DamageSmoke(smokePieces)
 	end
 end
 
+-- this is for SWE radar equivalent
+local function AirScanner()
+	local turret, balancer = piece("scanner_turret"), piece("scanner_balancer")
+	if turret and balancer then
+		local scanSpeed = math.rad(5)
+		while true do
+			Turn(turret, y_axis, math.rad(math.random(0, 50) - 25), scanSpeed)
+			Turn(balancer, x_axis, math.rad(math.random(0, 80) - 40), scanSpeed)
+			WaitForTurn(turret, y_axis)
+			WaitForTurn(balancer, x_axis)
+			Sleep(1000)
+		end
+	end
+end
+
 local function Raise()
 	local height = Spring.GetUnitHeight(unitID)
 	while select(5, Spring.GetUnitHealth(unitID)) < 1 do
@@ -44,12 +76,52 @@ local function Raise()
 	if radar then
 		Spin(radar, y_axis, math.rad(60), math.rad(5))
 	end
+	if piece("scanner_turret") then
+		StartThread(AirScanner)
+	end
+end
+
+local function SpawnChildren()
+	local x,y,z = Spring.GetUnitPosition(unitID) -- strictly needed?
+	local teamID = Spring.GetUnitTeam(unitID)
+	Sleep(50)
+	for i, childDefName in ipairs(children) do
+		local childID = CreateUnit(childDefName, x, y, z, 0, teamID)
+		if (childID ~= nil) then
+			AttachUnit(childrenPieces[i], childID)
+			Hide(childrenPieces[i])
+			SetUnitNoSelect(childID, true)
+		end
+	end
 end
 
 function script.Create()
+	-- get children if any
+	local pieceMap = Spring.GetUnitPieceMap(unitID)
+	for pieceName, pieceNum in pairs(pieceMap) do
+		local childPos = pieceName:find("child")
+		if childPos then
+			-- try to guess child number
+			local childNumStr = pieceName:sub(childPos + 5)
+			childrenPieces[tonumber(childNumStr)] = pieceNum
+			--childrenPieces[#childrenPieces + 1] = pieceNum
+		end
+	end
+	if customAnims and customAnims.preCreate then
+		customAnims.preCreate()
+	end
 	StartThread(Raise)
+
+	-- composite units
+	if #children > 0 then
+		StartThread(SpawnChildren)
+	end
+
 	if base then
 		StartThread(DamageSmoke, {base})
+	end
+	if customAnims and customAnims.postCreate then
+		customAnims.postCreate()
 	end
 end
 
@@ -97,28 +169,45 @@ if UnitDef.isBuilder then -- yard
 				Turn(door, y_axis, 0, math.rad(50))
 			end
 		end
+		--Spring.Echo("OpenCloseAnim", GetUnitValue(COB.YARD_OPEN))
+		local count = 0
+		while not (GetUnitValue(COB.YARD_OPEN) == open) do
+			count = count + 1
+			if count > 1 then Spring.Echo("Loop needed! Inform FLOZi immediately!!", count, UnitDefs[unitDefID].name) end
+			SetUnitValue(COB.BUGGER_OFF, 1)
+			Sleep(1500)
+			SetUnitValue(COB.YARD_OPEN, open)
+		end
+		SetUnitValue(COB.BUGGER_OFF, not open)
 		SetUnitValue(COB.INBUILDSTANCE, open)
-		SetUnitValue(COB.BUGGER_OFF, open)
 	end
 
 	-- Called when factory yard opens
 	function script.Activate()
 		-- OpenCloseAnim must be threaded to call Sleep() or WaitFor functions
-		StartThread(OpenCloseAnim, true)
+		StartThread(OpenCloseAnim, 1)
 	end
 
 	-- Called when factory yard closes
 	function script.Deactivate()
 		-- OpenCloseAnim must be threaded to call Sleep() or WaitFor functions
-		StartThread(OpenCloseAnim, false)
+		StartThread(OpenCloseAnim, 0)
 	end
 
 	function script.StartBuilding()
+		if customAnims and customAnims.startBuildingAnim then
+			customAnims.startBuildingAnim()
+		end	
 		-- TODO: You can run any animation that continues throughout the build process here e.g. spin pad
+		Sleep(5000)
 	end
 
 	function script.StopBuilding()
+		if customAnims and customAnims.stopBuildingAnim then
+			customAnims.stopBuildingAnim()
+		end		
 		-- TODO: You can run any animation that signifies the end of the build process here
+		Sleep(5000)
 	end
 
 end -- yard
@@ -149,4 +238,36 @@ do
 		end
 	
 	end -- bunker
+	-- Hungarian fortified storage
+	if info.numWeapons > 1 then
+		local guns = {}
+		local flares = {}
+		local n
+		for n = 1, info.numWeapons do
+			if info.reloadTimes[n] then
+				guns[n] = piece("gun"..n) or base
+				flares[n] = piece("flare"..n) or base
+			end
+		end
+
+		function script.QueryWeapon(weaponNum)
+			return flares[weaponNum]
+		end
+
+		function script.AimFromWeapon(weaponNum)
+			return guns[weaponNum]
+		end
+		
+		function script.AimWeapon(weaponNum, heading, pitch)
+			Turn(guns[weaponNum], y_axis, heading)
+			return true
+		end
+		
+		function script.Shot(weaponNum)
+			local ceg = info.weaponCEGs[weaponNum]
+			if ceg then
+				GG.EmitSfxName(unitID, flares[weaponNum], ceg)
+			end
+		end
+	end
 end

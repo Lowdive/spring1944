@@ -24,9 +24,28 @@ local gbrunits = {
     "gbrtankobstacle",
     --"gbrstorage",
     --"gbrbedfordtruck",
-    "rubberdingy",
-    "pontoonraft",
+    "gbrassaultboat",
+    "gbrpontoonraft",
 	--"pontoonbridge",
+  },
+
+  gbrhqaiengineer =
+  {
+    "gbrbarracks",
+    "gbrvehicleyard",
+    "gbrgunyard",
+    "gbrradar",
+    "gbrstorage",
+    "gbratminesign",
+    "gbrapminesign",
+    "gbrtankobstacle",
+    "gbrspyard",
+    "gbrspyard1",
+    "gbrtankyard1",
+    "gbrtankyard2",
+    "gbrassaultboat",
+    "gbrpontoonraft",
+  --"pontoonbridge",
   },
 
   gbrbarracks =
@@ -53,7 +72,16 @@ local gbrunits = {
     "gbr25pdr_truck",
     "gbrbofors_truck",
   },
-  
+
+  gbrgunyard2 =
+  {
+    "gbrmatadorengvehicle",
+    "gbrbedfordtruck",
+    "gbr17pdr_truck",
+    "gbr25pdr_truck",
+	"gbr45ingun_truck",
+    "gbrbofors_truck",
+  },  
   gbrspyard =
   {
     "gbrmatadorengvehicle",
@@ -61,21 +89,11 @@ local gbrunits = {
     "gbr17pdr_truck",
     "gbr25pdr_truck",
     "gbrbofors_truck",
-	"gbrstaghound",
+    "gbrstaghound",
     "gbrsexton",
-  },
-  
-  gbrspyard1 =
-  {
-    "gbrmatadorengvehicle",
-    "gbrbedfordtruck",
-    "gbr17pdr_truck",
-    "gbr25pdr_truck",
-    "gbrbofors_truck",
-    "gbraecmkii",
     "gbrm10achilles",
   },
-  
+
   gbrcommandoc =
   {
   "gbrsatchelcharge",
@@ -99,8 +117,8 @@ local gbrunits = {
     "gbrtankobstacle",
     --"gbrstorage",
     --"gbrbedfordtruck",
-    "rubberdingy",
-    "pontoonraft",
+    "gbrassaultboat",
+    "gbrpontoonraft",
 
   },
 
@@ -109,10 +127,11 @@ local gbrunits = {
     "gbrmatadorengvehicle",
     "gbrbedfordtruck",
     "gbrm5halftrack",
-	"gbrstaghound",
+    "gbrstaghound",
     "gbrdaimler",
     "gbrkangaroo",
     "gbrwasp",
+    "gbrjeep",
   },
   
   gbrvehicleyard1 =
@@ -125,6 +144,7 @@ local gbrunits = {
     "gbrkangaroo",
 		"gbrwasp",
     "gbraecmkii",
+    "gbrjeep",
   },
 
   gbrmatadorengvehicle =
@@ -187,16 +207,16 @@ local gbrunits = {
   
   gbrboatyard =
   {
-    "rubberdingy",
-    "pontoonraft",
+    "gbrassaultboat",
+    "gbrpontoonraft",
     "gbrlca",
     "gbrfairmiled",
 	"gbrlcsl",
   },
   gbrboatyardlarge =
   {
-    "rubberdingy",
-    "pontoonraft",
+    "gbrassaultboat",
+    "gbrpontoonraft",
     "gbrlca",
     "gbrfairmiled",
 	"gbrlcsl",

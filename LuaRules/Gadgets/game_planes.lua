@@ -13,7 +13,7 @@ end
 if not gadgetHandler:IsSyncedCode() then return end
 
 local sqrt = math.sqrt
-local sin, cos, atan2 = math.sin, math.cos, math.atan2
+local max, sin, cos, atan2 = math.max, math.sin, math.cos, math.atan2
 
 local airfieldCapacity = 10
 
@@ -31,9 +31,9 @@ local PENALTY_AMOUNT = 0.1
 -- a scout plane can cover 24 map squares on a 'normal' tank of gas (60 seconds).
 -- this becomes a reference point for how much to scale fuel amounts based on
 -- map size. We add a 25% bump so the planes have some time to do their work
--- once they arrive. The formula is: 
+-- once they arrive. The formula is:
 -- (mapDiagonalLength / REFERENCE_FUEL_AMOUNT) * definedPlaneFuel
-local REFERENCE_FUEL_AMOUNT = 17;
+local REFERENCE_FUEL_AMOUNT = 17
 
 local CreateUnit = Spring.CreateUnit
 local DestroyUnit = Spring.DestroyUnit
@@ -48,8 +48,6 @@ local GetUnitCmdDescs = Spring.GetUnitCmdDescs
 local EditUnitCmdDesc = Spring.EditUnitCmdDesc
 local InsertUnitCmdDesc = Spring.InsertUnitCmdDesc
 local UseUnitResource = Spring.UseUnitResource
-local GetUnitFuel = Spring.GetUnitFuel
-local SetUnitFuel = Spring.SetUnitFuel
 local GetUnitIsStunned = Spring.GetUnitIsStunned
 local GetUnitDefID = Spring.GetUnitDefID
 local GetUnitTeam = Spring.GetUnitTeam
@@ -62,6 +60,8 @@ local SendMessageToTeam = Spring.SendMessageToTeam
 
 local GetTeamRulesParam = Spring.GetTeamRulesParam
 local SetTeamRulesParam = Spring.SetTeamRulesParam
+local GetUnitRulesParam = Spring.GetUnitRulesParam
+local SetUnitRulesParam = Spring.SetUnitRulesParam
 
 local vNormalized
 local vRotateY
@@ -109,7 +109,7 @@ local function GetDefaultTooltip(sortie, sortieUnitDef)
 	for i=1,#sortieMembers do
 		local unitDef = UnitDefNames[sortieMembers[i]]
 		if unitDef then
-			local fuel = unitDef.maxFuel
+			local fuel = tonumber(unitDef.customParams.maxfuel)
 			if fuel > 0 and duration then
 				if fuel > duration then
 					duration = fuel
@@ -119,23 +119,22 @@ local function GetDefaultTooltip(sortie, sortieUnitDef)
 			end
 		end
 	end
-	
+
 	local result = "Call " .. sortieUnitDef.humanName .. " - " .. sortieUnitDef.tooltip .. "\n"
 		.. "Delay " .. (sortie.delay or 0) .. "s\n"
 		.. "Duration " .. (duration or "Permanent") .. "s"
-	
+
 	return result
 end
 
 local currCmdID = CMD_PLANES
 
 for sortieUnitName, sortie in pairs(sortieInclude) do
-	--Spring.Echo(sortieUnitName)
 	local sortieUnitDef = UnitDefNames[sortieUnitName]
 	if sortieUnitDef then
 		local sortieUnitDefID = sortieUnitDef.id
 		currCmdID = GG.CustomCommands.GetCmdID("CMD_PLANES_" .. sortieUnitDefID)
-		
+
 		local cmdDesc = {
 			id = currCmdID,
 			action = sortieUnitName,
@@ -145,21 +144,21 @@ for sortieUnitName, sortie in pairs(sortieInclude) do
 			tooltip = sortie.tooltip or GetDefaultTooltip(sortie, sortieUnitDef),
 			texture = sortie.texture or "unitpics/" .. sortieUnitDef.buildpicname,
 		}
-		
+
 		if sortie.groundOnly then
 			cmdDesc.type = CMDTYPE_ICON_MAP
 		else
 			cmdDesc.type = CMDTYPE_ICON_UNIT_OR_MAP
 		end
-		
+
 		sortie.cmdDesc = cmdDesc
 		sortie.name = sortieUnitDef.humanName
 		sortie.weight = sortie.weight or 0
 		sortieCmdIDs[currCmdID] = sortie
 		sortieDefs[sortieUnitDefID] = sortie
-	
+
 	else
-		Spring.Echo("<game_planes>: Warning: no UnitDef found for " .. sortieUnitName)
+		Spring.Log('planes gadget', 'error', "no UnitDef found for " .. sortieUnitName)
 	end
 end
 
@@ -168,9 +167,9 @@ local radioDefs = {}
 
 for unitDefID, unitDef in pairs(UnitDefs) do
 	local buildOptions = unitDef.buildOptions
-	
+
 	local sortieCmdDescs = {}
-	
+
 	for i=1, #buildOptions do
 		local buildDefID = buildOptions[i]
 		local sortie = sortieDefs[buildDefID]
@@ -178,7 +177,7 @@ for unitDefID, unitDef in pairs(UnitDefs) do
 			sortieCmdDescs[#sortieCmdDescs+1] = sortie.cmdDesc
 		end
 	end
-	
+
 	if #sortieCmdDescs > 0 then
 		radioDefs[unitDefID] = sortieCmdDescs
 	end
@@ -201,7 +200,7 @@ local function SpawnPlane(teamID, unitname, sx, sy, sz, cmdParams, dx, dy, dz, r
 	if #cmdParams == 3 then
 		cmdParams[1], cmdParams[2], cmdParams[3] = vClampToMapSize(cmdParams[1], cmdParams[2], cmdParams[3])
 	end
-	
+
 	local unitDef = UnitDefNames[unitname]
 	--local speed = unitDef.speed / 30
 	local speed = 20
@@ -217,13 +216,13 @@ local function SpawnPlane(teamID, unitname, sx, sy, sz, cmdParams, dx, dy, dz, r
 	sy = sy + altitude
 	local unitID = CreateUnit(unitname, sx, sy, sz, 0, teamID)
 
-	-- scale plane fuel to map size (roughly)
-	local mapDiagonalLength = math.sqrt(mapX ^ 2 + mapY ^ 2)
-	local fuelBoost = mapDiagonalLength / REFERENCE_FUEL_AMOUNT
-	local currentFuel = unitDef.maxFuel
-	
 	if unitID ~= nil then
-		SetUnitFuel(unitID, fuelBoost * currentFuel)
+		-- scale plane fuel to map size (roughly)
+		local mapDiagonalLength = math.sqrt(mapX ^ 2 + mapY ^ 2)
+		local fuelBoost = mapDiagonalLength / REFERENCE_FUEL_AMOUNT
+		local currentFuel = tonumber(unitDef.customParams.maxfuel)
+		SetUnitRulesParam(unitID, "fuel", fuelBoost * currentFuel)
+
 		SetUnitPosition(unitID, sx, sy, sz)
 		SetUnitVelocity(unitID, dx * speed, dy * speed, dz * speed)
 		SetUnitRotation(unitID, 0, -rotation, 0) --SetUnitRotation uses left-handed convention
@@ -249,8 +248,9 @@ local function SpawnPlane(teamID, unitname, sx, sy, sz, cmdParams, dx, dy, dz, r
 		planeStates[unitID] = PLANE_STATE_ACTIVE
 		-- make the plane say something if it's the first in its group
 		if numInFlight==1 then
-			if unitDef.customParams.planevoice=="1" then
-			  Spring.CallCOBScript(unitID, "PlaneVoice", 1, 1)
+			if unitDef.customParams.planevoice then
+				local env = Spring.UnitScript.GetScriptEnv(unitID)
+				Spring.UnitScript.CallAsUnit(unitID, env.PlaneVoice, 'enter_map')
 			end
 		end
 		-- remove fly/land and land at x buttons
@@ -277,13 +277,13 @@ local function GetFormationOffsets(numUnits, rotation)
 			i = i + 1
 			pairNum = pairNum + 1
 			if i > numUnits then break end
-		
+
 			result[i] = {vRotateY(DIAG_FORMATION_SEPARATION * pairNum, 0, -DIAG_FORMATION_SEPARATION * pairNum, rotation)}
 			i = i + 1
 			if i > numUnits then break end
 		end
 	end
-	
+
 	return result
 end
 
@@ -298,10 +298,10 @@ local function SpawnFlight(teamID, sortie, sx, sy, sz, cmdParams)
 	else
 		tx, ty, tz = cmdParams[1], cmdParams[2], cmdParams[3]
 	end
-	
+
 	local dx, dy, dz, dist = vNormalized(tx - sx, 0, tz - sz)
 	local rotation = atan2(dx, dz)
-	
+
 	local sortieMembers = sortie.members
 	local offsets = GetFormationOffsets(#sortieMembers, rotation)
 	if dist >= PATROL_DISTANCE then
@@ -324,7 +324,7 @@ local function SpawnFlight(teamID, sortie, sx, sy, sz, cmdParams)
 			SpawnPlane(teamID, unitname, ux, uy, uz, cmdParams, dx, dy, dz, rotation, waypoint, i, sortie.alwaysAttack)
 		end
 	end
-	
+
 	SendMessageToTeam(teamID, sortie.name .. " arrived.")
 	if not sortie.silent then
 		local allyTeam = select(6, Spring.GetTeamInfo(teamID))
@@ -365,12 +365,12 @@ local function UpdateCMDs(teamID, sortie)
 	local rulesParamName = "game_planes.stockpile" .. cmdID
 	local stockpile = GetTeamRulesParam(teamID, rulesParamName) or 0
 	local disabled = (stockpile <= 0)
-	
+
 	local editTable = {
 		name = stockpile .. " Ready",
 		disabled = disabled,
 	}
-	
+
 	for unitID, _ in pairs(radios[teamID]) do
 		local cmdDescs = GetUnitCmdDescs(unitID)
 		for i = 1, #cmdDescs do
@@ -388,9 +388,9 @@ local function ModifyStockpile(teamID, sortie, amount)
 	local stockpile = GetTeamRulesParam(teamID, rulesParamName) or 0
 	stockpile = stockpile + amount
 	SetTeamRulesParam(teamID, rulesParamName, stockpile)
-	
+
 	ModifyWeight(teamID, sortie, amount)
-	
+
 	UpdateCMDs(teamID, sortie)
 
 end
@@ -401,20 +401,19 @@ function gadget:Initialize()
 	vClampToMapSize = GG.Vector.ClampToMapSize
 	vNearestMapEdge = GG.Vector.NearestMapEdge
 	vDistanceToMapEdge = GG.Vector.DistanceToMapEdge
-	
+
 	DelayCall = GG.Delay.DelayCall
-	
+
 	local allTeams = Spring.GetTeamList()
 	for i=1, #allTeams do
 		radios[allTeams[i]] = {}
 	end
-	
+
 	local allUnits = Spring.GetAllUnits()
 	for i=1, #allUnits do
 		local unitID = allUnits[i]
 		local unitDefID = GetUnitDefID(unitID)
 		local teamID = GetUnitTeam(unitID)
-		--Spring.Echo(unitID, unitDefID, unitTeam)
 		gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
 end
@@ -426,11 +425,11 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 		return
 	end
 	local sortieCmdDescs = radioDefs[unitDefID]
-	
+
 	if not sortieCmdDescs then return end
-	
+
 	radios[teamID][unitID] = true
-	
+
 	for i=1,#sortieCmdDescs do
 		local sortieCmdDesc = sortieCmdDescs[i]
 		local stockpile = GetTeamRulesParam(teamID, "game_planes.stockpile" .. sortieCmdDesc.id) or 0
@@ -448,10 +447,10 @@ function gadget:UnitFinished(unitID, unitDefID, teamID)
 		end
 		return
 	end
-	
+
 	local sortie = sortieDefs[unitDefID]
 	if not sortie then return end
-	
+
 	ModifyStockpile(teamID, sortie, 1)
 	DestroyUnit(unitID, false, true)
 end
@@ -462,20 +461,20 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 	if planeState == PLANE_STATE_RETREAT or (planeState and cmdID == CMD_IDLEMODE) then
 		return false
 	end
-	
+
 	-- check if command is a sortie
 	local sortie = sortieCmdIDs[cmdID]
 	if not sortie then
 		return true
 	end
-	
+
 	-- check if unit is a radio
 	if not radios[teamID][unitID] then
 		return true
 	end
-	
+
 	local _, _, inBuild = GetUnitIsStunned(unitID)
-	
+
 	if inBuild then
 	  -- can't order
 	else
@@ -495,7 +494,7 @@ function gadget:AllowCommand(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOpt
 			SendMessageToTeam(teamID, "Sortie not available.")
 		end
 	end
-	
+
 	return false
 end
 
@@ -504,23 +503,27 @@ function gadget:GameFrame(n)
 		local unitDefID = GetUnitDefID(unitID)
 		local unitDef = UnitDefs[unitDefID]
 		local teamID = GetUnitTeam(unitID)
+		local fuel = GetUnitRulesParam(unitID, "fuel")
 		if state == PLANE_STATE_ACTIVE then
-			if GetUnitFuel(unitID) < 1 and unitDef.maxFuel > 0 then
+			if fuel < 1 and tonumber(unitDef.customParams.maxfuel) > 0 then
 				SetUnitNoSelect(unitID, true)
 				-- give fuel back so that it can fly to map border
-				SetUnitFuel(unitID, unitDef.maxFuel)
+				SetUnitRulesParam(unitID, "fuel", tonumber(unitDef.customParams.maxfuel))
 				local ex, ey, ez = GetSpawnPoint(teamID)
 				GiveOrderToUnit(unitID, CMD_MOVE, {ex, ey, ez}, {})
 				planeStates[unitID] = PLANE_STATE_RETREAT
 				-- make it say something
-				if unitDef.customParams.planevoice=="1" then
-					Spring.CallCOBScript(unitID, "PlaneVoice", 1, 3)
+				if unitDef.customParams.planevoice then
+					local env = Spring.UnitScript.GetScriptEnv(unitID)
+					Spring.UnitScript.CallAsUnit(unitID, env.PlaneVoice, 'return_to_base')
 				end
+			else
+				SetUnitRulesParam(unitID, "fuel", max(0, fuel - 0.033))
 			end
 		elseif state == PLANE_STATE_RETREAT then
 			-- check that it has enough fuel for return at all times
-			if GetUnitFuel(unitID) < 2 and unitDef.maxFuel > 0 then
-				SetUnitFuel(unitID, unitDef.maxFuel)
+			if fuel < 2 and tonumber(unitDef.customParams.maxfuel) > 0 then
+				SetUnitRulesParam(unitID, "fuel", tonumber(unitDef.customParams.maxfuel))
 			end
 			local ux, uy, uz = GetUnitPosition(unitID)
 			if vDistanceToMapEdge(ux, uy, uz) <= RETREAT_TOLERANCE then
@@ -530,7 +533,6 @@ function gadget:GameFrame(n)
 				AddTeamResource(teamID, "m", depositReturn)
 				planeStates[unitID] = nil --this looks redundant, but needs to happen so that you actually get your bonus.
 				DestroyUnit(unitID, false, true)
-				--Spring.Echo("Plane safe! " .. depositReturn .. " Command returned!")
 			end
 		end
 	end
@@ -547,12 +549,11 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 		local curCommand = GetTeamResources(teamID, "metal")
 		local penalty = math.min((unitDef.customParams.penalty or PENALTY_AMOUNT) * unitDef.metalCost, curCommand)
 		UseTeamResource(teamID, "m", penalty)
-		--Spring.Echo("Plane destroyed! " .. penalty .. " additional Command lost!")
 	end
 	planeStates[unitID] = nil
 	radios[teamID][unitID] = nil
 	radars[unitID] = nil
-	
+
 	if UnitDefs[unitDefID].name:find("radar") then
 		local allyTeam = select(6, Spring.GetTeamInfo(teamID))
 		allyRadarCounts[allyTeam] = (allyRadarCounts[allyTeam] or 1) - 1 -- should never actually be nil
@@ -563,14 +564,14 @@ function gadget:AllowUnitBuildStep(builderID, builderTeam, unitID, unitDefID, pa
 	if not radars[builderID] then return true end -- early out non-radars, inc HQ
 	local sortie = sortieDefs[unitDefID]
 	if not sortie or sortie.weight <= 0 then return true end
-	
+
 	local rulesParamName = "game_planes.weight"
 	local weight = GetTeamRulesParam(builderTeam, rulesParamName) or 0
-	
+
 	if weight > airfieldCapacity then
 		return false
 	end
-	
+
 	return true
 end
 
@@ -591,7 +592,7 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 		ModifyWeight(oldTeam, sortie, -1)
 		return
 	end
-	
+
 	if radios[oldTeam][unitID] then
 		radios[oldTeam][unitID] = nil
 		if next(radios[oldTeam]) == nil then

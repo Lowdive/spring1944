@@ -31,6 +31,7 @@ local activeBinocs = {} -- activeBinocs[ownerID] = {origin={x,y,z},target,telepo
 
 local CMD_LOOK = GG.CustomCommands.GetCmdID("CMD_LOOK")
 local COBSCALE = 65536
+local TTL = 2.5 * 30
 
 local lookCmdDesc = {
 	id = CMD_LOOK,
@@ -50,29 +51,19 @@ function CheckForBinocsWeapon(weapon)
 end
 
 function Look(unitID, weaponNumber, x, y, z)
-	--[[
-	local SET_WEAPON_GROUND_TARGET = COB.SET_WEAPON_GROUND_TARGET
-	-- command parameters: unit's weapon number (0-based), packed XZ, y
-	local XZ = x * COBSCALE + z
-	Spring.Echo("Looking with weapon "..weaponNumber.." at: "..XZ.." "..y)
-	local tmp = GetUnitCOBValue(unitID, SET_WEAPON_GROUND_TARGET, weaponNumber, XZ, y * COBSCALE)
-	Spring.Echo("Result: "..tmp)
-	]]--
 	Spring.SetUnitTarget(unitID, x, y, z)
 end
 
 function gadget:Explosion(weaponID, px, py, pz, ownerID)
 	local weapDef = WeaponDefs[weaponID]
 	if weapDef and (not weapDef.customParams.binocs or weapDef.customParams.binocs ~= "1" or ownerID == nil) then
-		--Spring.Echo("not binocs :(")
 		return false
 	else
 		local team = GetUnitTeam(ownerID)
-		--Spring.Echo("Made a binocspot!")
 		CreateUnit("binocspot", px, py, pz, 0, team)
 		local binocInfo = activeBinocs[ownerID]
 		if binocInfo == nil then
-			Spring.Echo("Binoc error, shouldn't occur!")
+			Spring.Log('scout binocs', 'error', "binoc info was nil in gadget:Explosion: shouldn't occur!")
 			return false
 		end
 		if binocInfo.teleportTo == nil then
@@ -85,7 +76,6 @@ end
 function gadget:ProjectileCreated(projID, ownerID, weaponID)
 	local weapDef = WeaponDefs[weaponID]
 	if weapDef and (not weapDef.customParams.binocs or weapDef.customParams.binocs ~= "1" or ownerID == nil) then
-		--Spring.Echo("not binocs :(")
 		return
 	else
 		local binocInfo = activeBinocs[ownerID]
@@ -115,6 +105,7 @@ function gadget:UnitCreated(unitID, unitDefID)
 	local ud = UnitDefs[unitDefID]
 	if ud.name == "binocspot" then
 		SetUnitNoSelect(unitID, true)
+		GG.Delay.DelayCall(Spring.DestroyUnit, {unitID}, TTL)
 	end
 	-- should we add the Look command?
 	local weapons = UnitDefs[unitDefID].weapons

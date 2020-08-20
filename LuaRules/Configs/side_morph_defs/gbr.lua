@@ -6,7 +6,7 @@ local gbrDefs = {
 			metal = 1000,
 			energy = 0,
 			time = 25,
-			name = '  Camo  ',
+			name = 'Camo',
 			text = 'Hides the storage shed from observation.',
 			facing = true,
 		},
@@ -17,7 +17,7 @@ local gbrDefs = {
 			metal = 2000,
 			energy = 0,
 			time = 65,
-			name = '  Light  \n  Armor  ',
+			name = 'Light\nArmor',
 			text = 'Makes Light Armor available in this yard',
 			facing = true,
 		},
@@ -25,22 +25,23 @@ local gbrDefs = {
 	gbrgunyard = {
 		{
 			into = 'gbrspyard',
-			metal = 3000,
+			metal = 3800,
 			energy = 0,
-			time = 85,
-			name = '  Self  \n  Propelled  ',
+			time = 90,
+			name = 'Self\nPropelled',
 			text = 'Makes Self-Propelled Artillery available in this yard',
 			facing = true,
 		},
+
 		{
-			into = 'gbrspyard1',
+			into = 'gbrgunyard2',
 			metal = 5250,
 			energy = 0,
 			time = 150,
-			name = '  Tank  \n  Destroyers  ',
-			text = 'Makes Tank Destroyers available in this yard',
+			name = 'Long\nRange\nArtillery',
+			text = 'Makes Long Range Artillery available in this yard',
 			facing = true,
-		},
+		},		
 	},	
 	gbrtankyard = {
 		{
@@ -48,7 +49,7 @@ local gbrDefs = {
 			metal = 4500,
 			energy = 0,
 			time = 60,
-			name = '  Advanced  \n  Mediums  ',
+			name = 'Advanced\nMediums',
 			text = 'Makes Advanced Medium Armor available in this yard',
 			facing = true,
 		},
@@ -58,7 +59,7 @@ local gbrDefs = {
 			metal = 4500,
 			energy = 0,
 			time = 60,
-			name = '  Heavy  \n  Armor  ',
+			name = 'Heavy\nArmor',
 			text = 'Makes Heavy Armor available in this yard',
 			facing = true,
 		},
@@ -70,7 +71,7 @@ local gbrDefs = {
 			metal = 6000,
 			energy = 0,
 			time = 80,
-			name = '  Landing  \n  Fire  \n  Support  ',
+			name = 'Landing\nFire\nSupport',
 			text = 'Makes Landing Fire Support Craft available in this yard',
 			facing = true,
 		},
@@ -141,7 +142,25 @@ local gbrDefs = {
     metal = 0,
     energy = 0,
   },
-  
+  gbr45ingun_truck = 
+  {
+    into = 'gbr45ingun_stationary',
+    tech = 0,
+    time = 60,
+    metal = 0,
+    energy = 0,
+    directional = true,
+  },
+
+  gbr45ingun_stationary = 
+  {
+    into = 'gbr45ingun_truck',
+    tech = 0,
+    time = 40,
+    metal = 0,
+    energy = 0,
+  },
+
   gbrbofors_truck =
   {
     into = 'gbrbofors_stationary',

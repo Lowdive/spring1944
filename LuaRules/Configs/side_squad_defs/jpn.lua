@@ -17,8 +17,6 @@ local jpnDefs = {
 		description = "8 x Arisaka Type 99 Rifle, 1 x Type 100 SMG, 1 x Knee Mortar: Long-Range Combat Platoon",
 		buildCostMetal = 1500,
 		buildPic = "JPNRifle.png",
-		buildTime = 1500,
-		side = "JPN",
 	},
 	["jpn_platoon_hq"] =
 	{
@@ -34,8 +32,6 @@ local jpnDefs = {
 		description = "5 x Arisaka Type 99, 1 x Type 100 SMG: Small Combat Squad",
 		buildCostMetal = 600,
 		buildPic = "JPNRifle.png",
-		buildTime = 600,
-		side = "JPN",
 	},
 	["jpn_platoon_assault"] =
 	{
@@ -55,8 +51,6 @@ local jpnDefs = {
 		description = "9 x Type 99 SMG, 1 x Type 99 LMG: Close-Quarters Assault Infantry",
 		buildCostMetal = 1400,
 		buildPic = "JPNType100SMG.png",
-		buildTime = 1400,
-		side = "JPN",
 	},
 	["jpn_platoon_mg"] =
 	{
@@ -68,10 +62,8 @@ local jpnDefs = {
 		},
 		name = "Machinegun Squad",
 		description = "2 x Type 99 Machinegun, 1 x Type 98 Heavy Machinegun, 1 x Scout: Infantry Fire Support Squad",
-		buildCostMetal = 1200,
+		buildCostMetal = 1190,
 		buildPic = "JPNType99LMG.png",
-		buildTime = 1200,
-		side = "JPN",
 	},
 	["jpn_platoon_sniper"] =
 	{
@@ -81,10 +73,8 @@ local jpnDefs = {
 		},
 		name = "Sniper Team",
 		description = "1 x Arisaka Type 99 Sniper, 1 x Spotter: Long-Range Fire Support",
-		buildCostMetal = 1140,
+		buildCostMetal = 1095,
 		buildPic = "JPNSniper.png",
-		buildTime = 1140,
-		side = "JPN",
 	},
 	["jpn_platoon_mortar"] =
 	{
@@ -96,10 +86,8 @@ local jpnDefs = {
 		},
 		name = "Mortar Team",
 		description = "3 x Type 97 81mm Mortar, 1 x Spotter: Heavy Infantry Fire Support",
-		buildCostMetal = 1580,
+		buildCostMetal = 2080,
 		buildPic = "JPNMortar.png",
-		buildTime = 1580,
-		side = "JPN",
 	},
 	["jpn_platoon_at"] =
 	{
@@ -107,16 +95,15 @@ local jpnDefs = {
 			"jpntype4at",
 			"jpntype3at",
 			"jpntype3at",
+			"jpntype3at",
 		},
 		name = "Anti-Tank Squad",
-		description = "2 x Type 3 AT Grenade, 1 x Type 4 Rocket Launcher: Anti-Tank Infantry",
+		description = "3 x Type 3 AT Grenade, 1 x Type 4 Rocket Launcher: Anti-Tank Infantry",
 		buildCostMetal = 400,
 		buildPic = "JPNType3AT.png",
-		buildTime = 400,
-		side = "JPN",
 	},
 
-	["jpn_platoon_daihatsu"] =
+	["jpn_platoon_landing"] =
 	{
 		members = {
 			"jpntype99lmg",
@@ -204,13 +191,11 @@ local jpnDefs = {
 		},
 		name = "Tankette Platoon",
 		description = "1 x tankette Te-Ke 37mm, 1 x tankette Te-Ke 7.7mm",
-		buildCostMetal = 1000,
+		buildCostMetal = 900,
 		buildPic = "JPNteke.png",
 		objectName = "JPNteke_build.s3o",
-		buildTime = 1000,
-		side = "JPN",
 	},
-	["jpn_platoon_tokudaihatsu"] =
+	["jpn_platoon_lct"] =
 	{
 		members = {
 			"jpnshinhotochiha",

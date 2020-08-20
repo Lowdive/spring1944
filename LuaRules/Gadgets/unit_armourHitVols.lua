@@ -13,20 +13,40 @@ end
 if gadgetHandler:IsSyncedCode() then
 --	SYNCED
 local GetUnitPieceList					= Spring.GetUnitPieceList
-local SetUnitPieceCollisionVolumeData	= Spring.SetUnitPieceCollisionVolumeData
+local SetPieceColVol					= Spring.SetUnitPieceCollisionVolumeData
+local GetPieceColVol					= Spring.GetUnitPieceCollisionVolumeData
 
-local armourPieces = {["base"] = true, ["turret"] = true}
-local boatPieces = {["base"] = true, ["hull"] = true, ["tower"] = true, ["tower2"] = true}
+local armourPieces = {["base"] = true, ["turret"] = true, ["super"] = true, ["trailer"] = true}
+local boatPieces = {["base"] = true, ["hull"] = true, ["tower"] = true, ["tower2"] = true, ["turret"] = true} -- turret for CharB1
 
 local function SetColVols(unitID, ud, colPieces)
-	if ud.model.type ~= "3do" then
+	if (ud.modeltype or ud.model.type) ~= "3do" then
 		local pieces = GetUnitPieceList(unitID)
+		local pieceMap = Spring.GetUnitPieceMap(unitID)
+		local tweaks = table.unserialize(ud.customParams.piecehitvols) or {}
 		for i, pieceName in pairs(pieces) do
-			--Spring.Echo(i, pieceName)
-			if not colPieces[pieceName] and i ~= "n" then
-				--Spring.Echo("piece " .. i .. " called " .. pieceName .. " to be disabled")
-				SetUnitPieceCollisionVolumeData(unitID, i - 1, false, 1, 1, 1, 0, 0, 0)
+			if colPieces[pieceName] and i ~= "n" 
+			and not (pieceName == "turret" and pieceMap["super"]) -- don't use turret if super exists
+			then
+
+				local pieceTweaks = tweaks[pieceName] or {
+					offset = { 0, 0, 0 },
+					scale = { 1, 1, 1 }
+				}
+
+				local sX, sY, sZ, oX, oY, oZ, volumeType, _, primaryAxis = GetPieceColVol(unitID, i)
+				sX = sX * pieceTweaks.scale[1]
+				sY = sY * pieceTweaks.scale[2]
+				sZ = sZ * pieceTweaks.scale[3]
+
+				oX = oX + pieceTweaks.offset[1]
+				oY = oY + pieceTweaks.offset[2]
+				oZ = oZ + pieceTweaks.offset[3]
+				SetPieceColVol(unitID, i, true, sX, sY, sZ, oX, oY, oZ, volumeType, primaryAxis)
+			else
+				SetPieceColVol(unitID, i, false, 1,1,1, 0,0,0, -1, 0)
 			end
+
 		end
 	end
 end
@@ -36,9 +56,8 @@ function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
 	if cp and cp.children then
-		--Spring.Echo("Found a BoatMother, setting ColVols")
 		SetColVols(unitID, ud, boatPieces)
-	elseif cp and cp.armor_front then
+	elseif cp and cp.armour then
 		SetColVols(unitID, ud, armourPieces)
 	end
 end

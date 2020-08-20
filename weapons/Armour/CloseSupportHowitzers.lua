@@ -1,89 +1,102 @@
 -- Armour - Close-Support Howitzers
 
--- CSHowitzer Base Class
-local CSHowitzerClass = Weapon:New{
-  accuracy           = 300,
-  avoidFeature		 = false,
-  collisionSize      = 4,
-  impulseFactor      = 0,
-  intensity          = 0.25,
-  leadBonus          = 0.5,
-  leadLimit          = 0,
-  movingAccuracy     = 600,
-  separation         = 2, 
-  size               = 1,
-  soundHitDry        = [[GEN_Explo_4]],
-  soundStart         = [[GEN_105mm]], -- move later?
-  stages             = 50,
-  targetMoveError    = 0.75,
-  tolerance          = 300,
-  turret             = true,
-  weaponType         = [[Cannon]],
-  weaponVelocity     = 1000,
-}
-
--- HE Round Class
-local CSHowitzerHEClass = Weapon:New{
-  explosionGenerator = [[custom:HE_Large]],
-  name               = [[HE Shell]],
-  rgbColor           = [[0.5 0.5 0.0]],
-  customparams = {
-    damagetype         = [[explosive]],
-    fearaoe            = 125,
-    fearid             = 501,
-  },
-}
-
--- Smoke Round Class
-local CSHowitzerSmokeClass = Weapon:New{
-  areaOfEffect       = 30,
-  explosionGenerator = [[custom:HE_Medium]],
-  name               = [[Smoke Shell]],
-  damage = {
-    default            = 100,
-  },
-  customparams = {
-    damagetype         = [[explosive]],
-	smokeradius        = 250,
-    smokeduration      = 40,
-    smokeceg           = [[SMOKESHELL_Medium]],
-  },  
-}
-
 -- Implementations
 
 -- CS 95mm (GBR)
-local CS95mm = CSHowitzerClass:New{
+local CS95mm = CSHowitzer:New{
   edgeEffectiveness  = 0.35,
   name               = [[CS 95mm]],
   range              = 1690, -- fwiw I object to this too
   reloadTime         = 9,
+  customParams = {
+    weaponcost         = 20,
+    cegflare           = "MEDIUMLARGE_MUZZLEFLASH",
+  },
 }
 
-local CS95mmHE = CS95mm:New(CSHowitzerHEClass, true):New{
+local CS95mmHE = HowitzerHE:New(CS95mm, true):New{
   areaOfEffect       = 109,
   damage = {
     default            = 2500,
   },  
 }
-local CS95mmSmoke = CS95mm:New(CSHowitzerSmokeClass, true)
+local CS95mmSmoke = HowitzerSmoke:New(CS95mm, true)
 
 -- M4 105mm (USA)
-local M4105mm = CSHowitzerClass:New{
+local M4105mm = CSHowitzer:New{
   edgeEffectiveness  = 0.25,
   name               = [[M4 105mm Howitzer]],
   range              = 1700, -- fwiw I object to this too
   reloadTime         = 11.25,
 }
 
-local M4105mmHE = M4105mm:New(CSHowitzerHEClass, true):New{
+local M4105mmHE = HowitzerHE:New(M4105mm, true):New{
   areaOfEffect       = 131,
   damage = {
     default            = 4360,
   },  
 }
-local M4105mmSmoke = M4105mm:New(CSHowitzerSmokeClass, true)
+local M4105mmSmoke = HowitzerSmoke:New(M4105mm, true)
 
+-- Ansaldo 105mm/25 (ITA)
+local Ansaldo105mmL25 = CSHowitzer:New{
+  name               = [[Ansaldo L/25 105mm Howitzer]],
+  range              = 1775,
+  reloadTime         = 11.25,
+  soundStart         = [[GEN_105mm]],
+  customparams = {
+    cegflare           = "LARGE_MUZZLEFLASH",
+  }
+}
+
+local Ansaldo105mmL25HE = HeavyHE:New(Ansaldo105mmL25, true):New{
+  areaOfEffect       = 129,
+  weaponVelocity     = 900,
+  damage = {
+    default            = 4009,
+  },  
+}
+
+local Ansaldo105mmL25HEAT = HeavyHEAT:New(Ansaldo105mmL25, true):New{
+  accuracy	= 500,
+  weaponVelocity     = 600,
+  customparams = {
+    armor_penetration       = 140,
+  },
+  damage = {
+    default            = 3608,
+  },
+}
+
+-- MÁVAG 40/43M L20.5 
+local Mavag_105_4043M = CSHowitzer:New{
+  name               = [[MÁVAG 105mm 40/43M L20.5  Howitzer]],
+  range              = 1775,
+  reloadTime         = 11.25,
+  soundStart         = [[GEN_105mm]],
+  customparams = {
+    cegflare           = "LARGE_MUZZLEFLASH",
+  }
+}
+
+local Mavag_105_4043MHE = HeavyHE:New(Mavag_105_4043M, true):New{
+  areaOfEffect       = 129,
+  weaponVelocity     = 900,
+  damage = {
+    default            = 4200,
+  },  
+}
+
+local Mavag_105_4043MHEAT = HeavyHEAT:New(Mavag_105_4043M, true):New{
+  accuracy	= 500,
+  weaponVelocity     = 600,
+  customparams = {
+    armor_penetration       = 110, --german Hl/C
+  },
+  damage = {
+    default            = 3790,
+  },
+}
 
 -- Return only the full weapons
 return lowerkeys({
@@ -93,4 +106,9 @@ return lowerkeys({
   -- M4 105mm
   M4105mmHE = M4105mmHE,
   M4105mmSmoke = M4105mmSmoke,
+  -- Ansaldo 105mm/25
+  Ansaldo105mmL25HE = Ansaldo105mmL25HE,
+  Ansaldo105mmL25HEAT = Ansaldo105mmL25HEAT,
+  Mavag_105_4043MHE = Mavag_105_4043MHE,
+  Mavag_105_4043MHEAT = Mavag_105_4043MHEAT,
 })

@@ -1,23 +1,14 @@
-local ITA_ML = Boat:New{
-	name					= "Landing Craft, Assault",
-	description				= "Infantry Landing Craft",
-	acceleration			= 0.9,
+local ITA_ML = InfantryLandingCraft:New{
+	name					= "Moto Lance",
+	acceleration			= 0.1,
 	brakeRate				= 0.5,
 	buildCostMetal			= 800,
-	category 				= "LARGESHIP SHIP MINETRIGGER",
-	buildTime				= 800,
-	corpse					= "ITAML_dead",
-	iconType				= "landingship",
-	mass					= 1550,
 	maxDamage				= 1550,
 	maxReverseVelocity		= 0.685,
-	maxVelocity				= 2,
-	movementClass			= "BOAT_LandingCraftSmall",
-	objectName				= "ITAML.s3o",
+	maxVelocity				= 2.2,
 	transportCapacity		= 22,
 	transportMass			= 1300,
-	transportSize			= 1,
-	turnRate				= 100,	
+	turnRate				= 55,	
 	weapons = {	
 		[1] = {
 			name				= "BredaM1931AA",
@@ -27,23 +18,32 @@ local ITA_ML = Boat:New{
 		},
 		[2] = {
 			name				= "BredaM1931",
-			onlyTargetCategory	= "INFANTRY OPENVEH SOFTVEH DEPLOYED SHIP LARGESHIP",
 			mainDir				= [[0 0 1]],
 			maxAngleDif			= 150,
 		}
 	},
 	customparams = {
-		soundCategory			= "ITA/Boat",
-		transportsquad			= "ita_platoon_ml",
-		armor_front				= 6,
-		armor_rear				= 6,
-		armor_side				= 6,
-		armor_top				= 6,
-		supplyRange				= 350,
+		armour = {
+			base = {
+				front = {
+					thickness		= 6,
+				},
+				rear = {
+					thickness		= 6,
+				},
+				side = {
+					thickness 		= 6,
+				},
+				top = {
+					thickness		= 0,
+				},
+			},
+		}
 		--[[ enable me later when using LUS
 		deathanim = {
 			["z"] = {angle = -30, speed = 10},
 		},]]
+
 	},
 	sfxtypes = { -- remove once using LUS
 		explosionGenerators = {

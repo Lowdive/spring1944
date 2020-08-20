@@ -5,30 +5,30 @@ format: transport name = {
 ]]
 
 local paratrooperDefs = {
-  usc47 = {
-    { "usparatrooper", "us101stmg" },
-    { "usparatrooper", "us101strifle" },
-    { "usparatrooper", "us101strifle" },
-    { "usparatrooper", "us101stthompson" },
-    { "usparatrooper", "us101stbar" },
-    { "usparatrooper", "us101strifle" },
-    { "usparatrooper", "us101strifle" },
-    { "usparatrooper", "us101stthompson" },
-	{ "usparatrooper", "us101stbazooka" },
-	
-    { "usparatrooper", "us101stmg" },
-    { "usparatrooper", "us101strifle" },
-    { "usparatrooper", "us101strifle" },
-    { "usparatrooper", "us101stthompson" },
-    { "usparatrooper", "us101stbar" },
-	{ "usparatrooper", "us101strifle" },
-    { "usparatrooper", "us101strifle" },
-    { "usparatrooper", "us101stthompson" },
-    { "usparatrooper", "us101stbazooka" },
-  },
-  ruspo2partisan = {
-    { "ruspdrop", "ruspresource"},
-  }
+	usc47 = {
+		{ "usparatrooper", "usparamg" },
+		{ "usparatrooper", "uspararifle" },
+		{ "usparatrooper", "uspararifle" },
+		{ "usparatrooper", "usparathompson" },
+		{ "usparatrooper", "usparabar" },
+		{ "usparatrooper", "uspararifle" },
+		{ "usparatrooper", "uspararifle" },
+		{ "usparatrooper", "usparathompson" },
+		{ "usparatrooper", "usparabazooka" },
+
+		{ "usparatrooper", "usparamg" },
+		{ "usparatrooper", "uspararifle" },
+		{ "usparatrooper", "uspararifle" },
+		{ "usparatrooper", "usparathompson" },
+		{ "usparatrooper", "usparabar" },
+		{ "usparatrooper", "uspararifle" },
+		{ "usparatrooper", "uspararifle" },
+		{ "usparatrooper", "usparathompson" },
+		{ "usparatrooper", "usparabazooka" },
+	},
+	ruspo2partisan = {
+		{ "ruspdrop", "ruspartisansupplies"},
+	}
 }
 
 return paratrooperDefs

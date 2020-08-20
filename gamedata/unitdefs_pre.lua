@@ -1,26 +1,81 @@
+VFS.Include('gamedata/VFSUtils.lua') -- for RecursiveFileSearch()
+lowerkeys = VFS.Include('gamedata/system.lua').lowerkeys -- for lowerkeys()
+
 -- Our shared funcs
-local function printTable (input)
-	for k,v in pairs(input) do
-		Spring.Echo(k, v)
-		if type(v) == "table" then
-			printTable(v)
+local function printTable (input, indentLevel)
+	local indentLevel = indentLevel or 0
+	if input == nil then
+		Spring.Log('OO Defs', 'warning', 'nil table passed to printTable')
+	else
+		if indentLevel == 0 then
+			Spring.Echo(string.rep("=", 60))
+		end
+		-- shove into an array for sorting so prints are consistent
+		local ordered = {}
+		for k,v in pairs (input) do table.insert(ordered, { k, v }) end
+
+		table.sort(ordered, function (a, b)
+			return a[1] < b[1]
+		end)
+
+		for i, tuple in ipairs(ordered) do
+			local k, v = tuple[1], tuple[2]
+			local indent = string.rep("  ", indentLevel)
+			local what = type(v)
+			if what == "table" then
+				Spring.Echo(indent .. k .. ": ")
+				printTable(v, indentLevel + 1)
+			else
+				Spring.Echo(indent .. k .. ' = ' .. tostring(v))
+			end
+		end
+
+		if indentLevel == 0 then
+			Spring.Echo(string.rep("=", 60))
 		end
 	end
 end
 
 local function inherit (c, p, concatNames)
-	for k,v in pairs(p) do 
-		if type(k) == "string" then
-			k:lower() -- really we need to run lowerkeys() on both c and p
+	lowerkeys(c)
+	for k,v in pairs(p) do
+		if type(k) == "string" and type(v) ~= "function" then
+			k = k:lower() -- can't use lowerkeys() on parent, as breaks e.g. New() -> new
 		end
 		if type(v) == "table" then
 			if c[k] == nil then c[k] = {} end
 			inherit(c[k], v)
 		else
-			if concatNames and k == "name" then 
+			if concatNames and k == "name" then
 				c[k] = v .. " " .. (c[k] or "")
 			else
 				if c[k] == nil then c[k] = v end
+				--Spring.Echo(c.name, k, v, c[k])
+			end
+		end
+	end
+end
+
+local function append (c, p)
+	lowerkeys(c)
+	for k,v in pairs(p) do
+		if type(v) == "string" then
+			c[k] = v .. " " .. (c[k] or "")
+		else
+			Spring.Log("OO Defs", "error", "Attempt to concatenate non-string value")
+		end
+	end
+end
+
+-- translate undef to nil so class consumers can explicitly drop parent
+-- values
+local function filterUndef (table)
+	for k,v in pairs(table) do
+		if type(v) == "table" then
+			filterUndef(table[k])
+		else
+			if v and v == 'explicitly-undefined-in-child' then
+				table[k] = nil
 			end
 		end
 	end
@@ -36,46 +91,90 @@ for sideNum, data in pairs(sideData) do
 end
 
 -- Root Classes
-
-Unit = {
-	showNanoFrame		= false,
+Def = {
 }
-function Unit:New(newAttribs, concatName)
+
+function Def:New(newAttribs, concatName)
 	local newClass = {}
+    if newAttribs == nil then
+        Spring.Log('OO Defs', 'error', 'Def:New called with nil child. check all children of ' .. self.name)
+        newAttribs = {
+            name = "ERROR: Invalid Child def. Check all instances that inherit from " .. self.name
+        }
+    end
 	inherit(newClass, newAttribs)
 	inherit(newClass, self, concatName)
+	filterUndef(newClass)
+
 	return newClass
 end
 
-local Weapon = {}
-function Weapon:New(newAttribs, concatName)
+function Def:Clone(name) -- name is passed to <NAME> in _post, it is the unitname of the unit to copy from
 	local newClass = {}
-	inherit(newClass, newAttribs)
-	inherit(newClass, self, concatName)
+	inherit(newClass, self)
+	newClass.unitname = name:lower()
+	filterUndef(newClass)
+
 	return newClass
 end
+
+function Def:Append(newAttribs)
+	local newClass = {}
+    if newAttribs == nil then
+        Spring.Log('OO Defs', 'error', 'Def:Append called with nil newAttributes. check all Append consumers of ' .. self.name)
+        newAttribs = {
+            name = "ERROR: Invalid Append def. Check all instances that append to " .. self.name
+        }
+    end
+	inherit(newClass, self)
+	append(newClass, newAttribs)
+	filterUndef(newClass)
+
+	return newClass
+end
+
+Unit = Def:New{
+	showNanoFrame			= false,
+	showNanoSpray			= false,
+	objectName				= "<SIDE>/<NAME>.s3o",
+	buildPic				= "<NAME>.png",
+	script					= "<NAME>.cob",
+	customParams			= {
+		normaltex			= "",
+	},
+}
+
+Weapon = Def:New{
+	customParams = {
+		-- this breaks AA, commenting it out. Why is it even there?
+		--onlytargetcategory     = "BUILDING INFANTRY SOFTVEH OPENVEH HARDVEH SHIP LARGESHIP DEPLOYED",
+		wiki_comments = "",      -- To be override by each unit
+	},
+}
 
 ---------------------------------------------------------------------------------------------
+
 -- This is where the magic happens
 local sharedEnv = {
 	Sides = Sides,
-	Weapon = Weapon,
+	Def = Def,
 	Unit = Unit,
+	Weapon = Weapon,
 	printTable = printTable,
+	lowerkeys = lowerkeys,
 }
 
 -- Include Base Classes from BaseClasses/*
-local unitBaseClasses = VFS.DirList("baseclasses/units")
-local weaponBaseClasses = VFS.DirList("baseclasses/weapons")
-local featureBaseClasses = VFS.DirList("baseclasses/features")
 
-local allBaseClasses = {unitBaseClasses, weaponBaseClasses, featureBaseClasses}
+local baseClassTypes = {"units", "weapons", "features"}
 
-for _, baseClasses in pairs(allBaseClasses) do
+for _, baseClassType in pairs(baseClassTypes) do
+	local baseClasses = RecursiveFileSearch("baseclasses/" .. baseClassType, "*.lua", VFS.ZIP)
 	for _, file in pairs(baseClasses) do
 		newClasses = VFS.Include(file, VFS.ZIP)
 		for className, class in pairs(newClasses) do
 			sharedEnv[className] = class
+			_G[className] = class
 		end
 	end
 end
@@ -94,10 +193,8 @@ function setmetatable(t, mt)
 					__newindex  = function() error('Attempt to write to system') end,
 					__metatable = function() error('Attempt to access system metatable') end
 				})
-				--Spring.Echo("foo", type(sharedEnv), type(sharedEnvMT))
 			end
 			local x = setmetatable_orig(t, { __index = sharedEnvMT })
-			--Spring.Echo("bar", x.SharedDefFunc)
 			return x
 		end
 	end

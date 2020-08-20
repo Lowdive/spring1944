@@ -140,15 +140,19 @@ function Team.UnitFinished(unitID, unitDefID, unitTeam)
 					local idx = enemyBaseLastAttacked
 					for i=1,enemyBaseCount do
 						-- enemyBases[] is in the right format to pass into GiveOrderToUnit...
-						GiveOrderToUnit(unitID, CMD.FIGHT, enemyBases[idx], {"shift"})
+						GiveOrderToUnit(unitID, CMD.FIGHT, enemyBases[idx], {})
 						idx = idx + 1
 						if idx > enemyBaseCount then idx = 1 end
 					end
 				end
 			end
 			for _,bo in ipairs(unitBuildOrder[unitDefID]) do
-				Log("Queueing: ", UnitDefs[bo].humanName)
-				GiveOrderToUnit(unitID, -bo, {}, {})
+				if bo and UnitDefs[bo] then
+					Log("Queueing: ", UnitDefs[bo].humanName)
+					GiveOrderToUnit(unitID, -bo, {}, {})
+				else
+					Spring.Echo("CRAIG: invalid buildorder found: " .. UnitDefs[unitDefID].humanName .. " -> " .. (bo or 'nil'))
+				end
 			end
 		else
 			Log("Warning: unitBuildOrder can only be used to control factories")

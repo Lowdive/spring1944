@@ -11,7 +11,7 @@ local itaunits =
     "ita_platoon_hq",
   },
   -- AI
-  itaengineer =
+  itahqaiengineer =
   {
     "itavehicleyard",
     "itabarracks",
@@ -21,8 +21,8 @@ local itaunits =
     "itaatminesign",
     "itaapminesign",
     "itatankobstacle",
-    "gersturmboot",
-    "pontoonraft",
+    "itaassaultboat",
+    "itapontoonraft",
     "itatankyard1",
     "itaspyard",
     "itaelitebarracks",
@@ -38,8 +38,8 @@ local itaunits =
     "itaatminesign",
     "itaapminesign",
     "itatankobstacle",
-    "gersturmboot",
-    "pontoonraft",
+    "itaassaultboat",
+    "itapontoonraft",
   },
 
   itabreda41 =
@@ -109,7 +109,6 @@ local itaunits =
   {
 	"itabreda41",
 	"itafiat626",
-	-- "itasemovente47",
 	"itabreda20_truck",
 	"itacannone47_truck",
 	"itacannone75_truck",
@@ -117,6 +116,17 @@ local itaunits =
 	"itacannone65",
   },
 
+  itagunyard2 =
+  {
+	"itabreda41",
+	"itafiat626",
+	"itabreda20_truck",
+	"itacannone47_truck",
+	"itacannone75_truck",
+	"itaobice100_truck",
+	"itacannone105_32_truck",
+	"itacannone65",
+  },  
   itaspyard =
   {
 	"itabreda41",
@@ -143,9 +153,11 @@ local itaunits =
 	"itafiat626",
 	"itaab41",
 	"itaas37",
-	"itaautocannone75",
+	--"itaautocannone75",
 	"itasemovente47",
 	"itaspadovunque",
+	"ital6_40lf",
+	"itafiat508cm",
   },
 
    itavehicleyard1 =
@@ -155,10 +167,12 @@ local itaunits =
 	"itafiat626",
 	"itaab41",
 	"itaas37",
-	"itaautocannone75",
 	"itasemovente47",
 	"itaspadovunque",
+	"itaautocannone75",
 	"ital6_40lf",
+	"itafiat508cm",
+
   }, 
   itatankyard =
   {
@@ -202,13 +216,14 @@ local itaunits =
 	"ita_sortie_interceptor",
 	"ita_sortie_fighter",
 	"ita_sortie_attack",
+	"ita_sortie_light_attack",
 	"ita_sortie_fighter_bomber",
 
   },
   itaboatyard =
   {
-    "gersturmboot",
-	"gerpontoonraft",
+    "itaassaultboat",
+	"itapontoonraft",
 	"itamas",
 	"itams",
 	"itavedetta",
@@ -217,8 +232,8 @@ local itaunits =
   },
   itaboatyardlarge =
   {
-    "gersturmboot",
-	"gerpontoonraft",
+    "itaassaultboat",
+	"itapontoonraft",
 	"itamas",
 	"itams",
 	"itavedetta",

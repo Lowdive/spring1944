@@ -2,6 +2,8 @@
 local base = piece("base")
 local prop = piece("prop")
 
+info = GG.lusHelper[unitDefID]
+
 local deg, rad, floor = math.deg, math.rad, math.floor
 
 local MG_TURRET_TURN = rad(60)
@@ -18,6 +20,16 @@ local rocket1 = 1
 local rocket2 = 1
 local rocketCount1 = 12
 local rocketCount2 = 12
+
+local usesAmmo = info.usesAmmo
+
+local function GetAmmo()
+	local ammo = 0
+	if usesAmmo then
+		ammo = Spring.GetUnitRulesParam(unitID, 'ammo')
+	end
+	return ammo
+end
 
 local bAimAA = false
 
@@ -44,12 +56,6 @@ local mg_turret = piece("mg_turret")
 local gun = piece("gun")
 local flare = piece("flare")
 
-local mgShotCount = 0
-local TRACER_PER_X_SHOTS = 3
-
-local MEDIUM_TRACER = 2048 + 4
-local MG_MUZZLEFLASH = 1024 + 7
-
 local RESTORE_PERIOD = 5000
 
 local bMoving = false
@@ -58,7 +64,7 @@ function DamageSmoke()
 	-- emit some smoke if the unit is damaged
 	-- check if the unit has finished building
 	_,_,_,_,buildProgress = Spring.GetUnitHealth(unitID)
-	while (buildProgress > 0) do
+	while (buildProgress < 1) do
 		Sleep(150)
 		_,_,_,_,buildProgress = Spring.GetUnitHealth(unitID)
 	end
@@ -85,7 +91,7 @@ end
 
 function FlagFlap()
 	local _,_,_,_,buildProgress = Spring.GetUnitHealth(unitID)
-	while (buildProgress > 0) do
+	while (buildProgress < 1) do
 		Sleep(150)
 		_,_,_,_,buildProgress = Spring.GetUnitHealth(unitID)
 	end
@@ -204,6 +210,17 @@ function RocketDisplayControl(rackNumber)
 	return
 end
 
+function script.BlockShot(weaponNum)
+	if usesAmmo then
+		local ammo = GetAmmo()
+		if ammo <= 0 then
+			return true
+		end
+	end
+
+	return false
+end
+
 function script.AimFromWeapon1()
 	return rack1
 end
@@ -223,6 +240,11 @@ function script.AimWeapon1(heading, pitch)
 end
 
 function script.FireWeapon1()
+	-- only check weapon1 since 2 is the same and it's supposed to use ammo once, not twice
+	if usesAmmo then
+		local currentAmmo = Spring.GetUnitRulesParam(unitID, 'ammo')
+		Spring.SetUnitRulesParam(unitID, 'ammo', currentAmmo - 1)
+	end
 	return
 end
 
@@ -233,6 +255,8 @@ function script.Shot1()
 		rocket1 = 1
 	end
 	RocketDisplayControl(1)
+	StartThread(RestoreTurrets)
+	EmitSfx(flare, SFX.CEG + 1)
 end
 
 function script.AimFromWeapon2()
@@ -264,6 +288,8 @@ function script.Shot2()
 		rocket2 = 1
 	end
 	RocketDisplayControl(2)
+	StartThread(RestoreTurrets)
+	EmitSfx(flare, SFX.CEG + 2)
 end
 
 function script.QueryWeapon3()
@@ -292,12 +318,7 @@ function script.FireWeapon3()
 end
 
 function script.Shot3()
-	mgShotCount = mgShotCount + 1
-	if mgShotCount >= TRACER_PER_X_SHOTS then
-		mgShotCount = 0
-		EmitSfx(flare, MEDIUM_TRACER)
-	end
-	EmitSfx(flare, MG_MUZZLEFLASH)
+	EmitSfx(flare, SFX.CEG + 3)
 end
 
 function script.QueryWeapon4()
@@ -327,12 +348,7 @@ function script.FireWeapon4()
 end
 
 function script.Shot4()
-	mgShotCount = mgShotCount + 1
-	if mgShotCount >= TRACER_PER_X_SHOTS then
-		mgShotCount = 0
-		EmitSfx(flare, MEDIUM_TRACER)
-	end
-	EmitSfx(flare, MG_MUZZLEFLASH)
+	EmitSfx(flare, SFX.CEG + 4)
 end
 
 function script.StartMoving()
@@ -347,7 +363,17 @@ end
 
 function script.Killed(recentDamage, maxHealth)
 	local severity = recentDamage / maxHealth
+	
 	if severity < 1 then
+		local dA = info.deathAnim
+		corpseType = 1
+		for axis, data in pairs(dA) do
+			Turn(base, info.axes[axis] or z_axis, -math.rad(data.angle or 30), math.rad(data.speed or 10))
+		end
+		for axis, data in pairs(dA) do
+			WaitForTurn(base, info.axes[axis] or z_axis)
+		end
+
 		return 1
 	else
 		Explode(base, SFX.SHATTER)

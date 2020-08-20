@@ -1,102 +1,35 @@
 -- Artillery - Auto Cannon (Light AA Guns)
-
--- AC Base Class
-local ACClass = Weapon:New{
-  collisionSize      = 2,
-  edgeEffectiveness  = 0.5,
-  explosionSpeed     = 100, -- needed?
-  impulseFactor      = 0,
-  movingAccuracy     = 500,
-  predictBoost       = 0.2,
-  size               = 1e-13, -- visuals done with tracers, except AP rounds
-  soundHitDry        = [[GEN_Explo_1]],
-  targetMoveError    = 0.1,
-  tolerance          = 700,
-  turret             = true,
-  weaponType         = [[Cannon]],
-  customparams = {
-	cegflare           = "XSMALL_MUZZLEFLASH",
-	flareonshot        = true,
-  },
-}
-
--- AA Round Class
-local ACAAClass = Weapon:New{
-  accuracy           = 200,
-  burnblow           = true,
-  areaOfEffect       = 15,
-  canattackground    = false,
-  collisionSize      = 5,
-  explosionGenerator = [[custom:HE_Small]],
-  movingAccuracy     = 0,
-  name               = [[AA Shell]],
-  soundHitDry        = [[GEN_Explo_Flak1]],
-  tolerance          = 1400,
-  customparams = {
-    damagetype         = [[explosive]],
-    no_range_adjust    = true,
-    fearaoe            = 450,
-    fearid             = 701,
-  },
-}
-
--- HE Round Class
-local ACHEClass = Weapon:New{
-  areaOfEffect       = 24,
-  explosionGenerator = [[custom:HE_XSmall]],
-  name               = [[HE Shell]],
-  customparams = {
-    damagetype         = [[explosive]],
-    fearaoe            = 40, -- flak 38 was 45?
-    fearid             = 301,
-  },
-}
-
--- AP Round Class
-local ACAPClass = Weapon:New{
-  areaOfEffect       = 2,
-  canattackground    = false,
-  colormap           = [[ap_colormap.png]],
-  explosionGenerator = [[custom:AP_XSmall]],
-  intensity          = 0.1,
-  name               = [[AP Shell]],
-  separation         = 2,
-  size               = 1,  
-  stages             = 50,
-  customparams = {
-    damagetype         = [[kinetic]],
-  },  
-}
-
 -- Implementations
 
 -- FlaK 38 20mm (GER)
-local FlaK3820mm = ACClass:New{
+local FlaK3820mm = AutoCannon:New{
   accuracy           = 255,
-  burst              = 3,
-  burstRate          = 0.16,
+  burst              = 4, -- 20 round box mag, 5 bursts
+  burstRate          = 0.133, -- cyclic 450rpm
+  reloadTime         = 1.3, -- 180rpm practical
+    turret	= true,
   name               = [[2cm FlaK 38]],
   range              = 730,
-  reloadTime         = 3,
   soundStart         = [[GER_20mm]],
   sprayAngle         = 400,
   weaponVelocity     = 1800,
   damage = {
     default            = 110,
   },
+  customparams = {
+    weaponcost = 1,
+  },
 }
 
-local FlaK3820mmAA = FlaK3820mm:New(ACAAClass, true):New{
-  burst              = 5,
-  burstRate          = 0.13,
-  range              = 1910,
+local FlaK3820mmAA = AutoCannonAA:New(FlaK3820mm, true):New{
+  range              = 1560,
 }
-local FlaK3820mmHE = FlaK3820mm:New(ACHEClass, true)
-local FlaK3820mmAP = FlaK3820mm:New(ACAPClass, true):New{
+local FlaK3820mmHE = AutoCannonHE:New(FlaK3820mm, true)
+local FlaK3820mmAP = AutoCannonAP:New(FlaK3820mm, true):New{
   weaponVelocity     = 1560,
   customparams = {
-    armor_penetration_1000m = 9,
-    armor_penetration_100m  = 20,
+    armor_penetration_1000m = 19,
+    armor_penetration_100m  = 34,
   },
   damage = {
     default            = 385,
@@ -104,68 +37,69 @@ local FlaK3820mmAP = FlaK3820mm:New(ACAPClass, true):New{
 }
 
 -- Flakvierling
--- derives from the above, only with 1/4 the burstrate and 4x burst
+-- derives from the above, only with 4x burst (can't have 1/4 the burstrate)
 local FlakVierling20mmAA = FlaK3820mmAA:New({
-  burst              = 16,
-  --burstrate          = 0.035, -- force to at least 1 frame
-  --reloadTime         = 1.2,
+  projectiles              = 4,
+  separation		  =1,
   name               = [[(Quad)]],
 }, true)
 local FlakVierling20mmHE = FlaK3820mmHE:New({
-  burst              = 16,
-  --burstrate          = 0.033,
-  --reloadTime         = 1.2,
+  projectiles              = 4,
+  separation		  =1,
   name               = [[(Quad)]],
 }, true)
 
 -- Oerlikon/Polsten 20mm (GBR)
-local Oerlikon20mm = ACClass:New{
+local Oerlikon20mm = AutoCannon:New{
   accuracy           = 255,
-  burst              = 3,
-  burstRate          = 0.16,
+  burst              = 5, -- 15 or 30 round drum
+  burstRate          = 0.133, -- cyclic 450rpm
+  reloadTime         = 1.2, -- practical 250 rpm
   name               = [[20mm Oerlikon]],
   range              = 750,
-  reloadTime         = 1.5,
   soundStart         = [[GER_20mm]],
   sprayAngle         = 475,
   weaponVelocity     = 1640,
   damage = {
     default            = 110, -- copy from FlaK / TNSh
   },
+  customparams = {
+    weaponcost = 1,
+  },
 }
 
-local Oerlikon20mmAA = Oerlikon20mm:New(ACAAClass, true):New{
-  burst              = 5,
-  range              = 1950,
+local Oerlikon20mmAA = AutoCannonAA:New(Oerlikon20mm, true):New{
+  range              = 1560,
 }
-local Oerlikon20mmHE = Oerlikon20mm:New(ACHEClass, true)
+local Oerlikon20mmHE = AutoCannonHE:New(Oerlikon20mm, true)
 local Twin_Oerlikon20mmAA = Oerlikon20mmAA:New({
   name               = [[(Twin)]],
-  reloadTime         = 0.75,
+  reloadTime         = 0.6,
 }, true)
 
 -- TNSh 20mm (RUS)
-local TNSh20mm = ACClass:New{
-  accuracy           = 300,
+local TNSh20mm = AutoCannon:New{
+  accuracy           = 200,
   burst              = 3,
   burstRate          = 0.1,
+  turret	= true,
   name               = [[20mm TNSh]],
   range              = 675,
-  reloadTime         = 4.5,
+  reloadTime         = 1.8,
   soundStart         = [[GER_20mm]],
-  sprayAngle         = 444,
+  sprayAngle         = 400,
   weaponVelocity     = 1600,
   damage = {
     default            = 110,
   },
 }
 
-local TNSh20mmHE = TNSh20mm:New(ACHEClass, true)
-local TNSh20mmAP = TNSh20mm:New(ACAPClass, true):New{
+local TNSh20mmHE = AutoCannonHE:New(TNSh20mm, true)
+local TNSh20mmAP = AutoCannonAP:New(TNSh20mm, true):New{
   weaponVelocity     = 1500,
   customparams = {
-    armor_penetration_1000m = 16,
-    armor_penetration_100m  = 35,
+    armor_penetration_1000m = 12,
+    armor_penetration_100m  = 29,
   },
   damage = {
     default            = 310,
@@ -173,10 +107,11 @@ local TNSh20mmAP = TNSh20mm:New(ACAPClass, true):New{
 }
 
 -- Breda M35 20mm (ITA)
-local BredaM3520mm = ACClass:New{
+local BredaM3520mm = AutoCannon:New{
   accuracy           = 100, --Why not 255 like the rest?
   burst              = 4,
   burstRate          = 0.261,
+  turret	= true,
   name               = [[Breda Model 35]],
   range              = 730,
   reloadTime         = 1.6,
@@ -184,42 +119,86 @@ local BredaM3520mm = ACClass:New{
   sprayAngle         = 300,
   weaponVelocity     = 2000,
   damage = {
-    default            = 41,
+    default            = 82,
+  },
+  customparams = {
+    weaponcost = 1,
   },
 }
 
-local BredaM3520mmAA = BredaM3520mm:New(ACAAClass, true):New{
-  burst              = 5,
-  burstRate          = 0.2,
-  range              = 1950,
+local BredaM3520mmAA = AutoCannonAA:New(BredaM3520mm, true):New{
+  range              = 1560,
   sprayAngle         = 475,
 }
 
 local TwinBredaM3520mmAA = BredaM3520mmAA:New{
-  burst              = 8,
-  burstRate          = 0.13,
+  projectiles        = 2,
+  separation		  =0.8,
+  burstRate          = 0.23,
 }
 
-local BredaM3520mmHE = BredaM3520mm:New(ACHEClass, true):New{
+local BredaM3520mmHE = AutoCannonHE:New(BredaM3520mm, true):New{
   customparams = {
     fearaoe            = 30,
   },
 }
 
-local BredaM3520mmAP = BredaM3520mm:New(ACAPClass, true):New{
+local BredaM3520mmAP = AutoCannonAP:New(BredaM3520mm, true):New{
   sprayAngle         = 400,
   weaponVelocity     = 1560,
   customparams = {
-    armor_penetration_1000m = 6,
-    armor_penetration_100m  = 29,
+    armor_penetration_1000m = 19,
+    armor_penetration_100m  = 36,
   },
   damage = {
     default            = 345,
   },
 }
 
+-- 20 mm maskinkanon M.40 S
+local BoforsM40_20mm = AutoCannon:New{
+	accuracy           = 255,
+	burst              = 4,
+	burstRate          = 0.361,
+	name               = [[20 mm maskinkanon M.40 S]],
+	range              = 740,
+	reloadTime         = 2.2,
+	soundStart         = [[GER_20mm]],
+	sprayAngle         = 300,
+	weaponVelocity     = 1900,
+	damage = {
+		default            = 121,
+	},
+	customparams = {
+		weaponcost = 1,
+	},
+}
+
+local BoforsM40_20mmAA = AutoCannonAA:New(BoforsM40_20mm, true):New{
+	burst = 4,
+	burstRate = 0.33,
+}
+
+local BoforsM40_20mmHE = AutoCannonHE:New(BoforsM40_20mm, true):New{
+	customparams = {
+		fearaoe            = 30,
+	},
+}
+
+local BoforsM40_20mmAP = AutoCannonAP:New(BoforsM40_20mm, true):New{
+	sprayAngle         = 200,
+	weaponVelocity     = 2060,
+	customparams = {
+		armor_penetration_1000m = 21,
+		armor_penetration_100m  = 40,
+	},
+	damage = {
+		default            = 345,
+	},
+}
+
 -- Type 98 20mm (JPN)
-local Type9820mm = ACClass:New{
+local Type9820mm = AutoCannon:New{
   accuracy           = 255,
   areaOfEffect       = 15,
   burst              = 4,
@@ -231,20 +210,18 @@ local Type9820mm = ACClass:New{
   sprayAngle         = 400,
   weaponVelocity     = 2000,
   damage = {
-    default            = 52,
+    default            = 102,
   },
 }
 
-local Type9820mmAA = Type9820mm:New(ACAAClass, true):New{
-  burst              = 5,
-  burstRate          = 0.13,
-  range              = 1950,
+local Type9820mmAA = AutoCannonAA:New(Type9820mm, true):New{
+  range              = 1560,
 }
 
-local Type9820mmHE = Type9820mm:New(ACHEClass, true)
+local Type9820mmHE = AutoCannonHE:New(Type9820mm, true)
 
 -- Type 96 25mm (JPN)
-local Type9625mm = ACClass:New{
+local Type9625mm = AutoCannon:New{
   accuracy           = 255,
   areaOfEffect       = 15, --if this is changed, change AA and HE aoe and fearaoe accordingly
   burst              = 5,
@@ -256,31 +233,117 @@ local Type9625mm = ACClass:New{
   sprayAngle         = 400,
   weaponVelocity     = 2000,
   damage = {
-    default            = 45,
+    default            = 145,
+  },
+  customparams = {
+    weaponcost = 1,
   },
 }
 
-local Type9625mmAA = Type9625mm:New(ACAAClass, true):New{
-  range              = 1950,
+local Type9625mmAA = AutoCannonAA:New(Type9625mm, true):New{
+  range              = 1620,
   damage = {
-    default            = 55,
+    default            = 155,
   },
 }
 
 local TwinType9625mmAA = Type9625mmAA:New{
-	burst            = 36,
-	burstrate        = 0.12,
-    reloadtime       = 6.5,
+    projectiles        = 2,
+    separation		  =1,
 }
 
-local Type9625mmHE = Type9625mm:New(ACHEClass, true)
+local Type9625mmHE = AutoCannonHE:New(Type9625mm, true)
 
 local TwinType9625mmHE = Type9625mmHE:New{
-	burst            = 36,
-	burstrate        = 0.12,
-    reloadtime       = 6.5,
+    projectiles        = 2,
+    separation		  =1,
 }
 
+-- Vehicle solothurn as used by Hungary
+local Solothurn_36MAP = AutoCannonAP:New{
+	accuracy           = 300,
+	burst              = 3,
+	burstRate          = 0.4,
+	size		= 0.3,
+  	turret	= true,
+	name               = [[Solothurn S-18/100 Anti-Tank Rifle]],
+	range              = 800,
+	reloadTime         = 4.4,
+	soundStart         = [[ITA_Solothurn]],
+	SoundTrigger	= false,
+	weaponVelocity     = 1600,
+	customparams = {
+		armor_penetration_1000m = 16,
+		armor_penetration_100m = 35,
+		weaponcost				= 1,
+		immobilizationchance = 0.5,	-- medium
+	},
+	damage = {
+		default            = 201,
+	},
+}
+
+local Solothurn_36MHE = AutoCannonHE:New{
+	accuracy           = 300,
+	burst              = 3,
+	burstRate          = 0.4,
+	size		= 0.3,
+	name               = [[Solothurn S-18/100 Anti-Tank Rifle]],
+	range              = 800,
+	reloadTime         = 4.4,
+	soundStart         = [[ITA_Solothurn]],
+	SoundTrigger	= false,
+	weaponVelocity     = 1600,
+	customparams = {
+		weaponcost				= 1,
+	},
+	damage = {
+		default            = 110,
+	},
+}
+
+-- French guns
+local Canon_25_SA_35 = AutoCannon:New{
+	accuracy           = 255,
+	burst              = 2,
+	name               = [[Canon de 25 SA 35]],
+	range              = 740,
+	reloadTime         = 3,
+	soundStart         = [[GER_20mm]],
+	weaponVelocity     = 2100,
+	damage = {
+		default            = 121,
+	},
+	customparams = {
+		weaponcost = 1,
+	},
+}
+
+local Canon_25_SA_35_AP = AutoCannonAP:New(Canon_25_SA_35, true):New{
+	customparams = {	-- data taken from http://www.littlewars.se/french1940/gundata.html
+		armor_penetration_1000m = 30,
+		armor_penetration_100m  = 47,	-- note: this is the short tank version, towed gun is longer = even more penetration. Crazy for just a 25mm
+	},
+	damage = {
+		default            = 540,
+	},
+}
+
+local Canon_25_SA_35_HE = AutoCannonHE:New(Canon_25_SA_35, true):New{
+	customparams = {
+		fearaoe            = 35,
+	},
+}
+
+local Canon_25_SA_34_AP = AutoCannonAP:New(Canon_25_SA_35, true):New{
+	customparams = {	-- data taken from http://www.littlewars.se/french1940/gundata.html
+		armor_penetration_1000m = 30,
+		armor_penetration_100m  = 54,	-- longer towed version
+	},
+	damage = {
+		default            = 540,
+	},
+}
 
 -- Return only the full weapons
 return lowerkeys({
@@ -310,4 +373,15 @@ return lowerkeys({
   TwinType9625mmAA = TwinType9625mmAA,
   Type9625mmHE = Type9625mmHE,
   TwinType9625mmHE = TwinType9625mmHE,
+  -- Bofors 20mm
+  BoforsM40_20mmHE = BoforsM40_20mmHE,
+  BoforsM40_20mmAP = BoforsM40_20mmAP,
+  BoforsM40_20mmAA = BoforsM40_20mmAA,
+  -- Hungarian AT rifle used as vehicle weapon, had to move it here as it is AP/HE like a cannon
+  Solothurn_36MAP = Solothurn_36MAP,
+  Solothurn_36MHE = Solothurn_36MHE,
+  -- French tank version of 25mm
+  Canon_25_SA_35_AP = Canon_25_SA_35_AP,
+  Canon_25_SA_35_HE = Canon_25_SA_35_HE,
+  Canon_25_SA_34_AP = Canon_25_SA_34_AP,
 })

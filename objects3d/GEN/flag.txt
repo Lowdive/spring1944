@@ -1,0 +1,9 @@
+base
+    gbrflag
+    gerflag
+    rusflag
+    usflag
+    jpnflag
+    itaflag
+    sweflag
+    hunflag

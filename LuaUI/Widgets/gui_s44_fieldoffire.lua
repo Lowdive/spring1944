@@ -38,6 +38,7 @@ local GetInvertQueueKey = Spring.GetInvertQueueKey
 local GetModKeyState = Spring.GetModKeyState
 local GetMouseState = Spring.GetMouseState
 local GetSelectedUnitsSorted = Spring.GetSelectedUnitsSorted
+local GetUnitDefID = Spring.GetUnitDefID
 local GetUnitHeading = Spring.GetUnitHeading
 local GetUnitPosition = Spring.GetUnitPosition
 local TraceScreenRay = Spring.TraceScreenRay
@@ -158,32 +159,36 @@ function widget:Initialize()
 	local inUse = false
 	--outer loop: stationaries
 	for stationaryUnitDefID, stationaryUnitDef in ipairs(UnitDefs) do
-		local maxAngleDif = GetUnitDefMaxAngleDif(stationaryUnitDef)
-		if maxAngleDif > 0 and stationaryUnitDef.speed == 0 then
-			--create stationary list
-			local list = stationaryLists[maxAngleDif]
-			local range = stationaryUnitDef.maxWeaponRange
-			if not list then
-				list = glCreateList(DrawStationary, maxAngleDif)
-				stationaryLists[maxAngleDif] = list
-			end
-			unitDefInfos[stationaryUnitDefID] = {list, range}
+		local cp = stationaryUnitDef.customParams
+		-- should this even have the fire arc?
+		if not(cp and cp.hidefirearc) then
+			local maxAngleDif = GetUnitDefMaxAngleDif(stationaryUnitDef)
+			if maxAngleDif > 0 and stationaryUnitDef.speed == 0 then
+				--create stationary list
+				local list = stationaryLists[maxAngleDif]
+				local range = stationaryUnitDef.maxWeaponRange
+				if not list then
+					list = glCreateList(DrawStationary, maxAngleDif)
+					stationaryLists[maxAngleDif] = list
+				end
+				unitDefInfos[stationaryUnitDefID] = {list, range}
 
-			inUse = true
+				inUse = true
 
-			--look for mobiles
-			local staticBasename = GetBasename(stationaryUnitDef.name)
+				--look for mobiles
+				local staticBasename = GetBasename(stationaryUnitDef.name)
 
-			for mobileUnitDefID, mobileUnitDef in ipairs(UnitDefs) do
-				if mobileUnitDef.speed > 0 then
-					local mobileBasename = GetBasename(mobileUnitDef.name)
-					if mobileBasename == staticBasename then
-						local list = mobileLists[maxAngleDif]
-						if not list then
-							list = glCreateList(DrawMobile, maxAngleDif)
-							mobileLists[maxAngleDif] = list
+				for mobileUnitDefID, mobileUnitDef in ipairs(UnitDefs) do
+					if mobileUnitDef.speed > 0 then
+						local mobileBasename = GetBasename(mobileUnitDef.name)
+						if mobileBasename == staticBasename then
+							local list = mobileLists[maxAngleDif]
+							if not list then
+								list = glCreateList(DrawMobile, maxAngleDif)
+								mobileLists[maxAngleDif] = list
+							end
+							unitDefInfos[mobileUnitDefID] = {list, range}
 						end
-						unitDefInfos[mobileUnitDefID] = {list, range}
 					end
 				end
 			end
@@ -233,14 +238,16 @@ function widget:DrawWorld()
 		if units then
 			for i=1,#units do
 				local unitID = units[i]
-				if inDeployCmd and FindUnitCmdDesc(unitID, cmdDescID) then
-					local unitID = units[i]
-					local ux, uy, uz = GetUnitActiveCommandPosition(unitID)
-					local dx, dz = tx - ux, tz - uz
-					local rotation = math.atan2(dx, dz) * (180 / 3.1415)
-					DrawFieldOfFire2(ux, uy, uz, info[1], info[2], rotation)
-				else
-					DrawFieldOfFire(unitID, info[1], info[2])
+				if GetUnitDefID(unitID) then
+					if inDeployCmd and FindUnitCmdDesc(unitID, cmdDescID) then
+						local unitID = units[i]
+						local ux, uy, uz = GetUnitActiveCommandPosition(unitID)
+						local dx, dz = tx - ux, tz - uz
+						local rotation = math.atan2(dx, dz) * (180 / 3.1415)
+						DrawFieldOfFire2(ux, uy, uz, info[1], info[2], rotation)
+					else
+						DrawFieldOfFire(unitID, info[1], info[2])
+					end
 				end
 			end
 		end

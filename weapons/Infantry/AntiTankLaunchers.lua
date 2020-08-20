@@ -1,43 +1,5 @@
 -- Infantry Anti-Tank Launchers
 
--- AT Launcher Base Class
-local ATLClass = Weapon:New{
-  explosionGenerator = [[custom:HE_Medium]],
-  explosionSpeed     = 30,
-  impulseFactor      = 0,
-  model              = [[Bomb_Tiny.S3O]],
-  noSelfDamage       = true,
-  soundHitDry        = [[GEN_Explo_3]],
-  tolerance          = 6000,
-  turret             = true,
-  customparams = {
-    damagetype         = [[shapedcharge]],
-  },
-}
-
--- Recoilless Rifle (& Spigot Mortar) Class
-local RCL_ATLClass = ATLClass:New{
-  accuracy           = 300,
-  collisionSize      = 3,
-  reloadtime         = 15,
-  weaponType         = [[Cannon]],
-  weaponVelocity     = 400,
-}
-
--- Rocket Launcher Class
-local Rocket_ATLClass = ATLClass:New{
-  areaOfEffect       = 32,
-  cegTag             = [[BazookaTrail]],
-  flightTime         = 1,
-  gravityaffected    = true,
-  reloadtime         = 10,
-  startVelocity      = 10,
-  weaponAcceleration = 2000,
-  weaponTimer        = 1,
-  weaponType         = [[MissileLauncher]],
-  weaponVelocity     = 1000,
-}
-
 -- Implementations
 -- RCL & Spigot Mortar
 -- PIAT(GBR)
@@ -47,12 +9,11 @@ local PIAT = RCL_ATLClass:New{
   name               = [[P.I.A.T.]],
   range              = 245,
   soundStart         = [[GBR_PIAT]],
-  targetMoveError    = 0.02,
   customparams = {
     armor_penetration  = 100,
   },
   damage = {
-    default            = 8800,
+    default            = 6800,
   },
 }
 
@@ -63,7 +24,6 @@ local Panzerfaust = RCL_ATLClass:New{
   name               = [[Panzerfaust 60]],
   range              = 235,
   soundStart         = [[GER_Panzerfaust]],
-  targetMoveError    = 0.1,
   customparams = {
     armor_penetration  = 170, -- wiki says 200?
   },
@@ -77,12 +37,11 @@ local Panzerschrek = Rocket_ATLClass:New{
   name               = [[RPzB 54/1 Panzerschrek]],
   range              = 360,
   soundStart         = [[GER_Panzerschrek]],
-  targetMoveError    = 0.1,
   customparams = {
     armor_penetration  = 200,
   },
   damage = {
-    default            = 5280, -- same as bazooka?
+    default            = 6280, -- same as bazooka?
   },
 }
 
@@ -91,7 +50,6 @@ local M9A1Bazooka = Rocket_ATLClass:New{
   name               = [[M9A1 Bazooka]],
   range              = 270,
   soundStart         = [[US_Bazooka]],
-  targetMoveError    = 0.075,
   customparams = {
     armor_penetration  = 108,
   },
@@ -105,13 +63,45 @@ local Type4AT = Rocket_ATLClass:New{
   name               = [[Type 4 Rocket Launcher]],
   range              = 270,
   soundStart         = [[US_Bazooka]],
-  targetMoveError    = 0.075,
+  targetMoveError    = 0.05,
   customparams = {
-    armor_penetration  = 108,
+    armor_penetration  = 104,
   },
   damage = {
-    default            = 5280,
+    default            = 5820,
   },
+}
+
+-- 44M kézi rakétavetõ
+local Raketaveto44M = Rocket_ATLClass:New{
+  name               = [[44M kézi rakétavetőkén]],
+  range              = 260,
+  soundStart         = [[GER_Panzerschrek]],
+  targetMoveError    = 0.01,
+  customparams = {
+    armor_penetration  = 101,
+  },
+  damage = {
+    default            = 5320,
+  },
+}
+
+-- 44M Buzoganyveto
+local Buzoganyveto44MHEAT = Rocket_ATLClass:New{
+	name			= [[215mm 44M Buzogány]],
+	range			= 740,
+	burst			= 2,
+	startVelocity     = 420,
+	burstRate		= 0.8,
+	soundStart		= [[GER_Panzerschrek]],
+	customparams = {
+		armor_penetration  = 300,
+		weaponCost			= 50,
+		onlyTargetCategory = "HARDVEH OPENVEH SOFTVEH SHIP LARGESHIP", -- don't fire at infantry
+	},
+	damage = {
+		default            = 8000,
+	},	
 }
 
 -- Return only the full weapons
@@ -123,4 +113,6 @@ return lowerkeys({
   Panzerschrek = Panzerschrek,
   M9A1Bazooka = M9A1Bazooka,
   Type4AT = Type4AT,
+  Buzoganyveto44MHEAT = Buzoganyveto44MHEAT,
+  Raketaveto44M = Raketaveto44M,
 })

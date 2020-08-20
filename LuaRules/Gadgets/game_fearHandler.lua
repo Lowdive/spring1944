@@ -26,6 +26,7 @@ local GetTeamInfo				= Spring.GetTeamInfo
 local CallCOBScript				= Spring.CallCOBScript
 local SetUnitExperience			= Spring.SetUnitExperience
 local SetUnitRulesParam 		= Spring.SetUnitRulesParam
+
 -- constants
 local MORALE_RADIUS = 150
 local FEAR_IDS = 	{["301"] = 2, --small arms or very small calibre cannon: MGs, snipers, LMGs, 20mm
@@ -34,14 +35,18 @@ local FEAR_IDS = 	{["301"] = 2, --small arms or very small calibre cannon: MGs, 
 					 ["601"] = 16, --omgwtfbbq explosions: medium/large bombs, 170+mm guns, rocket arty}
 					 ["701"] = 2  --a hack for aircraft fear, should be merged with 301 at some point.
 					}
+local DEFAULT_PRONE_SPHERE_MOVE_MULT = 0.4
+
 -- variables
 local cobScriptIDs = {}
 local lusScriptIDs = {}
 
-local fearLevels = {}
-local engineerIDs = {}
-local engineerDefIDs = {}
+local restoreCOBScriptIDs = {}
+local restorelusScriptIDs = {}
 
+local collisionUpdated = {}
+
+local fearShields = {}
 local targets = {}
 local tLength = 0
 
@@ -50,15 +55,81 @@ local blockAllyTeams = {}
 if (gadgetHandler:IsSyncedCode()) then
 -- SYNCED
 
-local function UpdateSuppression(unitID)
+local function UpdateCollision(unitID, direction)
+	local unitDef = UnitDefs[Spring.GetUnitDefID(unitID)]
+	
+	-- filter out static units like MG nests and AA/AT posts
+	if (unitDef.speed > 0) then
+		
+		-- filter out repeated calls on units already in proper state
+		if ((collisionUpdated[unitID] and direction == 1) or (collisionUpdated[unitID] == nil and direction == -1)) then
+			local sphereMult = unitDef.customParams.pronespheremovemult or DEFAULT_PRONE_SPHERE_MOVE_MULT
+			
+			-- hitsphere update 
+			local scaleX, scaleY, scaleZ, offsetX, offsetY, offsetZ, volumeType, testType, primaryAxis = Spring.GetUnitCollisionVolumeData(unitID)
+			Spring.SetUnitCollisionVolumeData(unitID, scaleX, scaleY, scaleZ, offsetX, offsetY + direction * scaleY * sphereMult, offsetZ, volumeType, testType, primaryAxis)
+			
+			-- read model data for aimpoint upgrade
+			local bpx,bpy,bpz,mpx,mpy,mpz = Spring.GetUnitPosition(unitID, true)
+			local centerHeight = mpy - bpy
+			
+			-- inverting between "nil" and "true" 
+			-- better than "true" and "false" because the table is shorter for per frame iteration below
+			if (collisionUpdated[unitID] == nil) then
+				Spring.SetUnitMidAndAimPos(unitID,0,centerHeight,0,0,centerHeight*DEFAULT_PRONE_SPHERE_MOVE_MULT,0,true)
+				collisionUpdated[unitID] = true 
+			else
+				Spring.SetUnitMidAndAimPos(unitID,0,centerHeight,0,0,centerHeight,0,true)
+				collisionUpdated[unitID] = nil 
+			end
+		end
+	end
+end
+
+local function UpdateSuppressionCOB(unitID)
+
+	local unitInSmoke = GetUnitRulesParam(unitID, "smoked") == 1 
+	if unitInSmoke then
+		if restoreCOBScriptIDs[unitID] then
+			CallCOBScript(unitID, restoreCOBScriptIDs[unitID], 0)
+		end
+	else
+		local unitAllyTeam = GetUnitAllyTeam(unitID)
+		local ux, uy, uz = GetUnitPosition(unitID)
+		local nearbyUnits = GetUnitsInSphere(ux, uy, uz, MORALE_RADIUS)
+		for i = 1, #nearbyUnits do
+			if nearbyUnits[i] ~= unitID then
+				local nearbyUnitAllyTeam = GetUnitAllyTeam(nearbyUnits[i])
+				local nearbyUD = UnitDefs[GetUnitDefID(nearbyUnits[i])]
+				if nearbyUD.customParams.blockfear == "1" and (unitAllyTeam == nearbyUnitAllyTeam) then
+					if restoreCOBScriptIDs[unitID] then
+						CallCOBScript(unitID, restoreCOBScriptIDs[unitID], 0)
+					end
+					break
+				end
+			end
+		end
+	end
+	
 	local _, currFear = CallCOBScript(unitID, cobScriptIDs[unitID], 1, 1)
-	fearLevels[unitID] = currFear
-	SetUnitRulesParam(unitID, "suppress", currFear)
-	if engineerIDs[unitID] then -- unit is an engineer, toggle his buildpower
-		if currFear <= 2 then
-			Spring.SetUnitBuildSpeed(unitID, engineerIDs[unitID])
+	SetUnitRulesParam(unitID, "fear", currFear)
+end
+
+local function UpdateSuppressionLUS(unitID)
+	if Spring.ValidUnitID(unitID) and restorelusScriptIDs[unitID] then
+		local unitInSmoke = GetUnitRulesParam(unitID, "smoked") == 1 
+		if unitInSmoke then
+			Spring.UnitScript.CallAsUnit(unitID, restorelusScriptIDs[unitID])
 		else
-			Spring.SetUnitBuildSpeed(unitID, 0.000001) -- must be non-0 or building will decay
+			local unitAllyTeam = GetUnitAllyTeam(unitID)
+			local ux, uy, uz = GetUnitPosition(unitID)
+			local nearbyUnits = GetUnitsInSphere(ux, uy, uz, MORALE_RADIUS)
+			for i = 1, #nearbyUnits do
+				local nearbyUnitAllyTeam = GetUnitAllyTeam(nearbyUnits[i])
+				if nearbyUnits[i] ~= unitID and unitAllyTeam == nearbyUnitAllyTeam and fearShields[nearbyUnits[i]] then
+					Spring.UnitScript.CallAsUnit(unitID, restorelusScriptIDs[unitID])
+				end
+			end
 		end
 	end
 end
@@ -66,78 +137,89 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID)
 	local scriptID = GetCOBScriptID(unitID, "luaFunction")
-	env = Spring.UnitScript.GetScriptEnv(unitID)
+	local env = Spring.UnitScript.GetScriptEnv(unitID)
 	if (scriptID or (env and env.AddFear)) then
-		SetUnitRulesParam(unitID, "suppress", 0)
+		SetUnitRulesParam(unitID, "fear", 0)
 		cobScriptIDs[unitID] = scriptID 
 		lusScriptIDs[unitID] = env and env.AddFear
-		if engineerDefIDs[unitDefID] == nil then -- first of this unitdef, check if it is a builder
-			if UnitDefs[unitDefID].isBuilder then
-				engineerDefIDs[unitDefID] = true
-				engineerIDs[unitID] = UnitDefs[unitDefID].buildSpeed
-			else
-				engineerDefIDs[unitDefID] = false
-			end
-		elseif engineerDefIDs[unitDefID] then -- is a builder
-			engineerIDs[unitID] = UnitDefs[unitDefID].buildSpeed
-		end
 	end
+	
+	scriptID = GetCOBScriptID(unitID, "RestoreAfterCover")
+	if (scriptID or (env and env.RestoreAfterCover)) then
+		restoreCOBScriptIDs[unitID] = scriptID 
+		restorelusScriptIDs[unitID] = env and env.RestoreAfterCover
+	end
+	
+	if UnitDefs[unitDefID].customParams.blockfear then
+		fearShields[unitID] = true
+	end
+	
+	UpdateCollision(unitID, 1)
+	
+	--[[
+		DOCUMENTATION OF SPRING API
+		
+		Spring.GetUnitPosition
+		( number unitID, [, boolean midPos [, boolean aimPos ] ] ) ->
+		nil |
+		number bpx, number bpy, number bpz
+		[, number mpx, number mpy, number mpz ]
+		[, number apx, number apy, number apz ]
+	
+		Spring.SetUnitMidAndAimPos
+		( number unitID, 
+		number mpx, number mpy, number mpz, 
+		number apx, number apy, number apz, 
+		[, boolean relative] ) -> boolean success
+		mpx, mpy, mpz: new middle position of unit
+		apx, apy, apz: new position that enemies aim at on this unit
+		relative: to the unit coordinates (false => relative to the world coordinates)
+		
+		UNCOMMENT SECTION BELOW FOR EXPERIMENTS
+	]]--
+
+	--[[
+	local unitDef = UnitDefs[Spring.GetUnitDefID(unitID)]
+	
+	-- filter out static units like MG nests and AA/AT posts
+	if (unitDef.speed > 0) then
+		local bpx,bpy,bpz,mpx,mpy,mpz,apx,apy,apz = Spring.GetUnitPosition(unitID, true, true)
+		Spring.Echo("before",bpx,bpy,bpz,mpx,mpy,mpz,apx,apy,apz)
+		local centerHeight = mpy-bpy
+		local scaleX, scaleY, scaleZ, offsetX, offsetY, offsetZ, volumeType, testType, primaryAxis = Spring.GetUnitCollisionVolumeData(unitID)
+		Spring.Echo("properties",scaleX, scaleY, scaleZ, offsetX, offsetY, offsetZ, volumeType, testType, primaryAxis)
+		--Spring.SetUnitMidAndAimPos(unitID,mpx,mpy,mpz,apx,apy-scaleY*DEFAULT_PRONE_SPHERE_MOVE_MULT,apz)
+		Spring.SetUnitMidAndAimPos(unitID,0,centerHeight,0,0,centerHeight*DEFAULT_PRONE_SPHERE_MOVE_MULT,0,true)
+		local bpx,bpy,bpz,mpx,mpy,mpz,apx,apy,apz = Spring.GetUnitPosition(unitID, true, true)
+		Spring.Echo("after",bpx,bpy,bpz,mpx,mpy,mpz,apx,apy,apz)
+	end
+	]]--
 end
 
 
 function gadget:UnitDestroyed(unitID)
 	cobScriptIDs[unitID] = nil
 	lusScriptIDs[unitID] = nil
-	engineerIDs[unitID] = nil
+	fearShields[unitID] = nil
+	collisionUpdated[unitID] = nil
 end
 
 
 function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
-	if cobScriptIDs[unitID] and weaponID and weaponID > 0 then
-		local wd = WeaponDefs[weaponID]
+	if (cobScriptIDs[unitID] or lusScriptIDs[unitID]) and weaponDefID and weaponDefID > 0 then
+		local wd = WeaponDefs[weaponDefID]
 		local cp = wd.customParams
 		-- SMGs and Rifles do a small amount of suppression cob side, so update suppression when hit by them
 		-- ... but be sure not to update suppression for a dead unit (UnitDamaged is called before UnitDestroyed, so cobScriptIDs[unitID] is still valid!)
-		if cp and cp.damagetype == "smallarms" and not cp.fearid and not GetUnitIsDead(unitID) then
+		if cp and cp.damagetype == "smallarm" and not cp.fearid and not GetUnitIsDead(unitID) then
+			UpdateCollision(unitID, -1) 
 			if cobScriptIDs[unitID] then
-				UpdateSuppression(unitID)
+				UpdateSuppressionCOB(unitID)
 			else -- danger Will Robinson! assumes the unit must have a lusScriptID
 				Spring.UnitScript.CallAsUnit(unitID, lusScriptIDs[unitID], 1)
 			end
 		end
 	end
-end
-
-function gadget:AllowCommand(unitID, unitDefID, unitTeam, cmdID, cmdParams)
-	local ud = UnitDefs[unitDefID]
-		if cobScriptIDs[unitID] then
-			local fearLevel = GetUnitRulesParam(unitID, "suppress")
-			if fearLevel > 0 and fearLevel <= 2 then
-				--Spring.Echo("dude should get up and run")
-				CallCOBScript(unitID, "RestoreAfterCover", 0, 0, 0)
-			elseif fearLevel > 2 then
-				--if they're in smoke, they don't have to fear...
-				local unitInSmoke = GetUnitRulesParam(unitID, "smoked") == 1 
-				if unitInSmoke then
-					CallCOBScript(unitID, "RestoreAfterCover", 0, 0, 0)
-				else
-					local unitAllyTeam = GetUnitAllyTeam(unitID)
-					local ux, uy, uz = GetUnitPosition(unitID)
-					local nearbyUnits = GetUnitsInSphere(ux, uy, uz, MORALE_RADIUS)
-					for i = 1, #nearbyUnits do
-						if nearbyUnits[i] ~= unitID then
-							local nearbyUnitAllyTeam = GetUnitAllyTeam(nearbyUnits[i])
-							local nearbyUD = UnitDefs[GetUnitDefID(nearbyUnits[i])]
-							if nearbyUD.customParams.blockfear == "1" and (unitAllyTeam == nearbyUnitAllyTeam) then
-								CallCOBScript(unitID, "RestoreAfterCover", 0, 0, 0)
-								break
-							end
-						end
-					end
-				end
-			end
-		end
-	return true
 end
 
 function gadget:Explosion(weaponID, px, py, pz, ownerID)
@@ -147,12 +229,22 @@ function gadget:Explosion(weaponID, px, py, pz, ownerID)
 	if not fearID then return false end
   
 	local unitsAtSpot = GetUnitsInSphere(px, py, pz, cp.fearaoe)
+	local validOwnerID = ValidUnitID(ownerID)
 	
 	-- if the weapon is a howitzer shell reset the gun's experience to 0
-	if ValidUnitID(ownerID) and (cp.howitzer or cp.infgun) then
+	if validOwnerID and (cp.howitzer or cp.infgun) then
 		GG.Delay.DelayCall(SetUnitExperience, {ownerID, 0}, 1)
 	end
-	
+
+	-- protect against dead owners
+	local ownerAllyTeam = -1
+	if validOwnerID then
+		ownerAllyTeam = GetUnitAllyTeam(ownerID)
+	end
+
+	-- friendly smallarms fear doesn't apply
+	local smallarms = cp.damagetype and cp.damagetype == "smallarm"
+
 	for i = 1, #unitsAtSpot do
 		local unitID = unitsAtSpot[i]
 		local ud = UnitDefs[GetUnitDefID(unitID)]
@@ -160,8 +252,17 @@ function gadget:Explosion(weaponID, px, py, pz, ownerID)
 			blockAllyTeams[GetUnitAllyTeam(unitID)] = unitID
 		else]]--
 		if ud.customParams.feartarget then
-			tLength = tLength + 1
-			targets[tLength] = unitID
+			local validTargetID = ValidUnitID(unitID)
+			if validTargetID then
+				local targetAllyTeam = GetUnitAllyTeam(unitID)
+				-- to minimize issues with LMGs hitting ground in the middle of friendly
+				-- group while prone
+				local friendlySmallarms = (smallarms and targetAllyTeam == ownerAllyTeam)
+				if not friendlySmallarms then
+					tLength = tLength + 1
+					targets[tLength] = unitID
+				end
+			end
 		end
 	end
 	
@@ -169,11 +270,12 @@ function gadget:Explosion(weaponID, px, py, pz, ownerID)
 		local unitID = targets[i]
 		-- GetUnitInSphere can catch tombstoned units, so check that cobScriptIDs[unitID] is valid (unit is not dead)
 		if unitID ~= ownerID then
+			UpdateCollision(unitID, -1) 
 			if lusScriptIDs[unitID] then
 				Spring.UnitScript.CallAsUnit(unitID, lusScriptIDs[unitID], FEAR_IDS[fearID])
 			elseif cobScriptIDs[unitID] then
 				CallCOBScript(unitID, "HitByWeaponId", 0, 0, 0, fearID, 0)
-				UpdateSuppression(unitID)
+				UpdateSuppressionCOB(unitID)
 			end
 		end
 	end
@@ -185,13 +287,17 @@ function gadget:Explosion(weaponID, px, py, pz, ownerID)
 	return false
 end
 
-
 function gadget:Initialize()
 	for weaponId, weaponDef in pairs (WeaponDefs) do
-		if weaponDef.customParams.fearid then
-			--Spring.Echo(weaponDef.name) -- useful for debugging
+		if weaponDef.customParams.fearid or weaponDef.customParams.projectilelups then
 			Script.SetWatchWeapon(weaponId, true)
 		end
+	end
+	-- Fake UnitCreated events for existing units. (for '/luarules reload')
+	local allUnits = Spring.GetAllUnits()
+	for i=1,#allUnits do
+		local unitID = allUnits[i]
+		gadget:UnitCreated(unitID, Spring.GetUnitDefID(unitID))
 	end
 end
 
@@ -199,7 +305,15 @@ end
 function gadget:GameFrame(n)
 	if (n % (1.5*30) < 0.1) then
 		for unitID, funcID in pairs(cobScriptIDs) do
-			UpdateSuppression(unitID)
+			UpdateSuppressionCOB(unitID)
+		end
+		for unitID, funcID in pairs(lusScriptIDs) do
+			UpdateSuppressionLUS(unitID)
+		end
+		for unitID, _ in pairs(collisionUpdated) do
+			if (GetUnitRulesParam(unitID, "fear") == 0) then
+				UpdateCollision(unitID, 1)
+			end
 		end
 	end
 end

@@ -10,7 +10,7 @@ local usunits = {
     --"usairengineer",
     "us_platoon_hq",
     --"us_platoon_hq_rifle",
-    --"us_platoon_hq_assault",
+    "us_platoon_hq_pioneers",
   },
 
   uscp =
@@ -33,8 +33,26 @@ local usunits = {
     "usapminesign",
     "ustankobstacle",
     --"sandbags",
-    "rubberdingy",
-    "pontoonraft",
+    "usassaultboat",
+    "uspontoonraft",
+  },
+
+  ushqaiengineer =
+  {
+    "usbarracks",
+    "usvehicleyard",
+    "usgunyard",
+    "usradar",
+    "usstorage",
+    "usspyard",
+    "ustankyard1",
+    "ustankyard2",
+    "usatminesign",
+    "usapminesign",
+    "ustankobstacle",
+    --"sandbags",
+    "usassaultboat",
+    "uspontoonraft",
   },
 
   ushqaiengineer =
@@ -85,8 +103,8 @@ local usunits = {
     "usapminesign",
     "ustankobstacle",
     --"sandbags",
-    "rubberdingy",
-    "pontoonraft",
+    "usassaultboat",
+    "uspontoonraft",
 
   },
 
@@ -99,6 +117,7 @@ local usunits = {
     "usdukw",
     "usm8greyhound",
     "usm8scott",
+    "usjeep",
   },
   
   usvehicleyard1 =
@@ -112,6 +131,8 @@ local usunits = {
     "usm8greyhound",
     "usm8scott",
     "usm5stuart",
+	"uslvta4",
+    "usjeep",
   },
 
   usgunyard =
@@ -124,6 +145,27 @@ local usunits = {
     "usm1bofors_truck",
   },
 
+  usgunyard2 =
+  {
+    "usgmcengvehicle",
+    "usgmctruck",
+    "usm8gun",
+    "usm5gun_truck",
+    "usm2gun_truck",
+	"usm1_45ingun_truck",
+    "usm1bofors_truck",
+  }, 
+  usspyard1 =
+  {
+    "usgmcengvehicle",
+    "usgmctruck",
+    "usm8gun",
+    "usm5gun_truck",
+    "usm2gun_truck",
+    "usm1bofors_truck",
+	"usm10wolverine",
+    "usm36jackson",
+  },  
   usspyard =
   {
     "usgmcengvehicle",
@@ -134,8 +176,9 @@ local usunits = {
     "usm1bofors_truck",
 	"usm16mgmc",
     "usm8scott",
-	"usm10wolverine",
     "usm7priest",
+	--"usm10wolverine",
+    --"usm36jackson",
   },
 
   usgmcengvehicle =
@@ -205,8 +248,8 @@ local usunits = {
   
   usboatyard =
   {
-    "rubberdingy",
-    "pontoonraft",
+    "usassaultboat",
+    "uspontoonraft",
     "usdukw",
     "uslcvp",
     "uspt103",
@@ -215,8 +258,8 @@ local usunits = {
   },
   usboatyardlarge =
   {
-    "rubberdingy",
-    "pontoonraft",
+    "usassaultboat",
+    "uspontoonraft",
     "usdukw",
     "uslcvp",
     "uspt103",

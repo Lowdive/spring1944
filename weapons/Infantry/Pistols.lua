@@ -1,46 +1,9 @@
 -- Smallarms - Infantry Pistols
 
--- Pistol Base Class
-local PistolClass = Weapon:New{
-  areaOfEffect       = 1,
-  avoidFeature       = true,
-  avoidFriendly      = false,
-  burnblow           = false,
-  collideFeature     = true,
-  collideFriendly    = false,
-  collisionSize      = 2.5,
-  coreThickness      = 0.15,
-  duration           = 0.025,
-  explosionGenerator = [[custom:Bullet]],
-  fireStarter        = 0,
-  id                 = 1, -- used?
-  impactonly         = 1,
-  interceptedByShieldType = 8,
-  laserFlareSize     = 0.0001,
-  movingAccuracy     = 888,
-  range              = 180,
-  reloadtime         = 1.5,
-  --rgbColor           = [[1.0 0.75 0.0]],
-  soundTrigger       = false,
-  thickness          = 0.2,
-  tolerance          = 6000,
-  turret             = true,
-  weaponType         = [[LaserCannon]],
-  weaponVelocity     = 1500,
-  customparams = {
-    damagetype         = [[smallarm]],
-  },
-  damage = {
-    default            = 31,
-  },
-}
-
 -- Implementations
-
 -- Enfield No. 2 Mk. I (GBR)
 local Webley = PistolClass:New{
-  name               = [[Enfield No. 2 Mk. I]],
-  soundStart         = [[GBR_Webley]],
+  name               = [[Enfield No. 2 Mk. I]], soundStart         = [[GBR_Webley]],
   damage = {
     default            = 35, -- intended?
   },
@@ -85,6 +48,20 @@ local NambuType14 = PistolClass:New{
   sprayAngle         = 50, -- intended?
 }
 
+-- Sweden
+local HusqvarnaM40 = PistolClass:New{
+	name			= "Husquarna m/1940",
+	reloadtime		= 1,
+	soundStart		= "M_40_pistol",
+	sprayAngle         = 50, -- intended?
+}
+
+-- FÉG 37M
+local feg37m = PistolClass:New{
+	name			= [[FÉG 37M]],
+	soundStart         = [[FEG_37M]],
+}
+
 -- Return only the full weapons
 return lowerkeys({
   Webley = Webley,
@@ -93,4 +70,6 @@ return lowerkeys({
   TT33 = TT33,
   BerettaM1934 = BerettaM1934,
   NambuType14 = NambuType14,
+  HusqvarnaM40 = HusqvarnaM40,
+  feg37m = feg37m,
 })

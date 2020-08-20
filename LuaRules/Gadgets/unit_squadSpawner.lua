@@ -41,8 +41,22 @@ local builders  = { }  -- keep track of builders
 local transporters = {} -- unitDefID = squadDefID
 
 
+local function GetUnitNames(pattern)
+	local list = {}
+	for unitName in pairs (UnitDefNames) do
+		if unitName:find(pattern) == 1 then
+			if not unitName:find("_all") then -- prevent recursion
+				table.insert(list, unitName)
+			end
+		end
+	end
+	return list
+end
+
 function gadget:Initialize()
 	squadDefs = include("LuaRules/Configs/squad_defs.lua")
+	squadDefs.hun_all.members = GetUnitNames("hun")
+	squadDefs.ger_all.members = GetUnitNames("ger")
 	initFrame = Spring.GetGameFrame()
 end
 
@@ -56,6 +70,30 @@ function gadget:gameFrame(n)
 	end
 end
 
+local function CreateSquadMember(unitName, x,y,z, unitHeading, teamID, queue)
+	local newUnitID = CreateUnit(unitName, x,y+1,z, unitHeading, teamID)
+	if newUnitID then
+		if states then
+			if UnitDefNames[unitName].fireState == -1 then -- unit set to inherit from builder
+				GiveOrderToUnit(newUnitID,  CMD.FIRE_STATE, { states.firestate }, 0)
+			end
+			if UnitDefNames[unitName].moveState == -1 then -- unit set to inherit from builder
+				GiveOrderToUnit(newUnitID,  CMD.MOVE_STATE, { states.movestate }, 0)
+			end
+		end
+		-- If its a valid queue
+		if queue then
+			-- Fix some things up
+			for k,v in ipairs(queue) do
+				local opts = v.options
+				if (not opts.internal) then
+					-- Give order to the units
+					GiveOrderToUnit(newUnitID, v.id, v.params, opts.coded)
+				end
+			end
+		end
+	end
+end
 
 local function CreateSquad(unitID, unitDefID, teamID, builderID)
 	local squadDef = squadDefs[unitDefID]
@@ -74,45 +112,13 @@ local function CreateSquad(unitID, unitDefID, teamID, builderID)
 		states = GetUnitStates(builderID)
 	end
 
-	local squad_units = {}
-
-	local xSpace, zSpace = -5, -5
-
+	local wait = 2 * 30 / #squadDef.members
+	
 	-- Spawn the units
 	for i, unitName in ipairs(squadDef.members) do
-		local newUnitID = CreateUnit(unitName, px + xSpace,py, pz + zSpace, unitHeading, teamID)
-		if newUnitID then
-			squad_units[#squad_units+1] = newUnitID
-			if states then
-				if UnitDefNames[unitName].fireState == -1 then -- unit set to inherit from builder
-					GiveOrderToUnit(newUnitID,  CMD.FIRE_STATE, { states.firestate }, 0)
-				end
-				if UnitDefNames[unitName].moveState == -1 then -- unit set to inherit from builder
-					GiveOrderToUnit(newUnitID,  CMD.MOVE_STATE, { states.movestate }, 0)
-				end
-			end
-		end
+		GG.Delay.DelayCall(CreateSquadMember, {unitName, px,py,pz, unitHeading, teamID, queue}, wait*(i-1))
 
-		if (i % 4 == 0) then
-			xSpace = -2
-			zSpace = zSpace + 2
-		else
-			xSpace = xSpace + 2
-		end
 	end
-
-	-- If its a valid queue
-	if queue then
-		-- Fix some things up
-		for k,v in ipairs(queue) do
-			local opts = v.options
-			if (not opts.internal) then
-				-- Give order to the units
-				GiveOrderToUnitArray(squad_units, v.id, v.params, opts.coded)
-			end
-		end
-	end
-
 	DestroyUnit(unitID, false, true)
 end
 
@@ -132,11 +138,18 @@ local function SpawnTransportSquad(unitID, teamID, transportSquad)
 	local x,y,z = Spring.GetUnitPosition(unitID)
 	for foo, passengerDefName in ipairs(squadDef) do -- ipairs to ensure LCT tanks are in correct positions
 		local passID = CreateUnit(passengerDefName, x, y, z, 0, teamID)
-		local passDefCP = UnitDefNames[passengerDefName].customParams
-		if passDefCP and passDefCP.maxammo then
-			Spring.SetUnitRulesParam(passID, "ammo", passDefCP.maxammo)
+		if (passID ~= nil) then
+			local passDefCP = UnitDefNames[passengerDefName].customParams
+			if passDefCP and passDefCP.maxammo then
+				Spring.SetUnitRulesParam(passID, "ammo", passDefCP.maxammo)
+			end
+			local env = Spring.UnitScript.GetScriptEnv(unitID)
+			if env then
+				Spring.UnitScript.CallAsUnit(unitID, env.script.TransportPickup, passID, true)
+			else
+				Spring.CallCOBScript(unitID, "TransportPickup", 0, passID, 1)
+			end
 		end
-		Spring.CallCOBScript(unitID, "TransportPickup", 0, passID, 1)
 	end
 end
 

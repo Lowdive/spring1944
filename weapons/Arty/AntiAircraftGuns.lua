@@ -1,131 +1,143 @@
 -- Artillery - Anti Aircraft Guns
 
--- AA Gun Base Class
-local AAGunClass = Weapon:New{
-  accuracy           = 200,
-  burnblow           = true,
-  collisionSize      = 2,
-  explosionSpeed     = 30,
-  impulseFactor      = 0,
-  intensity          = 0.9,
-  predictBoost       = 0.2, 
-  size               = 1e-5,
-  soundHitDry        = [[GEN_Explo_Flak1]],
-  soundStart         = [[GEN_37mmAA]],
-  sprayAngle         = 400,
-  turret             = true,
-  weaponType         = [[Cannon]],
-  customparams = {
-    damagetype         = [[explosive]],
-	cegflare           = "XSMALL_MUZZLEFLASH",
-	flareonshot        = true,
-  },
-  
-}
-
--- AA Round Class
-local AAGunAAClass = Weapon:New{
-  areaOfEffect       = 30,
-  canattackground    = false,
-  collisionSize      = 5,
-  cylinderTargeting  = 2.5,
-  edgeEffectiveness  = 0.001,
-  explosionGenerator = [[custom:HE_Medium]],
-  name               = [[AA Shell]],
-  tolerance          = 1400,
-  customparams = {
-    no_range_adjust    = true,
-    fearaoe            = 450,
-    fearid             = 701,
-  }
-}
-
--- HE Round Class
-local AAGunHEClass = Weapon:New{
-  areaOfEffect       = 24,
-  edgeEffectiveness  = 0.25,
-  explosionGenerator = [[custom:HE_XSmall]],
-  name               = [[HE Shell]],
-  sprayAngle         = 0,
-  tolerance          = 700,
-  customparams = {
-    fearaoe            = 45,
-    fearid             = 301,
-  },
-}
-
--- Implementations
-
 -- Bofors 40mm AA Gun (GBR & USA)
-local Bofors40mm = AAGunClass:New{
+local Bofors40mm = AntiAirGun:New{
   name               = [[40mm Bofors Anti-Aircraft Gun]],
+  burst              = 5, -- now 5 round clips
+  burstrate          = 0.429, -- cyclic 140rpm
+  reloadtime         = 3.3, -- practical 90rpm
   weaponVelocity     = 1646,
   damage = {
     default            = 275,
   },
+  customparams = {
+    weaponcost = 2,
+  },
 }
-local Bofors40mmAA = Bofors40mm:New(AAGunAAClass, true):New{
-  burst              = 4,
-  burstrate          = 0.33,
-  range              = 2025,
-  reloadtime         = 1.5,
+local Bofors40mmAA = AntiAirGunAA:New(Bofors40mm, true):New{
+  range              = 1620,
 }
-local Bofors40mmHE = Bofors40mm:New(AAGunHEClass, true):New{
-  burst              = 2,
-  burstrate          = 0.5,
+local Bofors40mmHE = AutoCannonHE:New(Bofors40mm, true):New{
   range              = 725,
-  reloadtime         = 1.625,
 }
+local Bofors40mmAP = AutoCannonAP:New(Bofors40mm, true):New{
+  range              = 725,
+  customparams = {
+   armor_penetration_1000m = 32,
+    armor_penetration_100m  = 49,
+  },
+  damage = {
+    default            = 895,
+  },
+}
+
 
 -- Twin Bofors 40mm AA Gun (For ships)
 -- derives from the above, only with half the reloadtime
 local Twin_Bofors40mmAA = Bofors40mmAA:New{
-  reloadtime         = 0.75,
+  reloadtime         = 1.35,
 }
 local Twin_Bofors40mmHE = Bofors40mmHE:New{
-  reloadtime         = 0.8125,
+  reloadtime         = 1.35,
 }
 
 -- FlaK 43 37mm AA Gun (GER)
-local FlaK4337mm = AAGunClass:New{
+local FlaK4337mm = AntiAirGun:New{
   name               = [[37mm FlaK 43 Anti-Aircraft Gun]],
+  burst              = 5, -- 8 round clips
+  burstrate          = 0.240, -- cyclic 250rpm
+  reloadtime         = 1.6, -- practical 150rpm 
   weaponVelocity     = 1640,
   damage = {
     default            = 162, -- guesstimate, can't get zergs formulas to match up
   },
+  customparams = {
+    weaponcost = 2,
+  },
 }
-local FlaK4337mmAA = FlaK4337mm:New(AAGunAAClass, true):New{
-  burst              = 4,
-  burstrate          = 0.250,
-  range              = 2025,
-  reloadtime         = 1.6,
+local FlaK4337mmAA = AntiAirGunAA:New(FlaK4337mm, true):New{
+  range              = 1620,
 }
-local FlaK4337mmHE = FlaK4337mm:New(AAGunHEClass, true):New{
-  burst              = 2,
-  burstrate          = 0.625,
+local FlaK4337mmHE = AutoCannonHE:New(FlaK4337mm, true):New{
   range              = 725,
-  reloadtime         = 1.625,
+}
+local FlaK4337mmAP = AutoCannonAP:New(FlaK4337mm, true):New{
+  range              = 725,
+  customparams = {
+    armor_penetration_1000m = 29,
+    armor_penetration_100m  = 52,
+  },
+  damage = {
+    default            = 585,
+  },
 }
 
+
 -- M-1939 61-K 37mm AA Gun (RUS)
-local M1939_61K37mm = AAGunClass:New{
+local M1939_61K37mm = AntiAirGun:New{
   name               = [[37mm M-1939 61-K Anti-Aircraft Gun]],
+  burst              = 4, -- 4 round clip
+  burstrate          = 0.353, -- cyclic 170rpm
+  reloadtime         = 3.0, -- 80 rpm practical
   weaponVelocity     = 1760,
   damage = {
     default            = 182,
   },
+  customparams = {
+    weaponcost = 1,
+  },
 }
-local M1939_61K37mmAA = M1939_61K37mm:New(AAGunAAClass, true):New{
-  burst              = 5, -- fed from 5 round clip
-  burstrate          = 0.35, -- 170rpm cyclic
-  range              = 2025,
-  reloadtime         = 3.75, -- 80rpm practical
+local M1939_61K37mmAA = AntiAirGunAA:New(M1939_61K37mm, true):New{
+  range              = 1620,
 }
-local M1939_61K37mmHE = M1939_61K37mm:New(AAGunHEClass, true):New{
-  burst              = 2,
-  burstrate          = 0.625,
+local M1939_61K37mmHE = AutoCannonHE:New(M1939_61K37mm, true):New{
   range              = 725,
-  reloadtime         = 1.625,
+}
+
+-- 25mm Bofors gun - Swedish ships
+local Bofors25mm = AntiAirGun:New{
+	name               = [[25mm M/38 Bofors Anti-Aircraft Gun]],
+	burst              = 6, -- 6 round clips
+	burstrate          = 0.429, -- cyclic 140rpm
+	reloadtime         = 2.7, -- practical 132rpm
+	weaponVelocity     = 1646,
+	damage = {
+		default            = 150,
+	},
+	customparams = {
+		weaponcost = 2,
+	},
+}
+
+local Bofors25mm_AA = AntiAirGunAA:New(Bofors25mm, true):New{
+	range              = 1620,
+}
+
+local Bofors25mm_HE = AutoCannonHE:New(Bofors25mm, true):New{
+	range              = 725,
+}
+
+-- Hotchkiss 25mm AA
+local Hotchkiss25mmAA = AntiAirGun:New{
+	name               = [[Mitrailleuse de 25 mm CA mle 39]],
+	burst              = 5, -- 15 round clips, split into bursts of 5
+	burstrate          = 0.24, -- cyclic 250rpm
+	reloadtime         = 1.52, -- practical 110rpm
+	weaponVelocity     = 1646,
+	damage = {
+		default            = 150,
+	},
+	customparams = {
+		weaponcost = 2,
+	},
+}
+
+local Hotchkiss25mmAA_AA = AntiAirGunAA:New(Hotchkiss25mmAA, true):New{
+	range              = 1620,
+}
+
+local Hotchkiss25mmAA_HE = AutoCannonHE:New(Hotchkiss25mmAA, true):New{
+	range              = 725,
 }
 
 -- Return only the full weapons
@@ -133,10 +145,16 @@ return lowerkeys({
   -- Medium (40mm)
   Bofors40mmAA = Bofors40mmAA,
   Bofors40mmHE = Bofors40mmHE,
+  Bofors40mmAP = Bofors40mmAP,
   Twin_Bofors40mmAA = Twin_Bofors40mmAA,
   Twin_Bofors40mmHE = Twin_Bofors40mmHE,
   FlaK4337mmAA = FlaK4337mmAA,
   FlaK4337mmHE = FlaK4337mmHE,
+  FlaK4337mmAP = FlaK4337mmAP,
   M1939_61K37mmAA = M1939_61K37mmAA,
   M1939_61K37mmHE = M1939_61K37mmHE,
+  Bofors25mm_AA = Bofors25mm_AA,
+  Bofors25mm_HE = Bofors25mm_HE,
+  Hotchkiss25mmAA = Hotchkiss25mmAA_AA,
+  Hotchkiss25mmHE = Hotchkiss25mmAA_HE,
 })

@@ -15,8 +15,10 @@ local modRules = {
 		},
 	},
 	movement = {
+		allowPushingEnemyUnits = true,
 		allowUnitCollisionDamage  = false,
 		allowUnitCollisionOverlap  = false,
+		allowSepAxisCollisionTest = true,
 	},
 	nanospray = {
 		allow_team_colours	=	false,

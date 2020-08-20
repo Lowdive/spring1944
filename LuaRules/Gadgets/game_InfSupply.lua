@@ -50,6 +50,9 @@ for i = 1, numTeams do
 	ammoSuppliers[teamID] = {}
 end
 
+-- Can't ignore GAIA anymore, there can be neutral suppliers now with Spoils of War
+ammoSuppliers[GAIA_TEAM_ID] = {}
+
 local modOptions
 if (Spring.GetModOptions) then
   modOptions = Spring.GetModOptions()
@@ -100,8 +103,13 @@ end
 
 function gadget:UnitCreated(unitID, unitDefID, teamID, builderID)
 	if not teamID then return end -- team already died
+	if not infantry[teamID] then
+		-- cheat-spawning units for a team that was not there at game start?
+		infantry[teamID] = {}
+	end
 	if infReloadCache[unitDefID] then
 		infantry[teamID][unitID] = infReloadCache[unitDefID]
+		--                             block clobj clpro clray crush bkpush bkheight
 		Spring.SetUnitBlocking(unitID, true, true, true, true, true, false, false)
 	else
 		local ud = UnitDefs[unitDefID]

@@ -1,56 +1,18 @@
 -- Aircraft - Aircraft Anti-Tank Cannon
 
--- AirAntiTankGun Base Class
--- Currently assumes that we would not want to give such weapons HE
-local AirATGunClass = Weapon:New{
-  accuracy           = 100,
-  avoidFriendly      = false,
-  canattackground    = false,
-  heightBoostFactor  = 0,
-  collisionSize      = 4,
-  collideFriendly    = false,
-  colormap           = [[ap_colormap.png]],
-  edgeEffectiveness  = 0.1,
-  explosionGenerator = [[custom:AP_Small]],
-  explosionSpeed     = 100,
-  gravityaffected    = true,
-  impactonly         = 1,
-  impulseFactor      = 0,
-  intensity          = 0.25, -- probably not used with a colormap
-  noSelfDamage       = true,
-  rgbColor           = [[1.0 0.0 0.0]],
-  separation         = 2,
-  size               = 1,
-  soundHitDry        = [[GEN_Explo_1]],
-  stages             = 50,
-  targetMoveError    = 0.1,
-  tolerance          = 600,
-  turret             = true,
-  dynDamageInverted  = true,
-  weaponType         = [[Cannon]],
-  customparams = {
-    no_range_adjust    = true,
-    armor_hit_side     = [[top]],
-    damagetype         = [[kinetic]],
-  },
-}
-
 -- Implementations
 
 -- Bordkanone BK 37 (GER)
-local BK37mmAP = AirATGunClass:New{
-  areaOfEffect       = 12,
+local BK37mmAP = AirATGun:New{
   --burst              = 1,
   --burstrate          = 0.375,
   name               = [[BK-37 37mm Semi-Automatic Cannon]],
   range              = 950,
-  reloadtime         = 0.4,
+  reloadtime         = 1,
   soundStart         = [[US_37mm]],
   weaponVelocity     = 1768,
   customparams = {
-    --constant penetration since aircraft engagement range can't be realistically controlled
-    armor_penetration_1000m = 60,
-    armor_penetration_100m = 60,
+    armor_penetration = 60,
   },
   damage = {
     default            = 825,
@@ -58,7 +20,7 @@ local BK37mmAP = AirATGunClass:New{
 }
 
 -- Ho-401 57mm HEAT (JPN)
-local Ho40157mm = AirATGunClass:New{
+local Ho40157mm = AirATGun:New{
   areaOfEffect       = 12,
   name               = [[Ho-401 57 mm HEAT]],
   range              = 760,
@@ -71,11 +33,24 @@ local Ho40157mm = AirATGunClass:New{
   },
   damage = {
     default            = 1341,
+	cegflare           = "MEDIUM_MUZZLEFLASH",
+  },
+}
+-- 57mm bofors (SWE)
+local bofors57mmAP = BK37mmAP:New{
+  name               = [[57mm Bofors Cannon]],
+  reloadtime         = 1.2,
+  range              = 1150,
+  soundStart         = [[PVKAN_M_43]],
+  damage = {
+    default            = 1425,
+	cegflare           = "MEDIUM_MUZZLEFLASH",
   },
 }
 
 -- Return only the full weapons
 return lowerkeys({
   BK37mmAP = BK37mmAP,
+  bofors57mmAP = bofors57mmAP,
   Ho40157mm = Ho40157mm,
 })

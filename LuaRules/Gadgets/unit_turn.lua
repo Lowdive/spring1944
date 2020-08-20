@@ -44,7 +44,7 @@ local function StartTurn(unitID, unitDefID, tx, tz)
 
 	local newHeading = math.deg(math.atan2(dx, dz)) * COB_ANGULAR	
 	local currHeading = GetUnitCOBValue(unitID, COB.HEADING)
-	local deltaHeading = newHeading - currHeading;
+	local deltaHeading = newHeading - currHeading
 	--  find the direction for shortest turn
 	if deltaHeading > (180 * COB_ANGULAR) then deltaHeading = deltaHeading - (360 * COB_ANGULAR) end
 	if deltaHeading < (-180 * COB_ANGULAR) then deltaHeading = deltaHeading + (360 * COB_ANGULAR) end
@@ -79,6 +79,12 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
 	local ud = UnitDefs[unitDefID]
 	if ud.customParams.hasturnbutton then
 		Spring.InsertUnitCmdDesc(unitID, 500, turnCmdDesc)
+	end
+end
+
+function gadget:UnitDestroyed(unitID, unitDefID)
+	if unitID then
+		turning[unitID] = nil
 	end
 end
 

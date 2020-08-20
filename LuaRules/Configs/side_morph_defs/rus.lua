@@ -6,7 +6,7 @@ local rusDefs = {
 			metal = 2000,
 			energy = 0,
 			time = 65,
-			name = '  Light  \n  Armor  ',
+			name = 'Light\nArmor',
 			text = 'Makes Light Armor available in this yard',
 			facing = true,
 		},
@@ -17,7 +17,7 @@ local rusDefs = {
 			metal = 4025,
 			energy = 0,
 			time = 115,
-			name = '  Self  \n  Propelled  ',
+			name = 'Self\nPropelled',
 			text = 'Makes Self-Propelled Artillery available in this yard',
 			facing = true,
 		},
@@ -26,8 +26,17 @@ local rusDefs = {
 			metal = 5200,
 			energy = 0,
 			time = 150,
-			name = '  Tank  \n  Destroyers  ',
+			name = 'Tank\nDestroyers',
 			text = 'Makes Tank Destroyers available in this yard',
+			facing = true,
+		},
+		{
+			into = 'rusgunyard2',
+			metal = 5500,
+			energy = 0,
+			time = 155,
+			name = 'Long\nRange\nArtillery',
+			text = 'Makes Long Range Artillery available in this yard',
 			facing = true,
 		},
 	},
@@ -37,7 +46,7 @@ local rusDefs = {
 			metal = 4500,
 			energy = 0,
 			time = 60,
-			name = '  Advanced  \n  Mediums  ',
+			name = 'Advanced\nMediums',
 			text = 'Makes Advanced Medium Armor available in this yard',
 			facing = true,
 		},
@@ -46,7 +55,7 @@ local rusDefs = {
 			metal = 4500,
 			energy = 0,
 			time = 60,
-			name = '  Heavy  \n  Armor  ',
+			name = 'Heavy\nArmor',
 			text = 'Makes Heavy Armor available in this yard',
 			facing = true,
 		},
@@ -57,7 +66,7 @@ local rusDefs = {
 			metal = 6000,
 			energy = 0,
 			time = 80,
-			name = '  Landing  \n  Fire  \n  Support  ',
+			name = 'Landing\nFire\nSupport',
 			text = 'Makes Landing Fire Support Craft available in this yard',
 			facing = true,
 		},
@@ -104,7 +113,7 @@ local rusDefs = {
   {
     into = 'ruszis2_stationary',
     tech = 0,
-    time = 5,
+    time = 7,
     metal = 0,
     energy = 0,
     directional = true,
@@ -114,7 +123,7 @@ local rusDefs = {
   {
     into = 'ruszis2_truck',
     tech = 0,
-    time = 5,
+    time = 7,
     metal = 0,
     energy = 0,
   },
@@ -123,7 +132,7 @@ local rusDefs = {
   {
     into = 'ruszis3_stationary',
     tech = 0,
-    time = 10,
+    time = 12,
     metal = 0,
     energy = 0,
     directional = true,
@@ -133,7 +142,7 @@ local rusDefs = {
   {
     into = 'ruszis3_truck',
     tech = 0,
-    time = 10,
+    time = 12,
     metal = 0,
     energy = 0,
   },
@@ -156,6 +165,24 @@ local rusDefs = {
     metal = 0,
     energy = 0,
   },
+  rusa19_truck = 
+  {
+    into = 'rusa19_stationary',
+    tech = 0,
+    time = 70,
+    metal = 0,
+    energy = 0,
+    directional = true,
+  },
+  
+  rusa19_stationary = 
+  {
+    into = 'rusa19_truck',
+    tech = 0,
+    time = 45,
+    metal = 0,
+    energy = 0,
+  },  
   -- Trucks / Trucksupplies
    ruszis5 =
   {
@@ -203,7 +230,22 @@ local rusDefs = {
     energy = 0,
 	facing = true,
   },
-
+  rusbt7 =
+  {
+    into = 'rusbt7_wheeled',
+    tech = 0,
+    time = 30,
+    metal = 0,
+    energy = 0,    
+  },
+  rusbt7_wheeled =
+  {
+    into = 'rusbt7',
+    tech = 0,
+    time = 30,
+    metal = 0,
+    energy = 0,    
+  },
 }
 
 return rusDefs

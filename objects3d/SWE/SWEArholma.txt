@@ -1,0 +1,19 @@
+base
+    exhaust
+    wake3
+    wake2
+    wake1
+    propeller1
+    propeller2
+    boats
+    flag1
+        flag2
+            flag3
+                flag4
+    child1
+    child2
+    child3
+    child4
+    superstructure
+    extra
+    base2

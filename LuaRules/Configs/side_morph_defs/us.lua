@@ -6,7 +6,7 @@ local usDefs = {
 			metal = 6000,
 			energy = 0,
 			time = 80,
-			name = '  Upgrade  ',
+			name = 'Upgrade',
 			text = 'Upgrades into a large storage shed.',
 			facing = true,
 		},
@@ -17,7 +17,7 @@ local usDefs = {
 			metal = 2000,
 			energy = 0,
 			time = 65,
-			name = '  Light  \n  Armor  ',
+			name = 'Light\nArmor',
 			text = 'Makes Light Armor available in this yard',
 			facing = true,
 		},
@@ -25,13 +25,32 @@ local usDefs = {
 	usgunyard = {
 		{
 			into = 'usspyard',
-			metal = 5175,
+			metal = 3475,
 			energy = 0,
-			time = 150,
-			name = '  Self  \n  Propelled  ',
+			time = 85,
+			name = 'Self\nPropelled',
 			text = 'Makes Self-Propelled Artillery available in this yard',
 			facing = true,
 		},
+		{
+			into = 'usspyard1',
+			metal = 5200,
+			energy = 0,
+			time = 150,
+			name = 'Tank\nDestroyers',
+			text = 'Makes Tank Destroyers available in this yard',
+			facing = true,
+		},
+		{
+			into = 'usgunyard2',
+			metal = 5200,
+			energy = 0,
+			time = 150,
+			name = 'Long\nRange\nArtillery',
+			text = 'Makes Long Range Artillery Artillery available in this yard',
+			facing = true,
+		},
+		
 	},
 	ustankyard = {
 		{
@@ -39,7 +58,7 @@ local usDefs = {
 			metal = 4500,
 			energy = 0,
 			time = 60,
-			name = '  Advanced  \n  Mediums  ',
+			name = 'Advanced\nMediums',
 			text = 'Makes Advanced Medium Armor available in this yard',
 			facing = true,
 		},
@@ -48,7 +67,7 @@ local usDefs = {
 			metal = 4500,
 			energy = 0,
 			time = 60,
-			name = '  Heavy  \n  Armor  ',
+			name = 'Heavy\nArmor',
 			text = 'Makes Heavy Armor available in this yard',
 			facing = true,
 		},
@@ -59,15 +78,15 @@ local usDefs = {
 			metal = 6000,
 			energy = 0,
 			time = 80,
-			name = '  Landing  \n  Fire  \n  Support  ',
+			name = 'Landing\nFire\nSupport',
 			text = 'Makes Landing Fire Support Craft available in this yard',
 			facing = true,
 		},
 	},
 	  -- Machineguns
-  usgimg =
+  usmg =
   {
-    into = 'usgimg_sandbag',
+    into = 'usmg_sandbag',
     tech = 0,
     time = 12,
     metal = 0,
@@ -76,18 +95,18 @@ local usDefs = {
   },
   
 
-  usgimg_sandbag =
+  usmg_sandbag =
   {
-    into = 'usgimg',
+    into = 'usmg',
     tech = 0,
     time = 12,
     metal = 0,
     energy = 0,
   },
 
-  us101stmg =
+  usparamg =
   {
-    into = 'us101stmg_sandbag',
+    into = 'usparamg_sandbag',
     tech = 0,
     time = 12,
     metal = 0,
@@ -95,9 +114,9 @@ local usDefs = {
     directional = true,
   },
   
-    us101stmg_sandbag =
+    usparamg_sandbag =
   {
-    into = 'us101stmg',
+    into = 'usparamg',
     tech = 0,
     time = 12,
     metal = 0,
@@ -142,7 +161,26 @@ local usDefs = {
     energy = 0,
   },
  
-     usm1bofors_truck = 
+  usm1_45ingun_truck = 
+  {
+    into = 'usm1_45ingun_stationary',
+    tech = 0,
+    time = 60,
+    metal = 0,
+    energy = 0,
+    directional = true,
+  },
+  
+  usm1_45ingun_stationary = 
+  {
+    into = 'usm1_45ingun_truck',
+    tech = 0,
+    time = 40,
+    metal = 0,
+    energy = 0,
+  },
+
+ usm1bofors_truck = 
   {
     into = 'usm1bofors_stationary',
     tech = 0,

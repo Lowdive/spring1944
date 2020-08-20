@@ -14,11 +14,12 @@ local GetGameRulesParam = Spring.GetGameRulesParam
 
 local CMD_UNIT_SET_TARGET = GetGameRulesParam("CMD_UNIT_SET_TARGET")
 local CMD_UNIT_CANCEL_TARGET = GetGameRulesParam("CMD_UNIT_CANCEL_TARGET")
+local CMD_SET_WANTED_MAX_SPEED = CMD.SET_WANTED_MAX_SPEED or 1002  -- See LuaRules/Gadgets/unit_customformations2.lua
 
-Spring.Echo("CMDIDs in keeptarget:", CMD_UNIT_SET_TARGET, CMD_UNIT_CANCEL_TARGET)
+--Spring.Echo("CMDIDs in keeptarget:", CMD_UNIT_SET_TARGET, CMD_UNIT_CANCEL_TARGET)
 
 function widget:CommandNotify(id, params, options)
-    if id == CMD.SET_WANTED_MAX_SPEED then
+    if id == CMD_SET_WANTED_MAX_SPEED then
         return false -- FUCK CMD.SET_WANTED_MAX_SPEED
     end
     if id == CMD.MOVE then
@@ -26,7 +27,7 @@ function widget:CommandNotify(id, params, options)
         for i = 1, #units do
             local unitID = units[i]
             if Spring.ValidUnitID(unitID) then
-                local cmd = Spring.GetCommandQueue(unitID)
+                local cmd = Spring.GetCommandQueue(unitID, 1)
                 if cmd and #cmd ~= 0 and cmd[1].id == CMD.ATTACK and #cmd[1].params == 1 and not cmd[1].options.internal then
                     Spring.GiveOrderToUnit(unitID,CMD_UNIT_SET_TARGET,cmd[1].params,{})
                 end

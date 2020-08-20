@@ -17,7 +17,10 @@ local AreTeamsAllied			= Spring.AreTeamsAllied
 local GetFeatureDefID			= Spring.GetFeatureDefID
 local GetFeaturePosition		= Spring.GetFeaturePosition
 local GetGroundHeight			= Spring.GetGroundHeight
-local GetGroundInfo				= Spring.GetGroundInfo
+-- 104.0.1: Spring.GetGroundInfo returns different values. Better using
+-- Spring.GetMetalAmount
+-- local GetGroundInfo				= Spring.GetGroundInfo
+local GetMetalAmount			= Spring.GetMetalAmount
 local GetUnitsInCylinder		= Spring.GetUnitsInCylinder
 local GetUnitPosition			= Spring.GetUnitPosition
 local GetUnitTeam				= Spring.GetUnitTeam
@@ -26,6 +29,8 @@ local GetTeamRulesParam			= Spring.GetTeamRulesParam
 local GetTeamUnitDefCount		= Spring.GetTeamUnitDefCount
 local GetTeamUnitsSorted		= Spring.GetTeamUnitsSorted
 local GetUnitDefID				= Spring.GetUnitDefID
+local GetGaiaTeamID				= Spring.GetGaiaTeamID
+local GetTeamList				= Spring.GetTeamList
 -- Synced Ctrl
 local CallCOBScript				= Spring.CallCOBScript
 local CreateUnit				= Spring.CreateUnit
@@ -40,7 +45,7 @@ local SetUnitRulesParam			= Spring.SetUnitRulesParam
 local TransferUnit				= Spring.TransferUnit
 
 -- constants
-local GAIA_TEAM_ID = Spring.GetGaiaTeamID()
+local GAIA_TEAM_ID = GetGaiaTeamID()
 local PROFILE_PATH = "maps/flagConfig/" .. Game.mapName .. "_profile.lua"
 local DEBUG	= false -- enable to print out flag locations in profile format
 
@@ -49,15 +54,13 @@ local DEF_MULT = 0.25 --multiplies against the FBI defined DefRate
 
 -- easymetal constants
 local EXTRACT_RADIUS = Game.extractorRadius > 125 and Game.extractorRadius or 125
-local GRID_SIZE	= 4
+local GRID_SIZE	= Game.squareSize
 local THRESH_FRACTION = 0.4
 local MAP_WIDTH = floor(Game.mapSizeX / GRID_SIZE)
 local MAP_HEIGHT = floor(Game.mapSizeZ / GRID_SIZE)
 
 -- variables
-local metalMap = {}
-local maxMetal = 0
-local totalMetal = 0
+local maxMetal = 1
 local metalSpots = {}
 local metalSpotCount	= 0
 local metalData = {}
@@ -92,7 +95,6 @@ end
 
 
 local flagCapStatuses = {} -- table of flag's capping statuses
-local teams	= Spring.GetTeamList()
 
 local modOptions
 if (Spring.GetModOptions) then
@@ -145,16 +147,16 @@ end
 
 local function AnalyzeMetalMap()
 	for mx_i = 1, MAP_WIDTH do
-		metalMap[mx_i] = {}
 		for mz_i = 1, MAP_HEIGHT do
 			local mx = mx_i * GRID_SIZE
 			local mz = mz_i * GRID_SIZE
-			local _, curMetal = GetGroundInfo(mx, mz)
-			totalMetal = totalMetal + curMetal
-			--curMetal = floor(curMetal * 100)
-			metalMap[mx_i][mz_i] = curMetal
-			if (curMetal > maxMetal) then
-				maxMetal = curMetal
+			-- 104.0.1: Spring.GetGroundInfo returns different values. Better
+			-- using Spring.GetMetalAmount
+			local mCur = GetMetalAmount(mx / (GRID_SIZE * 2),
+			                            mz / (GRID_SIZE * 2))
+			--mCur = floor(mCur * 100)
+			if (mCur > maxMetal) then
+				maxMetal = mCur
 			end
 		end
 	end
@@ -163,7 +165,14 @@ local function AnalyzeMetalMap()
 
 	for mx_i = 1, MAP_WIDTH do
 		for mz_i = 1, MAP_HEIGHT do
-			local mCur = metalMap[mx_i][mz_i]
+			local mx = mx_i * GRID_SIZE
+			local mz = mz_i * GRID_SIZE
+			-- Storing metalMap may be too much memory consuming. Even more if
+			-- a wrong GRID_SIZE is choosen (like it happened before). Hence, is
+			-- better calling GetMetalAmount again (since it is pure C
+			-- implementation, it would be even faster!).
+			local mCur = GetMetalAmount(mx / (GRID_SIZE * 2),
+			                            mz / (GRID_SIZE * 2))
 			if mCur > lowMetalThresh then
 				metalDataCount = metalDataCount +1
 
@@ -218,7 +227,7 @@ end
 function FlagSpecialBehaviour(flagType, flagID, flagTeamID, teamID)
 	if flagType == "flag" then
 		local env = Spring.UnitScript.GetScriptEnv(flagID)
-		Spring.UnitScript.CallAsUnit(flagID, env.StartFlagThread, teamID)
+		Spring.UnitScript.CallAsUnit(flagID, env.script.Create, teamID)
 	end
 end
 
@@ -255,6 +264,16 @@ function PlaceFlag(spot, flagType, unitID)
 	end
 
 	table.insert(GG.flags, newFlag)
+	
+	-- external handles
+	Script.LuaRules.Strongpoints_Add(newFlag, {
+		ID = newFlag, -- we can use unitID
+		x = spot.x,
+		z = spot.z,
+		radius = flagTypeData[flagType].radius,
+		income = spot.initialProduction,
+		ownerTeamID = GAIA_TEAM_ID,
+	})
 end
 
 
@@ -264,11 +283,11 @@ function gadget:Initialize()
 	if VFS.FileExists(PROFILE_PATH) then
 		local flagSpots, buoySpots = VFS.Include(PROFILE_PATH)
 		if flagSpots and #flagSpots > 0 then
-			Spring.Echo("Map Flag Profile found. Loading Flag positions...")
+			Spring.Log('flag manager', 'info', "Map Flag Profile found. Loading Flag positions...")
 			flagTypeSpots["flag"] = flagSpots
 		end
 		if buoySpots and #buoySpots > 0 then
-			Spring.Echo("Map Buoy Profile found. Loading Buoy positions...")
+			Spring.Log('flag manager', 'info', "Map Buoy Profile found. Loading Buoy positions...")
 			flagTypeSpots["buoy"] = buoySpots
 		end
 	end
@@ -276,12 +295,12 @@ function gadget:Initialize()
 	local generatedSpots = AnalyzeMetalMap()
 	-- no flag profile found, use metal map for flag spawns
 	if #flagTypeSpots["flag"] == 0 then
-		Spring.Echo("Map Flag Profile not found. Using autogenerated Flag positions...")
+		Spring.Log('flag manager', 'info', "Map Flag Profile not found. Using autogenerated Flag positions...")
 		flagTypeSpots['flag'] = generatedSpots['flag']
 	end
 	-- no buoy profile found, use metal map for flag spawns
 	if #flagTypeSpots["buoy"] == 0 then
-		Spring.Echo("Map Buoy Profile not found. Using autogenerated Buoy positions...")
+		Spring.Log('flag manager', 'info', "Map Buoy Profile not found. Using autogenerated Buoy positions...")
 		flagTypeSpots['buoy'] = generatedSpots['buoy']
 	end
 
@@ -323,6 +342,22 @@ end
 function gadget:GameFrame(n)
 	-- FLAG CONTROL
 	if n % 30 == 5 then -- every second with a 5 frame offset
+		if GAIA_TEAM_ID ~= GetGaiaTeamID() then
+			GAIA_TEAM_ID = GetGaiaTeamID()
+			-- Gaia team has changed of ID, and would break the whole system.
+			-- We should indeed track all the orphan flags, reassigning them
+			-- to the new Gaia
+			for _, flagType in pairs(flagTypes) do
+				for spotNum = 1, numFlags[flagType] do -- WARNING: Assumes flags are placed in order they exist in flags[flagType]
+					local flagID = flags[flagType][spotNum]
+					if GetUnitTeam(flagID) == nil then
+						TransferUnit(flagID, GAIA_TEAM_ID, false)
+					end
+				end
+			end
+		end
+
+		local teams = GetTeamList()
 		for _, flagType in pairs(flagTypes) do
 			local flagData = flagTypeData[flagType]
 			--for spotNum, flagID in pairs(flags[flagType]) do
@@ -334,9 +369,8 @@ function gadget:GameFrame(n)
 				local defenders = flagTypeDefenders[flagType]
 				local defendTotal = 0
 				local unitsAtFlag = GetUnitsInCylinder(spots[spotNum].x, spots[spotNum].z, flagData.radius)
-				--Spring.Echo ("There are " .. #unitsAtFlag .. " units at flag " .. flagID)
 				if #unitsAtFlag == 1 then -- Only the flag, no other units
-					for teamID = 0, #teams-1 do
+					for _, teamID in pairs(teams) do
 						if teamID ~= flagTeamID then
 							if (flagCapStatuses[flagID][teamID] or 0) > 0 then
 								flagCapStatuses[flagID][teamID] = flagCapStatuses[flagID][teamID] - flagData.regen
@@ -349,21 +383,17 @@ function gadget:GameFrame(n)
 						local unitID = unitsAtFlag[i]
 						local unitTeamID = GetUnitTeam(unitID)
 						if defenders[unitID] and AreTeamsAllied(unitTeamID, flagTeamID) and not GetUnitTransporter(unitID) then
-							--Spring.Echo("Defender at flag " .. flagID .. " Value is: " .. defenders[unitID])
 							defendTotal = defendTotal + defenders[unitID]
 						end
 						if cappers[unitID] and (not AreTeamsAllied(unitTeamID, flagTeamID)) and not GetUnitTransporter(unitID) then
 							if (flagTeamID ~= GAIA_TEAM_ID or GetTeamUnitDefCount(unitTeamID, UnitDefNames[flagType].id) < flagData.limit) then
-								--Spring.Echo("Capper at flag " .. flagID .. " Value is: " .. cappers[unitID])
 								flagCapStatuses[flagID][unitTeamID] = (flagCapStatuses[flagID][unitTeamID] or 0) + cappers[unitID]
 							end
 						end
 					end
-					for j = 1, #teams do
-						teamID = teams[j]
+					for _, teamID in pairs(teams) do
 						if teamID ~= flagTeamID then
 							if (flagCapStatuses[flagID][teamID] or 0) > 0 then
-								--Spring.Echo("Capping: " .. flagCapStatuses[flagID][teamID] .. " Defending: " .. defendTotal)
 								flagCapStatuses[flagID][teamID] = flagCapStatuses[flagID][teamID] - defendTotal
 								if flagCapStatuses[flagID][teamID] < 0 then
 									flagCapStatuses[flagID][teamID] = 0
@@ -378,11 +408,21 @@ function gadget:GameFrame(n)
 								--Spring.SendMessageToTeam(teamID, flagData.tooltip .. " Captured!")
 								TransferUnit(flagID, teamID, false)
 								SetTeamRulesParam(teamID, "flags", (GetTeamRulesParam(teamID, "flags") or 0) + 1, {public = true})
+								-- send message to other gadgets should they need it
+								if GG.FlagCapNotification then
+									GG.FlagCapNotification(flagID, teamID)
+								end
+								
+								-- external handles
+								Script.LuaRules.Strongpoints_UpdateParameter(flagID, "ownerTeamID", teamID)
 							else
 								-- Team flag being neutralised
 								--Spring.SendMessageToTeam(teamID, flagData.tooltip .. " Neutralised!")
 								TransferUnit(flagID, GAIA_TEAM_ID, false)
 								SetTeamRulesParam(teamID, "flags", (GetTeamRulesParam(teamID, "flags") or 0) - 1, {public = true})
+								
+								-- external handles
+								Script.LuaRules.Strongpoints_UpdateParameter(flagID, "ownerTeamID", GAIA_TEAM_ID)
 							end
 							-- reset production
 							SetUnitRulesParam(flagID, "lifespan", 0)
@@ -392,7 +432,7 @@ function gadget:GameFrame(n)
 							-- Turn flag back on
 							GiveOrderToUnit(flagID, CMD.ONOFF, {1}, {})
 							-- Flag has changed team, reset capping statuses
-							for cleanTeamID = 0, #teams-1 do
+							for _, cleanTeamID in pairs(teams) do
 								flagCapStatuses[flagID][cleanTeamID] = 0
 								SetUnitRulesParam(flagID, "cap" .. tostring(cleanTeamID), 0, {public = true})
 							end

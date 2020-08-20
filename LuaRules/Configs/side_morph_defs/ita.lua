@@ -2,11 +2,11 @@ local itaDefs = {
   -- italy
    	itastorage = {
 		{
-			into = 'itasupplycenter',
+			into = 'itastoragesupply',
 			metal = 1500,
 			energy = 0,
 			time = 40,
-			name = '  Upgrade  ',
+			name = 'Upgrade',
 			text = 'Upgrades into a Supply Center.',
 			facing = true,
 		},
@@ -70,7 +70,7 @@ local itaDefs = {
   {
     into = 'itacannone75_stationary',
     tech = 0,
-    time = 25,
+    time = 15,
     metal = 0,
     energy = 0,
 	directional = true,
@@ -80,7 +80,7 @@ local itaDefs = {
   {
     into = 'itacannone75_truck',
     tech = 0,
-    time = 20,
+    time = 12,
     metal = 0,
     energy = 0,
   },
@@ -103,6 +103,26 @@ local itaDefs = {
     metal = 0,
     energy = 0,
   },
+  
+  itacannone105_32_truck =
+  {
+    into = 'itacannone105_32_stationary',
+    tech = 0,
+    time = 60,
+    metal = 0,
+    energy = 0,
+	directional = true,
+  },
+  
+  itacannone105_32_stationary =
+  {
+    into = 'itacannone105_32_truck',
+    tech = 0,
+    time = 40,
+    metal = 0,
+    energy = 0,
+  },  
+  
     itamg =
   {
     into = 'itamg_dugin',
@@ -138,7 +158,7 @@ local itaDefs = {
 			metal = 6000,
 			energy = 0,
 			time = 80,
-			name = '  Landing \n Fire \n Support  ',
+			name = 'Landing\nFire\nSupport',
 			text = 'Makes Landing Fire Support Craft available in this yard',
 			facing = true,
 		},
@@ -150,8 +170,8 @@ local itaDefs = {
 			energy = 0,
 			time = 65,
 			buttonname = 'Upg: Elite',
-			name = '  Elite  \n  Troops  ',
-			text = 'Makes Eliteinfantry available in this barracks',
+			name = 'Elite\nTroops',
+			text = 'Makes Elite Infantry available in this barracks',
 			--notext = true,
 		},
 	},
@@ -161,8 +181,17 @@ local itaDefs = {
 			metal = 3500,
 			energy = 0,
 			time = 60,
-			name = '  Self  \n  Propelled  ',
+			name = 'Self\nPropelled',
 			text = 'Makes Self-Propelled Artillery  available in this yard',
+			facing = true,
+		},
+		{
+			into = 'itagunyard2',
+			metal = 5000,
+			energy = 0,
+			time = 140,
+			name = 'Long\nRange\nArtillery',
+			text = 'Makes Long Range Artillery  available in this yard',
 			facing = true,
 		},
 	},
@@ -172,7 +201,7 @@ local itaDefs = {
 			metal = 4500,
 			energy = 0,
 			time = 60,
-			name = '  Advanced \n  tanks  ',
+			name = 'Advanced\ntanks',
 			text = 'Makes heavier armament and armor available in this yard',
 			facing = true,
 		},
@@ -181,7 +210,7 @@ local itaDefs = {
 			metal = 6000,
 			energy = 0,
 			time = 120,
-			name = '  Advanced \n  assault \n  guns  ',
+			name = 'Advanced\nassault\nguns',
 			text = 'Makes advanced heavy armor available in this yard',
 			facing = true,
 		},
@@ -193,8 +222,8 @@ local itaDefs = {
 			metal = 2000,
 			energy = 0,
 			time = 65,
-			name = '  Light  \n  Armor  ',
-			text = 'Makes Light Armor available in this yard',
+			name = 'Light\nArtillery',
+			text = 'Makes light self-propelled artillery available in this yard',
 			facing = true,
 		},
 	},

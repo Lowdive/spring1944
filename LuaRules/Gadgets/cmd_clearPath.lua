@@ -20,21 +20,20 @@ if (gadgetHandler:IsSyncedCode()) then
 
 
 -- Synced Read
-local GetUnitDefID			= Spring.GetUnitDefID
+local GetUnitDefID		= Spring.GetUnitDefID
 local GetUnitPosition		= Spring.GetUnitPosition
 local GetUnitsInCylinder	= Spring.GetUnitsInCylinder
 local GetFeaturesInCylinder	= Spring.GetFeaturesInCylinder
 local GetFeatureBlocking	= Spring.GetFeatureBlocking
-local ValidUnitID			= Spring.ValidUnitID
+local ValidUnitID		= Spring.ValidUnitID
 local GetGroundHeight		= Spring.GetGroundHeight
 
 
 -- Synced Ctrl
-local CallCOBScript			= Spring.CallCOBScript
-local DestroyUnit			= Spring.DestroyUnit
+local DestroyUnit		= Spring.DestroyUnit
 local RemoveBuildingDecal	= Spring.RemoveBuildingDecal
 local SetUnitMoveGoal		= Spring.SetUnitMoveGoal
-local SpawnCEG				= Spring.SpawnCEG
+local SpawnCEG			= Spring.SpawnCEG
 local GiveOrderToUnit		= Spring.GiveOrderToUnit
 
 
@@ -43,39 +42,34 @@ local CMD_CLEARPATH = GG.CustomCommands.GetCmdID("CMD_CLEARPATH")
 local STOP_DIST = 5
 local MIN_DIST = 20
 local WAYPOINT_DIST = 100
-local MINE_CLEAR_TIME = 3 -- time in seconds to clear single mine
+local MINE_CLEAR_TIME = 3000 -- time in ms to clear single mine
 local gMaxUnits = Game.maxUnits
 -- Variables
 local clearers = {} -- clearers[ownerID] = {target={x,y,z},waypoint={wx,wy,wz},delta={dx,dz}, new, active, on_waypoint, done}
+local startClearCache = {}
+local stopClearCache = {}
+local isClearingCache = {}
 
+local currentFrame
 
 local clearPathDesc = {
 	name	= "Clear Path",
 	action	= "clearpath",
-	id		= CMD_CLEARPATH,
+	id	= CMD_CLEARPATH,
 	type	= CMDTYPE.ICON_MAP, -- change to ICON_AREA?
 	tooltip	= "Clear the path to a given location",
 	cursor	= "Clear Path",
 }
 
 
-function gadget:GameFrame(f)
-	for unitID, clearer in pairs(clearers) do
-		if clearer.onWaypoint and not clearer.active and not clearer.done then
-			local wx, wz = clearer.waypoint[1], clearer.waypoint[3]
-			clearer.done = ClearWaypoint(unitID, wx, wz)
-		end
-	end
-end
-
-
 -- Callins
 
-function BlowMine(mineID, engineerID)
-	if clearers[engineerID] then
-		clearers[engineerID].active = false
-	
-		if ValidUnitID(engineerID) and ValidUnitID(mineID) then -- only destroy mines if clearer is still alive
+local function BlowMine(engineerID)
+	local mineID = clearers[engineerID].mineID
+	clearers[engineerID].active = false
+	if ValidUnitID(engineerID) and not clearers[engineerID].done then
+		Spring.UnitScript.CallAsUnit(unitID, stopClearCache[unitID])
+		if ValidUnitID(mineID) then -- only destroy mines if clearer is still alive
 			local px, py, pz = GetUnitPosition(mineID)
 			DestroyUnit(mineID, false, true)
 			SpawnCEG("HE_Small", px, py, pz)
@@ -86,7 +80,7 @@ end
 
 -- Returns true if finished clearing
 
-function ClearWaypoint(unitID, x, z)
+local function ClearWaypoint(unitID, x, z)
 	local tmpNearbyUnits = GetUnitsInCylinder(x, z, MINE_CLEAR_RADIUS)
 	local mines = {}
 	local obstacles = {}
@@ -109,11 +103,10 @@ function ClearWaypoint(unitID, x, z)
 	
 	if #mines > 0 then
 		GG.Delay.DelayCall(BlowMine, {mines[math.random(#mines)], unitID}, MINE_CLEAR_TIME * 30)
+		clearers[unitID].blowFrame = currentFrame + MINE_CLEAR_TIME
+		clearers[unitID].mineID = mines[math.random(#mines)]
 		
-		-- Shortened on purpose from 1000 to 700 due to the unit getting stuck
-		-- occasionally
-		CallCOBScript(unitID, "LookForMines", 0, MINE_CLEAR_TIME * 700)
-		clearers[unitID].active = true
+		clearers[unitID].active = Spring.UnitScript.CallAsUnit(unitID, startClearCache[unitID], BlowMine, MINE_CLEAR_TIME)
 		return false
 	end
 	
@@ -151,78 +144,86 @@ end
 
 
 function gadget:CommandFallback(unitID, unitDefID, teamID, cmdID, cmdParams, cmdOptions)
-	if cmdID == CMD_CLEARPATH then
-		local ud = UnitDefs[unitDefID]
-		local cp = ud.customParams
-		if cp and cp.canclearmines then
-			local clearer
-			local x = cmdParams[1]
-			local y = cmdParams[2]
-			local z = cmdParams[3]
-			local px, py, pz = GetUnitPosition(unitID)
-			
-			if not clearers[unitID] then
-				clearers[unitID] = {target = {x, y, z}, waypoint={px, py, pz}, delta = {0.0, 0.0}, new = true, active = false, onWaypoint = false, done = true}
-				clearer = clearers[unitID]
-			else
-				clearer = clearers[unitID]
-				if clearer.active then
-					return true, false
-				end
-				local currentTarget = clearer.target
-				if currentTarget[1] ~= x or currentTarget[2] ~= y or currentTarget[3] ~= z then
-					currentTarget[1], currentTarget[2], currentTarget[3] = x, y, z
-					clearer.new = true
-					clearer.waypoint[1], clearer.waypoint[2], clearer.waypoint[3] = px, py, pz
-					clearer.onWaypoint = false
-					clearer.done = true
-				end
-			end
-			local wx, wy, wz, distance
-			if not clearer.done then
-				wx, wy, wz = clearer.waypoint[1], clearer.waypoint[2], clearer.waypoint[3]
-				distance = math.sqrt((wx - px)^2 + (wy - py)^2 + (wz - pz)^2)
-				if distance < MIN_DIST then
-					clearer.onWaypoint = true
-				end
-				return true, false
-			else
-				distance = math.sqrt((x - px)^2 + (y - py)^2 + (z - pz)^2)
-				local dx, dz
-				if distance > WAYPOINT_DIST then
-					if clearer.new then
-						local angle = math.atan2(x - px, z - pz)
-						dx = math.sin(angle) * WAYPOINT_DIST
-						dz = math.cos(angle) * WAYPOINT_DIST
-						clearer.delta[1], clearer.delta[2] = dx, dz
-						clearer.new = false
-					else
-						dx, dz = clearer.delta[1], clearer.delta[2]
-					end
-					wx, wz = clearer.waypoint[1], clearer.waypoint[3]
-					wx = wx + dx
-					wz = wz + dz
-				elseif distance > MIN_DIST then
-					wx = x
-					wz = z
-				else
-					return true, true
-				end
-				wy = GetGroundHeight(wx, wz)
-				SetUnitMoveGoal(unitID, wx, wy, wz, STOP_DIST)
-				clearer.waypoint[1], clearer.waypoint[2], clearer.waypoint[3] = wx, wy, wz
-				clearer.done = false
-				clearer.onWaypoint = false
-				return true, false
-			end
-		else
-			-- Don't take any action, the unit shouldn't be able to clear mines 
-			--(we consider that they didn't get a mineclear command)
-			return false
-		end
-	else
+	if cmdID ~= CMD_CLEARPATH then
 		-- It was a different command, do nothing
 		return false
+	end
+	local ud = UnitDefs[unitDefID]
+	local cp = ud.customParams
+	if not cp or not cp.canclearmines then
+		-- Don't take any action, the unit shouldn't be able to clear mines 
+		--(we consider that they didn't get a mineclear command)
+		return false
+	end
+	local clearer
+	local x = cmdParams[1]
+	local y = cmdParams[2]
+	local z = cmdParams[3]
+	local px, py, pz = GetUnitPosition(unitID)
+	if not clearers[unitID] then
+		clearers[unitID] = {target = {x, y, z},
+		                    waypoint={px, py, pz},
+		                    delta = {0.0, 0.0},
+		                    new = true,
+		                    active = false,
+		                    done = true}
+		clearer = clearers[unitID]
+	else
+		clearer = clearers[unitID]
+		if not Spring.UnitScript.CallAsUnit(unitID, isClearingCache[unitID]) then
+			clearer.active = false
+		end
+		if clearer.active then
+			-- The unit is still busy accomplishing the mission
+			return true, false
+		end
+		local currentTarget = clearer.target
+		if currentTarget[1] ~= x or currentTarget[2] ~= y or currentTarget[3] ~= z then
+			-- The target has changed
+			currentTarget[1], currentTarget[2], currentTarget[3] = x, y, z
+			clearer.new = true
+			clearer.waypoint[1], clearer.waypoint[2], clearer.waypoint[3] = px, py, pz
+			clearer.done = true
+		end
+	end
+	local wx, wy, wz, distance2
+	if not clearer.done then
+		wx, wy, wz = clearer.waypoint[1], clearer.waypoint[2], clearer.waypoint[3]
+		-- Computing the square of MIN_DIST is dramatically cheaper than
+		-- the square root of distance2
+		distance2 = (wx - px)^2 + (wy - py)^2 + (wz - pz)^2
+		if distance2 < MIN_DIST^2 then
+			clearer.done = ClearWaypoint(unitID, wx, wz)
+		end
+		return true, false
+	else
+		distance2 = (x - px)^2 + (y - py)^2 + (z - pz)^2
+		local dx, dz
+		if distance2 > WAYPOINT_DIST^2 then
+			if clearer.new then
+				local angle = math.atan2(x - px, z - pz)
+				dx = math.sin(angle) * WAYPOINT_DIST
+				dz = math.cos(angle) * WAYPOINT_DIST
+				clearer.delta[1], clearer.delta[2] = dx, dz
+				clearer.new = false
+			else
+				dx, dz = clearer.delta[1], clearer.delta[2]
+			end
+			wx, wz = clearer.waypoint[1], clearer.waypoint[3]
+			wx = wx + dx
+			wz = wz + dz
+		elseif distance2 > MIN_DIST^2 then
+			wx = x
+			wz = z
+		else
+			clearers[unitID] = nil
+			return true, true
+		end
+		wy = GetGroundHeight(wx, wz)
+		SetUnitMoveGoal(unitID, wx, wy, wz, STOP_DIST)
+		clearer.waypoint[1], clearer.waypoint[2], clearer.waypoint[3] = wx, wy, wz
+		clearer.done = false
+		return true, false
 	end
 end
 
@@ -235,7 +236,23 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local cp = ud.customParams
 	if cp and cp.canclearmines then
 		Spring.InsertUnitCmdDesc(unitID, clearPathDesc)
+		
+		local env = Spring.UnitScript.GetScriptEnv(unitID)
+		if env then
+			startClearCache[unitID] = env.StartClearMines
+			stopClearCache[unitID] = env.StopClearMines
+			isClearingCache[unitID] = env.IsClearing
+		else
+			return
+		end
 	end
+end
+
+function gadget:UnitDestroyed(unitID)
+	startClearCache[unitID] = nil
+	stopClearCache[unitID] = nil
+	isClearingCache[unitID] = nil
+	clearers[unitID] = nil
 end
 
 function gadget:Initialize()
@@ -249,6 +266,13 @@ function gadget:Initialize()
 	Spring.SetCustomCommandDrawData(CMD_CLEARPATH, "Clear Path", {1,0.5,0,.8}, false)
 end
 
+function gadget:GameFrame(n)
+	currentFrame = n
+end
+
+
+
+
 else
 
 -- UNSYNCED
@@ -259,6 +283,8 @@ local GetActiveCommand = Spring.GetActiveCommand
 local GetSelectedUnitsSorted = Spring.GetSelectedUnitsSorted
 local TraceScreenRay = Spring.TraceScreenRay
 local GetMouseState = Spring.GetMouseState
+local GetUnitPositionAtEndOfQueue = GG.CmdQueue.GetUnitPositionAtEndOfQueue
+local GetUnitActiveCommandPosition = GG.CmdQueue.GetUnitActiveCommandPosition
 
 -- OpenGL
 glColor = gl.Color
@@ -314,7 +340,7 @@ function gadget:DrawWorld()
 					
 					for i=1, numUnits do
 						unitID = units[i]
-						ux, uy, uz = GG.CmdQueue.GetUnitActiveCommandPosition(unitID)
+						ux, uy, uz = GetUnitActiveCommandPosition(unitID)
 						local dx, dz = tx - ux, tz - uz
 						local rotation = math.atan2(dx, dz)
 						

@@ -38,15 +38,25 @@ local deadChildren = {} -- unitID = true
 -- Commands which should be passed from mother to all children
 local passedCmds = {[CMD.ATTACK] = true, [CMD.FIRE_STATE] = true, [CMD.STOP] = true}
 
+local function DisableChild(childID, disable)
+	deadChildren[childID] = disable
+	Spring.SetUnitNeutral(childID, disable)
+	local env = Spring.UnitScript.GetScriptEnv(childID)
+	Spring.UnitScript.CallAsUnit(childID, env.Disabled, disable)
+end
+
 function gadget:UnitCreated(unitID, unitDefID, teamID)
 	local ud = UnitDefs[unitDefID]
 	local cp = ud.customParams
 	if cp.mother then
 		GG.boatMothers[unitID] = {}
-		local toRemove = {CMD.LOAD_UNITS, CMD.UNLOAD_UNITS}
-		for _, cmdID in pairs(toRemove) do
-			local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
-			Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+		-- only remove load/unload commands if the unit is not really a transporter!
+		if not cp.compositetransporter then
+			local toRemove = {CMD.LOAD_UNITS, CMD.UNLOAD_UNITS}
+			for _, cmdID in pairs(toRemove) do
+				local cmdDescID = Spring.FindUnitCmdDesc(unitID, cmdID)
+				Spring.RemoveUnitCmdDesc(unitID, cmdDescID)
+			end
 		end
 	elseif cp.child then
 		childCache[unitID] = true
@@ -58,7 +68,16 @@ function gadget:UnitCreated(unitID, unitDefID, teamID)
 	end
 end
 
-function gadget:UnitDestroyed(unitID, unitDefID, unitTeam)
+function gadget:UnitFinished(unitID, unitDefID, teamID)
+	local motherChildren = GG.boatMothers[unitID]
+	if motherChildren then -- exists thanks to UnitCreated
+		for i, child in pairs(motherChildren) do
+			DisableChild(child, false) -- mother is finished, wake up the children
+		end
+	end
+end
+
+function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 	GG.boatMothers[unitID] = nil
 	childCache[unitID] = nil
 	deadChildren[unitID] = nil
@@ -68,24 +87,26 @@ function gadget:UnitGiven(unitID, unitDefID, newTeam, oldTeam)
 	local children = GG.boatMothers[unitID]
 	if children then
 		for _, childID in pairs(children) do
-			TransferUnit(childID, newTeam, true)
+			GG.Delay.DelayCall(TransferUnit, {childID, newTeam, true}, 1)
 		end
 	end
 end
 
 function gadget:UnitLoaded(unitID, unitDefID, unitTeam, transportID, transportTeam)
 	if childCache[unitID] then
-		--Spring.Echo("CHILD LOADED", unitID, transportID)
-		childCache[unitID] = transportID -- set value to unitID of mother
-		table.insert(GG.boatMothers[transportID], unitID) -- insert into GG.boatMothers list
+		-- try to fix it right here
+		if transportID and not GG.boatMothers[transportID] then
+			Spring.Log('composite ships', 'error', 'Fixing: Transporter ID not in boatmother list: transporter ID ' .. (transportID or 'nil') .. ' loaded unit: ' .. (UnitDefs[unitDefID].name or nil))
+			GG.boatMothers[transportID] = {}
+		end
+		if transportID and GG.boatMothers[transportID] then
+			childCache[unitID] = transportID -- set value to unitID of mother
+			table.insert(GG.boatMothers[transportID], unitID) -- insert into GG.boatMothers list
+			DisableChild(unitID, true) -- disable until mother is completed
+		else
+			Spring.Log('composite ships', 'error', 'Transporter ID not in boatmother list: transporter ID ' .. (transportID or 'nil') .. ' loaded unit: ' .. (UnitDefs[unitDefID].name or nil))
+		end
 	end 
-end
-
-local function DisableChild(childID, disable)
-	deadChildren[childID] = disable
-	Spring.SetUnitNeutral(childID, disable)
-	env = Spring.UnitScript.GetScriptEnv(childID)
-	Spring.UnitScript.CallAsUnit(childID, env.Disabled, disable)
 end
 
 function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
@@ -103,7 +124,8 @@ function gadget:UnitPreDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, w
 		-- don't become shields)
 		local passThroughDamage = damage - newDamage
 		local mother = childCache[unitID]
-		if mother and not Spring.GetUnitIsDead(mother) then
+		-- exclude the case when we still have boolean true in here instead of a unitID
+		if mother and not (mother == true) and not Spring.GetUnitIsDead(mother) then
 			local wd = WeaponDefs[weaponDefID]
 			local smallarmsDamage = wd.customParams and wd.customParams.damagetype == 'smallarm'
 			-- hulls (mothers) don't take smallarms damage
@@ -126,8 +148,9 @@ end
 function gadget:GameFrame(n)
 	if n % (30 * 3) == 0 then -- check every 3 seconds, TODO: too slow? SlowUpdate (16f)?
 		for childID in pairs(deadChildren) do
+			local motherBuilt = select(5, Spring.GetUnitHealth(childCache[childID])) == 1
 			local health, maxHealth = Spring.GetUnitHealth(childID)
-			if health/maxHealth > HEALTH_RESTORE_LEVEL then
+			if motherBuilt and health/maxHealth > HEALTH_RESTORE_LEVEL then
 				DisableChild(childID, false)
 			end
 		end

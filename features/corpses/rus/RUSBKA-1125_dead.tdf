@@ -1,4 +1,4 @@
-[RUSBKA-1125_dead] {
+[RUSBKA1125_dead] {
   description=Sunk Armored Boat;
   blocking=0;
   damage=10000;
@@ -9,5 +9,9 @@
   hitdensity=70;
   object=RUSBKA1125_dead.s3o;
   reclaimable=1;
+	[customParams]
+		{
+
+		}
 }
 

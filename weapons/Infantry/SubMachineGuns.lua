@@ -1,45 +1,6 @@
 -- Smallarms - Infantry Submachineguns
 
--- Submachinegun Base Class
-local SMGClass = Weapon:New{
-  accuracy           = 100,
-  areaOfEffect       = 1,
-  avoidFeature       = true,
-  avoidFriendly      = false,
-  burnblow           = false,
-  burst              = 5,
-  collideFeature     = true,
-  collideFriendly    = false,
-  collisionSize      = 2.5,
-  coreThickness      = 0.15,
-  duration           = 0.01,
-  explosionGenerator = [[custom:Bullet]],
-  fireStarter        = 0,
-  id                 = 5, -- used for cob based fear from rifle/smg
-  impactonly         = 1,
-  intensity          = 0.7,
-  interceptedByShieldType = 8,
-  laserFlareSize     = 0.0001,
-  movingAccuracy     = 933,
-  rgbColor           = [[1.0 0.75 0.0]],
-  soundTrigger       = true,
-  sprayAngle         = 350,
-  thickness          = 0.4,
-  tolerance          = 6000,
-  turret             = true,
-  weaponTimer        = 1,
-  weaponType         = [[LaserCannon]],
-  weaponVelocity     = 1500,
-  customparams = {
-    damagetype         = [[smallarm]],
-  },
-  damage = {
-    default            = 17,
-  },
-}
-
 -- Implementations
-
 -- STEN Mk. II (GBR)
 local STEN = SMGClass:New{
   burstrate          = 0.1,
@@ -66,7 +27,7 @@ local SilencedSten = STEN:New({
 -- MP.40 (GER)
 local MP40 = SMGClass:New{
   burstRate          = 0.12,
-  movingAccuracy     = 470, -- intended?
+  movingAccuracy     = 1200, 
   name               = [[Maschinenpistole 40]],
   range              = 330,
   reloadtime         = 2,
@@ -83,9 +44,6 @@ local Thompson = SMGClass:New{
   reloadtime         = 1.7,
   soundStart         = [[US_Thompson]],
   sprayAngle         = 400, -- intended?
-  damage = {
-    default            = 19, -- intended?
-  },
 }
 
 -- PPSh (RUS)
@@ -117,15 +75,12 @@ local BerettaM38 = SMGClass:New{
 local FNAB43 = SMGClass:New{
   burst              = 5,
   burstRate          = 0.112,
-  movingAccuracy     = 1000,
+  movingAccuracy     = 800,
   name               = [[FNAB-43]],
   range              = 340,
   reloadtime         = 1.2,
   soundStart         = [[ITA_Fnab43]],
   sprayAngle         = 300,
-  damage = {
-    default            = 19, -- intended?
-  },
 }
 
 local Type100SMG = SMGClass:New{
@@ -139,6 +94,30 @@ local Type100SMG = SMGClass:New{
   sprayAngle         = 380,
 }
 
+local KPistM3738 = SMGClass:New{
+	burst		= 5,
+	burstRate	= 0.076,	-- sync with sound sample
+	movingAccuracy	= 1300,
+	name		= "kpist m/37-39",
+	range		= 325,
+	reloadtime	= 1.7,
+	soundStart	= [[KPist_M_37_39]],
+	sprayAngle	= 380,
+}
+
+-- Hungary
+-- Danuvia 43M
+local danuvia43m = SMGClass:New{
+	burst              = 8,
+	burstRate          = 0.09,
+	movingAccuracy     = 1200,
+	name               = [[Danuvia 43M]],
+	range              = 330,
+	reloadtime         = 1.8,
+	soundStart         = [[ITA_BerettaM38]],
+	sprayAngle         = 380,
+}
+
 -- Return only the full weapons
 return lowerkeys({
   STEN = STEN,
@@ -149,4 +128,6 @@ return lowerkeys({
   BerettaM38 = BerettaM38,
   FNAB43 = FNAB43,
   Type100SMG = Type100SMG,
+  KPistM3738 = KPistM3738,
+  danuvia43m = danuvia43m,
 })
